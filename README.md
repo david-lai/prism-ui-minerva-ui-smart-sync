@@ -1,7 +1,7 @@
 # minerva-ui
 
 
-# Welcome to your the UI for Nutanix Buckets
+# Welcome to your the UI for Nutanix Files
 
 This application uses webpack and npm. We have two types of builds
 
