@@ -1,9 +1,0 @@
-{
-  "extends": [
-    "../eslint/eslint.dev.json"
-  ],
-  "plugins": [
-  ],
-  "rules": {
-  }
-}

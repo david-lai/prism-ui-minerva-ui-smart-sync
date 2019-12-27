@@ -1,27 +1,23 @@
 //
-// Copyright (c) 2019 Nutanix Inc. All rights reserved.
+// Copyright (c) 2018 Nutanix Inc. All rights reserved.
 //
 // The common webpack configuration
 //
 /* eslint-env node */
 var path = require('path');
 var webpack = require('webpack');
+var externals = require('prism-subapps-react-common/tools/externals');
 
 module.exports = {
-  entry: ['babel-polyfill', path.resolve(__dirname, 'src/index.js')],
+  entry: path.resolve(__dirname, 'src/index.js'),
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'index.js'
+    libraryTarget: 'umd',
+    filename: 'serviceChains.js'
   },
-  externals: {
-    'lodash': 'lodash',
-    'react': 'react',
-    'react-dom': 'react-dom',
-    'react-redux': 'react-redux',
-    'redux': 'redux',
-    'redux-logger': 'redux-logger',
-    'prop-types': 'prop-types'
-  },
+  externals: Object.assign({}, externals, {
+    // Add any other external dependencies here.
+  }),
   resolve: {
     extensions: ['.js', '.jsx']
   },
@@ -51,19 +47,10 @@ module.exports = {
       // For loading fonts.
       // This is only needed for the styleguide.
       {
-        test: /\.(woff|woff2|eot|eot\?iefix|ttf|svg|gif|png|jpg)$/,
+        test: /\.(woff|woff2|eot|eot\?iefix|ttf|svg|gif)$/,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]'
-        }
-      },
-      // For loading fonts.
-      // This is only needed for the styleguide.
-      {
-        test: /\.(woff|woff2|eot|eot\?iefix|ttf|svg|gif|png|jpg)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 100000
         }
       }
     ]

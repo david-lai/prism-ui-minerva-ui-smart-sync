@@ -1,0 +1,96 @@
+{
+  "Common": {
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "save": "Save",
+    "create": "Create",
+    "serviceChains": "Service Chains",
+    "create_sc": "Create Service Chain",
+    "plsReviewAndResubmit": "Please review errors and resubmit.",
+    "schema": {
+      "file_server": {
+        "name": "Name",
+        "versions": "Versions",
+        "cluster": "Cluster",
+        "file_server_vms": "File Server Vms",
+        "actions": "Actions",
+        "type": {
+          "tap": "Tap",
+          "inline": "Inline"
+        },
+        "networkServiceProviders": "Network Service Providers",
+        "policies": "Policies",
+        "tap": "Tap",
+        "inline": "Inline"
+      }
+    }
+  },
+
+  "App": {
+    "noChains": "Service chains have not been defined.",
+    "errorFetchingServiceChains": "Error fetching Service Chains."
+  },
+
+  "ServiceChainActions": {
+    "update_sc": "Update",
+    "delete_sc": "Delete",
+    "confirmDelete": "Delete selected Service Chain ?"
+  },
+
+  "FileServers": {
+    "files": "Files",
+    "typeName": "Type name to filter",
+    "fileServers": "File Servers",
+    "noFileServer": "No File Server",
+    "oneFileServer": "One File Server",
+    "numOfFileServers": "{num} File Servers",
+    "summary": "Summary",
+    "alerts": "Alerts",
+    "events": "Events"
+  },
+
+  "EBComponentFactory": {
+    "manage": "Manage"
+  },
+
+  "FileServersManageVersion": {
+    "nutanix_files": "Nutanix Files",
+    "nutanix_files_desc": "A native file-storage solution for unstructured data. Files provides a highly available and massively scalable data repository for a wide rand of deployments and applications.",
+    "enable_files": "Enable Files",
+    "enable_files_desc": "Once enabled, File servers across all of your Nutanix Clusters can be managed from Prism Central(PC). File Server Manager(FSM) is required to manage File Servers from PC",
+    "file_server_manager_info": "PC is not running the latest verion of the File Server Manager. Use {lcm} to upgrade FSM to the latest version.",
+    "file_server_manager_version": "File Server Manager Version",
+    "current_version": "Current Version",
+    "latest_version": "Latest Version",
+    "lcm": "Life Cycle Management(LCM)"
+  },
+
+  "CreateServiceChainPopup": {
+    "save": "Save",
+    "create": "Create",
+    "cancel": "Cancel",
+    "updateSC": "Update Service Chain",
+    "createSC": "Create Service Chain",
+    "updatingSC": "Updating Service Chain",
+    "creatingSC": "Creating Service Chain",
+    "name": "Name",
+    "description": "Description",
+    "mode": "Type",
+    "catsTitle": "Select categories for the service chain",
+    "errorSavingSC": "Error saving the service chain",
+    "errorLoadingServiceChainDetails": "Error Loading Service Chain details. ",
+    "networkServiceProvider": "Network Service Provider",
+    "vms": "VMs",
+    "noSPCats": "NetworkServiceProvider categories not available."
+  },
+
+  "PopupContainer": {
+    "confirm": "Confirm",
+    "deletedSC": "Successfully deleted the Service Chain",
+    "errorDeletingSC": "Error deleting the Service Chain"
+  },
+
+  "EntityConfigs": {
+    "noChains": "Service chains have not been defined. Start by defining one."
+  }
+}
