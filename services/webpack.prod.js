@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2018 Nutanix Inc. All rights reserved.
+// Copyright (c) 2019 Nutanix Inc. All rights reserved.
 //
 // The plugin webpack configuration (production)
 //

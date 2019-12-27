@@ -17,7 +17,6 @@ const fileServerManagerInfo = 'PC is not running the latest verion of the File S
 
 class FileServersManageVersion extends React.Component {
   getLCM() {
-  	// return i18nT('lcm', 'Life Cycle Management(LCM)');
 	return (
 	  <Link>
 		{i18nT('lcm', 'Life Cycle Management(LCM)')}

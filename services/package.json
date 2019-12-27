@@ -1,6 +1,6 @@
 {
-  "name": "service-chains",
-  "version": "0.1.0",
+  "name": "prism-ui-minerva-ui",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
     "build": "npm run lint && webpack --config webpack.prod.js",

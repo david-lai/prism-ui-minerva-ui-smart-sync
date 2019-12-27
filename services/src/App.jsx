@@ -1,7 +1,7 @@
 //
 // Copyright (c) 2019 Nutanix Inc. All rights reserved.
 //
-// The Service Chains Sub-Application
+// The Minerva UI Sub-Application
 //
 import React from 'react';
 import FileServers from './components/FileServers';

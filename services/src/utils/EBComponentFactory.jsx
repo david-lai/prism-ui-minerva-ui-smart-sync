@@ -11,7 +11,6 @@ import { AphroditeApi, WindowsMessageUtil } from 'prism-utils-common';
 import { OpenInNewWindowIcon, TextLabel, Link, FlexLayout } from 'prism-reactjs';
 
 // Local includes
-import PopupContainer from '../popups/PopupContainer';
 import AppConstants from './AppConstants';
 import CatPolicies from './CatPolicies';
 
@@ -43,8 +42,6 @@ class EBComponentFactory {
   }
 
   onOpenPeClick(e) {
-    console.log(e.currentTarget.getAttribute('data-name'));
-    // const clusterUuid = e.currentTarget.getAttribute('data-name');
     const clusterUuid = '000597f7-e2bc-4a93-0000-00000000b7b7';
     WindowsMessageUtil.postMessage({
       service: AppConstants.SERVICE_NAME.PRISM_UI,

@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 //
-// Copyright (c) 2018 Nutanix Inc. All rights reserved.
+// Copyright (c) 2019 Nutanix Inc. All rights reserved.
 //
 // The standalone app webpack configuration (production)
 //
@@ -21,7 +21,7 @@ const paths = {
 // Webpack configuration
 //----------------------
 module.exports = {
-  entry: path.join(paths.src, 'index.js'),
+  entry: ['babel-polyfill', path.join(paths.src, 'index.js')],
   output: {
     path: paths.dist,
     filename: 'app.bundle.js'

@@ -65,32 +65,7 @@
     "lcm": "Life Cycle Management(LCM)"
   },
 
-  "CreateServiceChainPopup": {
-    "save": "Save",
-    "create": "Create",
-    "cancel": "Cancel",
-    "updateSC": "Update Service Chain",
-    "createSC": "Create Service Chain",
-    "updatingSC": "Updating Service Chain",
-    "creatingSC": "Creating Service Chain",
-    "name": "Name",
-    "description": "Description",
-    "mode": "Type",
-    "catsTitle": "Select categories for the service chain",
-    "errorSavingSC": "Error saving the service chain",
-    "errorLoadingServiceChainDetails": "Error Loading Service Chain details. ",
-    "networkServiceProvider": "Network Service Provider",
-    "vms": "VMs",
-    "noSPCats": "NetworkServiceProvider categories not available."
-  },
-
-  "PopupContainer": {
-    "confirm": "Confirm",
-    "deletedSC": "Successfully deleted the Service Chain",
-    "errorDeletingSC": "Error deleting the Service Chain"
-  },
-
   "EntityConfigs": {
-    "noChains": "Service chains have not been defined. Start by defining one."
+    "noFiles": "Minerval files have not been defined. Start by defining one."
   }
 }

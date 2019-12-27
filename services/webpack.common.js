@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2018 Nutanix Inc. All rights reserved.
+// Copyright (c) 2019 Nutanix Inc. All rights reserved.
 //
 // The common webpack configuration
 //
@@ -9,7 +9,7 @@ var webpack = require('webpack');
 var externals = require('prism-subapps-react-common/tools/externals');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'src/index.js'),
+  entry: ['babel-polyfill', path.resolve(__dirname, 'src/index.js')],
   output: {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'umd',

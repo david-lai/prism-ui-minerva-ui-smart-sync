@@ -66,7 +66,6 @@ class FileServers extends React.Component {
     // Create the EB configuration we will be using
     const queryConfig = {
       pollingSec: AppConstants.POLLING_FREQ_SECS,
-      //queryProcessorName: 'ListV3UQDC'
       queryProcessorName: 'GroupsV3UQDC'
     };
 
@@ -89,10 +88,7 @@ class FileServers extends React.Component {
   }
 
   onMenuChange = (e) => {
-    console.log(e.key);
     this.setState({ebConfiguration: this.getEbConfiguration(e.key)});
-  //  this.setState({ currentPanelKey: e.key });
-    console.log(this.state);
   }
 
   onEnableFiles = () => {

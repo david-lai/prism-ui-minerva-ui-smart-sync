@@ -36,19 +36,6 @@ const entity_configs = {
           type: 'string',
           displayName: i18nT('schema.file_server.actions', 'Actions')
         }
-//        // Virtual Attribute
-//        network_function_categories : {
-//          type: 'string',
-//          isList: true,
-//          displayName: i18nT('schema.file_server.networkServiceProviders',
-//            'Network Service Providers')
-//        },
-//        // Joined Attribute
-//        policies : {
-//          type: 'string',
-//          isList: true,
-//          displayName: i18nT('schema.file_server.policies', 'Polices')
-//        }
       }
     },
     perspectives: [
@@ -120,13 +107,12 @@ const entity_configs = {
       }
     ],
     actions: [],
-    // actions: EBActionsUtil.processActionsConfig(service_chain_actions),
     details: [],
     filters: {},
     gettingStarted: {
       createActionId: 'create_sc',
       gettingStartedPrompt: i18nT('noChains',
-        'Service chains have not been defined. Start by defining one.')
+        'Minerval files have not been defined. Start by defining one.')
     }
   },
     event: {
@@ -181,14 +167,6 @@ const entity_configs = {
             },
             file_server_vms: {
               columnWidth: '20%'
-//            },
-//          network_function_categories: {
-//            columnWidth: '25%',
-//            formatter: 'scCats'
-//          },
-//          policies: {
-//            columnWidth: '25%',
-//            formatter: 'scPolicies'
             },
             versions : {
               columnWidth: '15%'
@@ -241,7 +219,7 @@ const entity_configs = {
     gettingStarted: {
       createActionId: 'create_sc',
       gettingStartedPrompt: i18nT('noChains',
-        'Service chains have not been defined. Start by defining one.')
+        'Minerval files have not been defined. Start by defining one.')
     }
   },
     alert: {
@@ -296,14 +274,6 @@ const entity_configs = {
             },
             file_server_vms: {
               columnWidth: '20%'
-//            },
-//          network_function_categories: {
-//            columnWidth: '25%',
-//            formatter: 'scCats'
-//          },
-//          policies: {
-//            columnWidth: '25%',
-//            formatter: 'scPolicies'
             },
             versions : {
               columnWidth: '15%'
@@ -356,7 +326,7 @@ const entity_configs = {
     gettingStarted: {
       createActionId: 'create_sc',
       gettingStartedPrompt: i18nT('noChains',
-        'Service chains have not been defined. Start by defining one.')
+        'Minerval files have not been defined. Start by defining one.')
     }
   }
 };
