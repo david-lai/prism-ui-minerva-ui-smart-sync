@@ -2,6 +2,7 @@
 // Copyright (c) 2019 Nutanix Inc. All rights reserved.
 //
 import React from 'react';
+import 'babel-polyfill';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { injectApi } from 'prism-utils-common';
 import App from './App.jsx';
