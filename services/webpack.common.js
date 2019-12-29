@@ -9,7 +9,7 @@ var webpack = require('webpack');
 var externals = require('prism-subapps-react-common/tools/externals');
 
 module.exports = {
-  entry: ['babel-polyfill', path.resolve(__dirname, 'src/index.js')],
+  entry: ['babel-polyfill', path.resolve(__dirname, 'src/index_dev.js')],
   output: {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'umd',

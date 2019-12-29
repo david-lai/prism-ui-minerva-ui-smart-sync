@@ -37,7 +37,7 @@ const AppUtil = {
     }
     return ret;
   },
-  
+
   // Formats raw numeric values.
   // eg 1000 is converted to 1K
   // @param value    - Numeric value

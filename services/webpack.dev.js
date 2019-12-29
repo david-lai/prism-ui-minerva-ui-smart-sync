@@ -58,7 +58,7 @@ module.exports = {
     port: 3000
     // , hot: false
   },
-  entry: ['babel-polyfill', path.join(paths.src, 'index.js')],
+  entry: ['babel-polyfill', path.join(paths.src, 'index_dev.js')],
   output: {
     path: paths.dist,
     filename: 'app.bundle.js'

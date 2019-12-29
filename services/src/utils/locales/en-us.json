@@ -4,7 +4,6 @@
     "cancel": "Cancel",
     "save": "Save",
     "create": "Create",
-    "create_sc": "Create Service Chain",
     "plsReviewAndResubmit": "Please review errors and resubmit.",
     "schema": {
       "file_server": {
@@ -23,12 +22,6 @@
         "inline": "Inline"
       }
     }
-  },
-
-  "ServiceChainActions": {
-    "update_sc": "Update",
-    "delete_sc": "Delete",
-    "confirmDelete": "Delete selected Service Chain ?"
   },
 
   "FileServers": {

@@ -4,24 +4,12 @@
 // Application wide constants
 //
 const AppConstants = {
-  POPUPS : {
-    CREATE_SC: 'create_sc', // Create Service Chain
-    UPDATE_SC: 'update_sc', // Update Service Chain
-    DELETE_SC: 'delete_sc' // Delete Service Chain
-  },
-
   APIS: {
     GROUPS_API : '/api/nutanix/v3/groups'
   },
 
   // State for when an action is enabled
   ACTION_CAPABILITY_ENABLED_STATE: { state: 'enabled' },
-
-  // SChain Modes
-  SC_TYPE: {
-    INLINE: 'INLINE',
-    TAP: 'TAP'
-  },
 
   // Polling Freq for the grid
   POLLING_FREQ_SECS: 90,
@@ -40,9 +28,6 @@ const AppConstants = {
   FS_PC_TO_PE: 'fs_pc_to_pe',
 
   ENTITY_TYPES: {
-    // MH_VM: 'vm',
-    // SERVICE_CHAIN: 'network_function_chain',
-    // CLUSTER: 'cluster',
     ENTITY_FILE_SERVER: 'file_server_service',
     ENTITY_ALERT      : 'alert',
     ENTITY_EVENT      : 'event'

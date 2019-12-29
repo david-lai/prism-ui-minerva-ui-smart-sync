@@ -4,14 +4,15 @@
 // The file servers main view
 //
 import React from 'react';
-import { EntityBrowser, EBActionsUtil } from 'ebr-ui';
-import { LeftNavLayout, Loader, Menu, MenuGroup, MenuItem, StackingLayout, TextLabel, Title, Divider } from 'prism-reactjs';
+import { EntityBrowser } from 'ebr-ui';
+import { LeftNavLayout, Loader, Menu, MenuGroup, MenuItem, StackingLayout, TextLabel, Title,
+  Divider } from 'prism-reactjs';
 import EntityConfigs from '../config/entity_configs.js';
 import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
 import EBComponentFactory from '../utils/EBComponentFactory';
 import i18n from '../utils/i18n';
-import FileServersManageVersion from './FileServersManageVersion';
+import FileServersManageVersion from './FileServersManageVersion.jsx';
 
 // Helper to translate strings from this module
 const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
@@ -30,7 +31,6 @@ class FileServers extends React.Component {
       ebConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER),
       filesEnabled: false
     };
-
   }
 
   getEbConfiguration= (entityType) => {
@@ -40,10 +40,10 @@ class FileServers extends React.Component {
     ];
     this.entityTypeDisplayNames = {
       [AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER]: {
-       singular: AppConstants.ENTITY_TYPE_NAME.ENTITY_FILE_SERVER,
+        singular: AppConstants.ENTITY_TYPE_NAME.ENTITY_FILE_SERVER,
         plural: AppConstants.ENTITY_TYPE_NAME_PLURAL.ENTITY_FILE_SERVER
       },
-     [AppConstants.ENTITY_TYPES.ENTITY_ALERT]: {
+      [AppConstants.ENTITY_TYPES.ENTITY_ALERT]: {
         singular: AppConstants.ENTITY_TYPE_NAME.ENTITY_ALERT,
         plural: AppConstants.ENTITY_TYPE_NAME_PLURAL.ENTITY_ALERT
       },
@@ -52,16 +52,16 @@ class FileServers extends React.Component {
         plural: AppConstants.ENTITY_TYPE_NAME_PLURAL.ENTITY_EVENT
       }
     };
-   this.entityGroupings = [
-    {
-       sectionName: '',
-       entities: [
-         {
-           entity: entityType
-         }
-       ]
-     }
-   ];
+    this.entityGroupings = [
+      {
+        sectionName: '',
+        entities: [
+          {
+            entity: entityType
+          }
+        ]
+      }
+    ];
 
     // Create the EB configuration we will be using
     const queryConfig = {
@@ -84,15 +84,14 @@ class FileServers extends React.Component {
       queryConfig,
       ebComponentFactory: EBComponentFactory.getInstance()
     };
-
   }
 
   onMenuChange = (e) => {
-    this.setState({ebConfiguration: this.getEbConfiguration(e.key)});
+    this.setState({ ebConfiguration: this.getEbConfiguration(e.key) });
   }
 
   onEnableFiles = () => {
-    this.setState({filesEnabled: true});
+    this.setState({ filesEnabled: true });
   }
 
   getLeftPanel() {
@@ -114,18 +113,18 @@ class FileServers extends React.Component {
         </StackingLayout>
 
         <MenuGroup key="1">
-          <MenuItem key={AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER}>
+          <MenuItem key={ AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER }>
             { i18nT('fileServers', 'File Servers') }
           </MenuItem>
-          <MenuItem key={AppConstants.ENTITY_TYPES.ENTITY_ALERT}>
+          <MenuItem key={ AppConstants.ENTITY_TYPES.ENTITY_ALERT }>
             { i18nT('alerts', 'Alerts') }
           </MenuItem>
-          <MenuItem key={AppConstants.ENTITY_TYPES.ENTITY_EVENT}>
+          <MenuItem key={ AppConstants.ENTITY_TYPES.ENTITY_EVENT }>
             { i18nT('events', 'Events') }
           </MenuItem>
         </MenuGroup>
       </Menu>
-    );  
+    );
   }
 
   // Render buckets counts accounting for unavailability
@@ -144,20 +143,18 @@ class FileServers extends React.Component {
         return i18nT('numOfFileServers', '{num} File Servers',
           { num: AppUtil.rawNumericFormat(count) });
     }
-  } 
+  }
 
   render() {
     if (this.state.filesEnabled) {
-     return (
-       <LeftNavLayout leftPanel={ this.getLeftPanel() } itemSpacing="0"
-         rightBodyContent={
-           <EntityBrowser { ...this.state.ebConfiguration } />
-         } />
-     );
-    } else {
-      return <FileServersManageVersion enableFiles = { this.onEnableFiles } />;
+      return (
+        <LeftNavLayout leftPanel={ this.getLeftPanel() } itemSpacing="0"
+          rightBodyContent={
+            <EntityBrowser { ...this.state.ebConfiguration } />
+          } />
+      );
     }
-    
+    return <FileServersManageVersion enableFiles={ this.onEnableFiles } />;
   }
 
 }

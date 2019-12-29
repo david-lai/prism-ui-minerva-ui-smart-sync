@@ -47,7 +47,7 @@ class EBComponentFactory {
       target: AppConstants.IFRAME_EVENT_OPEN_PE,
       state: AppConstants.FS_PC_TO_PE,
       serviceTargets: clusterUuid
-    }, window.location.ancestorOrigins[0], window.parent);    
+    }, window.location.ancestorOrigins[0], window.parent);
   }
 
   getComponent(componentId, options) {
@@ -55,11 +55,11 @@ class EBComponentFactory {
       case COMPONENTS.ACTIONS:
         return (
           <Link className="manage-link" data-name={ options.options.entity.nvm_uuid_list }
-              onClick={ this.onOpenPeClick }>
+            onClick={ this.onOpenPeClick }>
             <FlexLayout alignItems="center" itemSpacing="5px">
               <TextLabel className="nsg-example-icon-text">{i18nT('manage', 'Manage')}</TextLabel>
               <OpenInNewWindowIcon />
-            </FlexLayout>  
+            </FlexLayout>
           </Link>);
       case COMPONENTS.NUMBER_OF_VMS:
         const numberOfVms = options.options.entity.nvm_uuid_list.split(',').length || 0;

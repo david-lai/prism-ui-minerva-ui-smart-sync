@@ -3,7 +3,6 @@
 //
 // The EB configuration for Minerva Files view
 //
-import { EBActionsUtil } from 'ebr-ui';
 import i18n from '../utils/i18n';
 
 // Helper to translate strings from this module
@@ -115,40 +114,40 @@ const entity_configs = {
         'Minerval files have not been defined. Start by defining one.')
     }
   },
-    event: {
+  event: {
     schema: {
       idAttribute: 'entity_id',
       nameAttribute: 'name',
       attributes: {
         name: {
           type: 'string',
-          displayName: i18nT('schema.network_function_chain.name', 'Name')
+          displayName: i18nT('schema.file_server.name', 'Name')
         },
         file_server_vms: {
           type: 'string',
-          displayName: i18nT('schema.network_function_chain.file_server_vms', 'File Server Vms')
+          displayName: i18nT('schema.file_server.file_server_vms', 'File Server Vms')
         },
         cluster: {
           type: 'string',
-          displayName: i18nT('schema.network_function_chain.cluster', 'Cluster')
+          displayName: i18nT('schema.file_server.cluster', 'Cluster')
         },
         // Virtual Attribute
         versions : {
           type: 'string',
-          displayName: i18nT('schema.network_function_chain.versions', 'Versions')
+          displayName: i18nT('schema.file_server.versions', 'Versions')
         },
         // Virtual Attribute
         network_function_categories : {
           type: 'string',
           isList: true,
-          displayName: i18nT('schema.network_function_chain.networkServiceProviders',
+          displayName: i18nT('schema.file_server.networkServiceProviders',
             'Network Service Providers')
         },
         // Joined Attribute
         policies : {
           type: 'string',
           isList: true,
-          displayName: i18nT('schema.network_function_chain.policies', 'Polices')
+          displayName: i18nT('schema.file_server.policies', 'Polices')
         }
       }
     },
@@ -222,40 +221,40 @@ const entity_configs = {
         'Minerval files have not been defined. Start by defining one.')
     }
   },
-    alert: {
+  alert: {
     schema: {
       idAttribute: 'entity_id',
       nameAttribute: 'name',
       attributes: {
         name: {
           type: 'string',
-          displayName: i18nT('schema.network_function_chain.name', 'Name')
+          displayName: i18nT('schema.file_server.name', 'Name')
         },
         file_server_vms: {
           type: 'string',
-          displayName: i18nT('schema.network_function_chain.file_server_vms', 'File Server Vms')
+          displayName: i18nT('schema.file_server.file_server_vms', 'File Server Vms')
         },
         cluster: {
           type: 'string',
-          displayName: i18nT('schema.network_function_chain.cluster', 'Cluster')
+          displayName: i18nT('schema.file_server.cluster', 'Cluster')
         },
         // Virtual Attribute
         versions : {
           type: 'string',
-          displayName: i18nT('schema.network_function_chain.versions', 'Versions')
+          displayName: i18nT('schema.file_server.versions', 'Versions')
         },
         // Virtual Attribute
         network_function_categories : {
           type: 'string',
           isList: true,
-          displayName: i18nT('schema.network_function_chain.networkServiceProviders',
+          displayName: i18nT('schema.file_server.networkServiceProviders',
             'Network Service Providers')
         },
         // Joined Attribute
         policies : {
           type: 'string',
           isList: true,
-          displayName: i18nT('schema.network_function_chain.policies', 'Polices')
+          displayName: i18nT('schema.file_server.policies', 'Polices')
         }
       }
     },
