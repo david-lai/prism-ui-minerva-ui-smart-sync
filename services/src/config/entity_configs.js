@@ -1,7 +1,7 @@
 //
 // Copyright (c) 2019 Nutanix Inc. All rights reserved.
 //
-// The EB configuration for service chains view
+// The EB configuration for Minerva Files view
 //
 import { EBActionsUtil } from 'ebr-ui';
 import i18n from '../utils/i18n';
@@ -111,7 +111,7 @@ const entity_configs = {
     filters: {},
     gettingStarted: {
       createActionId: 'create_sc',
-      gettingStartedPrompt: i18nT('noChains',
+      gettingStartedPrompt: i18nT('noFiles',
         'Minerval files have not been defined. Start by defining one.')
     }
   },
@@ -218,7 +218,7 @@ const entity_configs = {
     filters: {},
     gettingStarted: {
       createActionId: 'create_sc',
-      gettingStartedPrompt: i18nT('noChains',
+      gettingStartedPrompt: i18nT('noFiles',
         'Minerval files have not been defined. Start by defining one.')
     }
   },
@@ -325,7 +325,7 @@ const entity_configs = {
     filters: {},
     gettingStarted: {
       createActionId: 'create_sc',
-      gettingStartedPrompt: i18nT('noChains',
+      gettingStartedPrompt: i18nT('noFiles',
         'Minerval files have not been defined. Start by defining one.')
     }
   }

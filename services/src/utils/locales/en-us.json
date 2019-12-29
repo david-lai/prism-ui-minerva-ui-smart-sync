@@ -4,7 +4,6 @@
     "cancel": "Cancel",
     "save": "Save",
     "create": "Create",
-    "serviceChains": "Service Chains",
     "create_sc": "Create Service Chain",
     "plsReviewAndResubmit": "Please review errors and resubmit.",
     "schema": {
@@ -24,11 +23,6 @@
         "inline": "Inline"
       }
     }
-  },
-
-  "App": {
-    "noChains": "Service chains have not been defined.",
-    "errorFetchingServiceChains": "Error fetching Service Chains."
   },
 
   "ServiceChainActions": {

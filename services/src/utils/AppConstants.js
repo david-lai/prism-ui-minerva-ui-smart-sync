@@ -11,12 +11,7 @@ const AppConstants = {
   },
 
   APIS: {
-    GROUPS_API : '/api/nutanix/v3/groups',
-    GET_SC: '/api/nutanix/v3/network_function_chains',
-    CREATE_SC: '/api/nutanix/v3/network_function_chains',
-    UPDATE_SC: '/api/nutanix/v3/network_function_chains',
-    DELETE_SC: '/api/nutanix/v3/network_function_chains',
-    CATS_QUERY_API: '/api/nutanix/v3/category/query'
+    GROUPS_API : '/api/nutanix/v3/groups'
   },
 
   // State for when an action is enabled

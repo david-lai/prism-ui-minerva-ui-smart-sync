@@ -12,7 +12,6 @@ import { OpenInNewWindowIcon, TextLabel, Link, FlexLayout } from 'prism-reactjs'
 
 // Local includes
 import AppConstants from './AppConstants';
-import CatPolicies from './CatPolicies';
 
 import i18n from './i18n';
 // Helper to translate strings from this module

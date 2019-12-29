@@ -56,4 +56,4 @@ app.post(`${apiURL}/category/query`, function(req, res, next) {
   res.sendfile(`${mockData}/category_query.json`);
 });
 
-app.listen(5000, () => console.log('Service Chains  - Mock API server listening on port 5000!'));
+app.listen(5000, () => console.log('Minerva Files  - Mock API server listening on port 5000!'));

@@ -120,7 +120,7 @@ const AppUtil = {
         { attribute: 'entity_counts' }, { attribute: 'policy_counts' },
         { attribute: 'immutable' }
       ],
-      query_name: `serviceChains:${catName}`,
+      query_name: `minervaFiles:${catName}`,
       filter_criteria: `name==${catName}`
     };
 

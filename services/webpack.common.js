@@ -13,7 +13,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'umd',
-    filename: 'serviceChains.js'
+    filename: 'minervaFiles.js'
   },
   externals: Object.assign({}, externals, {
     // Add any other external dependencies here.
