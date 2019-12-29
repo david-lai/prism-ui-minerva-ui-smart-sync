@@ -111,7 +111,7 @@ const entity_configs = {
     gettingStarted: {
       createActionId: 'create_sc',
       gettingStartedPrompt: i18nT('noFiles',
-        'Minerval files have not been defined. Start by defining one.')
+        'Minerva files have not been defined. Start by defining one.')
     }
   },
   event: {
@@ -218,7 +218,7 @@ const entity_configs = {
     gettingStarted: {
       createActionId: 'create_sc',
       gettingStartedPrompt: i18nT('noFiles',
-        'Minerval files have not been defined. Start by defining one.')
+        'Minerva files have not been defined. Start by defining one.')
     }
   },
   alert: {
@@ -325,7 +325,7 @@ const entity_configs = {
     gettingStarted: {
       createActionId: 'create_sc',
       gettingStartedPrompt: i18nT('noFiles',
-        'Minerval files have not been defined. Start by defining one.')
+        'Minerva files have not been defined. Start by defining one.')
     }
   }
 };

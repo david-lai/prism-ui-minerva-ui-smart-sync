@@ -58,7 +58,6 @@ const AppConstants = {
   ENTITY_CATEGORY_SEPARATOR: ':',
   CATEGORY : {
     NET_SERVICE_PROVIDER: 'NetworkServiceProvider'
-    // NET_SERVICE_PROVIDER: 'network_function_provider'
   }
 };
 

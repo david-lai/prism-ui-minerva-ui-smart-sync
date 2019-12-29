@@ -56,7 +56,6 @@ module.exports = {
     https,
     proxy,
     port: 3000
-    // , hot: false
   },
   entry: ['babel-polyfill', path.join(paths.src, 'index_dev.js')],
   output: {
@@ -111,7 +110,6 @@ module.exports = {
   // Enable importing JS files without specifying their's extension
   resolve: {
     alias: {
-      // 'universal-qdc' : path.resolve('node_modules/universal-qdc/dist/index-debug.js')
     },
     extensions: ['.js', '.jsx']
   }
