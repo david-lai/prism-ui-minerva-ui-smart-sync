@@ -20,31 +20,32 @@ const paths = {
 let proxy = {};
 let https = false;
 
+const userName = process.env.USERNAME || 'admin';
+const pwd =  process.env.PASSWORD || 'Nutanix.123';
+const proxyServer = process.env.PROXY || 'http://localhost:5000';
+
 // Proxy Configuration for override of the default
-if (process.env.PROXY && process.env.USERNAME && process.env.PASSWORD) {
-  const pConfig = {
-    auth: `${process.env.USERNAME}:${process.env.PASSWORD}`,
-    target: process.env.PROXY,
-    secure: false,
-    changeOrigin : true,
-    ws : true,
-    xfwd : true
-  };
-
-  proxy = {
-
-  };
-  https = (process.env.PROXY.indexOf('https') === 0);
-} else {
-  console.log(chalk.red('Error: Proxy to ObjectStore Service Manger not specified.'));
-  console.log(chalk.red('Examples: '));
-  console.log(chalk.red('USERNAME=admin PASSWORD=Nutanix.123 PROXY=\'http://10.4.96.132:9001\' npm run dev'));
-  console.log(chalk.red('USERNAME=admin PASSWORD=Nutanix.123 PROXY=\'http://localhost:5000\' npm run dev'));
-  process.exit();
+if( !process.env.PROXY ) {
+  console.log('Usage: USERNAME=admin PASSWORD=\'Nutanix.123\' PROXY=\'https://10.2.3.4:9440\' npm run dev');
 }
 
+const pConfig = {
+  auth: `${userName}:${pwd}`,
+  target: proxyServer,
+  secure: false,
+  changeOrigin : true,
+  ws : true,
+  xfwd : true
+};
+
+// List of end points to proxy
+proxy = {
+  '/api/nutanix/v3' : pConfig
+};
+https = (proxyServer.indexOf('https') === 0);
+
 console.log('Starting Server -- Proxying to:',
-  chalk.yellow(JSON.stringify(proxy)));
+  chalk.yellow(JSON.stringify(proxyServer)));
 
 
 // Webpack configuration
@@ -56,7 +57,7 @@ module.exports = {
     proxy,
     port: 3000
   },
-  entry: ['babel-polyfill', path.join(paths.src, 'index.js')],
+  entry: ['babel-polyfill', path.join(paths.src, 'index_dev.js')],
   output: {
     path: paths.dist,
     filename: 'app.bundle.js'
@@ -100,24 +101,15 @@ module.exports = {
       // We'll add only image extensions, but you can add things like svgs, fonts and videos
       {
         test: /\.(woff|woff2|eot|eot\?iefix|ttf|svg|gif|png|jpg)$/,
-        loader: 'file-loader'
-      },
-      // File loader for image assets -> ADDED IN THIS STEP
-      // We'll add only image extensions, but you can add things like svgs, fonts and videos
-      {
-        test: /\.(woff|woff2|eot|eot\?iefix|ttf|svg|gif|png|jpg)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 100000
-        }
+        use: [
+          'file-loader'
+        ]
       }
     ]
   },
   // Enable importing JS files without specifying their's extension
   resolve: {
     alias: {
-      // NOTE: This is temp, until EB is published as a lib
-      ebr: path.resolve(__dirname, 'node_modules', 'ebr')
     },
     extensions: ['.js', '.jsx']
   }

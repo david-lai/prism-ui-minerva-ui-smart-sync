@@ -2,9 +2,10 @@
 
 # dependencies
 services/node_modules
+services/mockserver/node_modules
 
 # testing
-/coverage
+services/coverage
 
 # production
 /build

@@ -1,23 +1,23 @@
 //
-// Copyright (c) 2019 Nutanix Inc. All rights reserved.
+// Copyright (c) 2018 Nutanix Inc. All rights reserved.
 //
 module.exports = {
-  testURL: "http://localhost/",
+  testURL: 'http://localhost/',
   testRegex: '.*.spec\\.(js|jsx)$',
   setupTestFrameworkScriptFile: './node_modules/prism-jest/src/SetupReactEnzyme.js',
   moduleDirectories: [
     './node_modules'
   ],
   moduleNameMapper: {
-    '\\.(css|less)$': '<rootDir>/node_modules/prism-jest/src/styleMock.js',
-    "\\.(bmp|gif|jpg|jpeg|png|psd|svg|webp)$": "<rootDir>/tests/utils/MediaFileTransformer.js"
+    '\\.(css|less)$': '<rootDir>/node_modules/prism-jest/src/styleMock.js'
   },
   collectCoverageFrom: [
     'src/**/*.{js,jsx}',
     '!src/index.js',
+    '!src/index_dev.js',
     '!src/history.js',
     '!src/registerServiceWorker.js',
-    '!src/utils/StatsUtil.js',
+    '!src/components/ebr/index.js',
     '!../**/node_modules/**'
   ],
   collectCoverage: true,

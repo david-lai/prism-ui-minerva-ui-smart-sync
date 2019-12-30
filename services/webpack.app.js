@@ -21,12 +21,10 @@ const paths = {
 // Webpack configuration
 //----------------------
 module.exports = {
-  entry: ['babel-polyfill', path.join(paths.src, 'index.js')],
+  entry: ['babel-polyfill', path.join(paths.src, 'index_dev.js')],
   output: {
     path: paths.dist,
-    filename: 'app.bundle.js',
-    // This will generate /files/app.bundle.js and /files/style.bundle.js
-    publicPath: '/files'
+    filename: 'app.bundle.js'
   },
   // Tell webpack to use html plugin
   plugins: [
@@ -66,19 +64,10 @@ module.exports = {
       // File loader for image assets -> ADDED IN THIS STEP
       // We'll add only image extensions, but you can add things like svgs, fonts and videos
       {
-        test: /\.(woff|woff2|eot|eot\?iefix|ttf|svg|gif)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-          publicPath: '/oss'
-        }
-      },
-      {
-        test: /\.(png|jpg)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 100000
-        }
+        test: /\.(woff|woff2|eot|eot\?iefix|ttf|svg|gif|png|jpg)$/,
+        use: [
+          'file-loader'
+        ]
       }
     ]
   },
