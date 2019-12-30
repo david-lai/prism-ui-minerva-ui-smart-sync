@@ -14,9 +14,6 @@ const AppConstants = {
   // Polling Freq for the grid
   POLLING_FREQ_SECS: 90,
 
-  // The Obelix.1 release version
-  PC_OBELIX_1_VERSION: '5.6',
-
   // Name of the services.
   SERVICE_NAME: {
     PRISM_UI: 'prismui'

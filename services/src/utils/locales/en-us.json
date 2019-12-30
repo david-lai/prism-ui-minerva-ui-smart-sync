@@ -53,6 +53,6 @@
   },
 
   "EntityConfigs": {
-    "noFiles": "Minerval files have not been defined. Start by defining one."
+    "noFiles": "Minerva files have not been defined. Start by defining one."
   }
 }
