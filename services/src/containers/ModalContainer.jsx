@@ -1,15 +1,13 @@
-/**
- * @file modal container
- * @description container for modal
- * @author Nutanix
- * @version 2.0
- */
+//
+// Copyright (c) 2020 Nutanix Inc. All rights reserved.
+//
+// Container for modal
+//
 
 // Libs
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-// import { HulkComponent } from '@ntnx/hulk-core/client';
 import { closeModal } from '../actions';
 import FileServersDetails from '../popups/FileServersDetails.jsx';
 
@@ -21,7 +19,6 @@ import { MODAL_TYPE } from '../utils/AppConstants';
  * @class
  * @extends HulkComponent
 */
-// export class ModalContainer extends HulkComponent {
 class ModalContainer extends React.Component {
 
   static propTypes = {

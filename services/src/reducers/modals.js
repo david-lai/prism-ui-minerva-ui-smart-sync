@@ -1,7 +1,8 @@
-/**
- * @file Modals reducer
- * @author Nutanix
- */
+//
+// Copyright (c) 2020 Nutanix Inc. All rights reserved.
+//
+// Files Modals reducer
+//
 
 // Actions
 import {

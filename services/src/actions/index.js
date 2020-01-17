@@ -1,9 +1,8 @@
-/**
- * @file actions index
- * @description Starting point of redux actions
- * @author Nutanix
- * @version 2.0
-*/
+//
+// Copyright (c) 2020 Nutanix Inc. All rights reserved.
+//
+// Starting point of redux actions
+//
 
 export * from './modals';
 

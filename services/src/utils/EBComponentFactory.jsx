@@ -75,8 +75,8 @@ class EBComponentFactory {
             </FlexLayout>
           </Link>);
       case COMPONENTS.VERSION:
-        const veriion = options.options.entity.afs_version.split('-')[0];
-        return (<span>{ veriion }</span>);
+        const version = options.options.entity.afs_version.split('-')[0];
+        return (<span>{ version }</span>);
       case COMPONENTS.NUMBER_OF_VMS:
         const numberOfVms = options.options.entity.nvm_uuid_list.split(',').length || 0;
         return (<span>{ numberOfVms }</span>);

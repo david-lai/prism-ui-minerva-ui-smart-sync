@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2019 Nutanix Inc. All rights reserved.
+// Copyright (c) 2020 Nutanix Inc. All rights reserved.
 //
 // The EB configuration for Minerva Files view
 //

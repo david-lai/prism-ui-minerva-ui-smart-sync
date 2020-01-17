@@ -1,10 +1,8 @@
-/**
- * @file Modals actions
- * @description Modals Redux actions
- * @author Nutanix
- * @version 2.0
-*/
-
+//
+// Copyright (c) 2020 Nutanix Inc. All rights reserved.
+//
+// Files Modals actions
+//
 
 // ------------
 // Action Types

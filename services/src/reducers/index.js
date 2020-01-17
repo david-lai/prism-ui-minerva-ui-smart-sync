@@ -1,11 +1,8 @@
-/**
- * @file reducers index
- * @description Starting point of redux reducers
- * @author Nutanix
- * @version 2.0
-*/
-
-// Lib
+//
+// Copyright (c) 2020 Nutanix Inc. All rights reserved.
+//
+// Starting point of redux reducers
+//
 import { combineReducers } from 'redux';
 
 // Reducers
