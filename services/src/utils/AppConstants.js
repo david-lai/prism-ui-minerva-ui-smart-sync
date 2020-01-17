@@ -52,6 +52,10 @@ const AppConstants = {
     PUT: 'PUT'
   },
 
+  MODAL_TYPE: {
+    FILE_SERVER_DETAILS: 'file_server_details'
+  },
+
   ENTITY_CATEGORY_SEPARATOR: ':',
   CATEGORY : {
     NET_SERVICE_PROVIDER: 'NetworkServiceProvider'

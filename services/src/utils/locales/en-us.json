@@ -40,6 +40,14 @@
     "manage": "Manage"
   },
 
+  "FileServersDetails": {
+    "file_server_details": "File Server Details",
+    "fs_name": "File Server Name",
+    "verion": "Version",
+    "fs_vms": "File Server VMs",
+    "external_ip_addresses": "External IP Addresses"
+  },
+
   "FileServersManageVersion": {
     "nutanix_files": "Nutanix Files",
     "nutanix_files_desc": "A native file-storage solution for unstructured data. Files provides a highly available and massively scalable data repository for a wide rand of deployments and applications.",

@@ -4,6 +4,8 @@
 // The file servers main view
 //
 import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { EntityBrowser } from 'ebr-ui';
 import { LeftNavLayout, Loader, Menu, MenuGroup, MenuItem, StackingLayout, TextLabel, Title,
   Divider } from 'prism-reactjs';
@@ -12,7 +14,11 @@ import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
 import EBComponentFactory from '../utils/EBComponentFactory';
 import i18n from '../utils/i18n';
-import FileServersManageVersion from './FileServersManageVersion.jsx';
+
+// Actions
+import {
+  openModal
+} from '../actions';
 
 // Helper to translate strings from this module
 const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
@@ -28,8 +34,7 @@ class FileServers extends React.Component {
 
     this.state = {
       fileServersNum: 4,
-      ebConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER),
-      filesEnabled: false
+      ebConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER)
     };
   }
 
@@ -82,16 +87,12 @@ class FileServers extends React.Component {
       filterBarPlaceholder: i18nT('typeName', 'Type name to filter'),
       filtersPanelCollapsed: true,
       queryConfig,
-      ebComponentFactory: EBComponentFactory.getInstance()
+      ebComponentFactory: EBComponentFactory.getInstance({ openModal: this.props.openModal })
     };
   }
 
   onMenuChange = (e) => {
     this.setState({ ebConfiguration: this.getEbConfiguration(e.key) });
-  }
-
-  onEnableFiles = () => {
-    this.setState({ filesEnabled: true });
   }
 
   getLeftPanel() {
@@ -146,17 +147,26 @@ class FileServers extends React.Component {
   }
 
   render() {
-    if (this.state.filesEnabled) {
-      return (
-        <LeftNavLayout leftPanel={ this.getLeftPanel() } itemSpacing="0"
-          rightBodyContent={
-            <EntityBrowser { ...this.state.ebConfiguration } />
-          } />
-      );
-    }
-    return <FileServersManageVersion enableFiles={ this.onEnableFiles } />;
+    return (
+      <LeftNavLayout leftPanel={ this.getLeftPanel() } itemSpacing="0"
+        rightBodyContent={
+          <EntityBrowser { ...this.state.ebConfiguration } />
+        } />
+    );
   }
-
 }
 
-export default FileServers;
+const mapDispatchToProps = dispatch => {
+  return {
+    openModal: (type, options) => dispatch(openModal(type, options))
+  };
+};
+
+FileServers.propTypes = {
+  openModal: PropTypes.func
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(FileServers);
