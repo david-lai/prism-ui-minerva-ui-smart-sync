@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2019 Nutanix Inc. All rights reserved.
+// Copyright (c) 2020 Nutanix Inc. All rights reserved.
 //
 // The EB configuration for Minerva Files view
 //
@@ -45,7 +45,8 @@ const entity_configs = {
           primaryAttribute: 'name',
           customRenders: {
             name : {
-              columnWidth: '25%'
+              columnWidth: '25%',
+              formatter: 'fs_name'
             },
             cluster : {
               columnWidth: '15%'
@@ -55,7 +56,8 @@ const entity_configs = {
               formatter: 'number_of_vms'
             },
             afs_version : {
-              columnWidth: '15%'
+              columnWidth: '15%',
+              formatter: 'version'
             },
             cluster_uuid: {
               columnWidth: '15%',
@@ -105,7 +107,7 @@ const entity_configs = {
         }
       }
     ],
-    actions: [],
+    actions: {},
     details: [],
     filters: {},
     gettingStarted: {
@@ -212,7 +214,7 @@ const entity_configs = {
         }
       }
     ],
-    actions: [],
+    actions: {},
     details: [],
     filters: {},
     gettingStarted: {
@@ -319,7 +321,7 @@ const entity_configs = {
         }
       }
     ],
-    actions: [],
+    actions: {},
     details: [],
     filters: {},
     gettingStarted: {

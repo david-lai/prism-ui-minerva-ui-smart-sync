@@ -10,6 +10,9 @@ import React from 'react';
 import { AphroditeApi, WindowsMessageUtil } from 'prism-utils-common';
 import { OpenInNewWindowIcon, TextLabel, Link, FlexLayout } from 'prism-reactjs';
 
+// Popups
+import FileServersName from '../components/FileServersName.jsx';
+
 // Local includes
 import AppConstants from './AppConstants';
 
@@ -20,10 +23,11 @@ const i18nT = (key, defaultValue) => i18n.getInstance().t(
 
 // The custom components for sec planning
 const COMPONENTS = {
+  NAME: 'fs_name',
   ACTIONS: 'actions',
-  NUMBER_OF_VMS: 'number_of_vms'
+  NUMBER_OF_VMS: 'number_of_vms',
+  VERSION: 'version'
 };
-
 
 // Components
 class EBComponentFactory {
@@ -32,6 +36,11 @@ class EBComponentFactory {
     options = options || {};
     this.parser = options.parser;
     this.popupContext = {};
+    // this.popupElement = React.createRef();
+    this.popup = {};
+    this.openModal = options.openModal;
+
+    this.onOpenPeClick = this.onOpenPeClick.bind(this);
   }
 
   // Set context for popups.
@@ -52,6 +61,10 @@ class EBComponentFactory {
 
   getComponent(componentId, options) {
     switch (componentId) {
+      case COMPONENTS.NAME:
+        return (
+          <FileServersName options={ options.options } openModal={ this.openModal } />
+        );
       case COMPONENTS.ACTIONS:
         return (
           <Link className="manage-link" data-name={ options.options.entity.nvm_uuid_list }
@@ -61,6 +74,9 @@ class EBComponentFactory {
               <OpenInNewWindowIcon />
             </FlexLayout>
           </Link>);
+      case COMPONENTS.VERSION:
+        const version = options.options.entity.afs_version.split('-')[0];
+        return (<span>{ version }</span>);
       case COMPONENTS.NUMBER_OF_VMS:
         const numberOfVms = options.options.entity.nvm_uuid_list.split(',').length || 0;
         return (<span>{ numberOfVms }</span>);
