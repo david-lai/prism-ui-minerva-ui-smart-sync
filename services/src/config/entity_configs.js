@@ -228,7 +228,7 @@ const entity_configs = {
       //   'Minerva files have not been defined. Start by defining one.')
     }
   },
-alert: {
+  alert: {
     schema: {
       idAttribute: 'entity_id',
       nameAttribute: 'title',
@@ -263,9 +263,9 @@ alert: {
           displayName: i18nT('schema.alert.createdTime', 'Create Time')
         },
         cluster: {
-           type: 'string',
-           displayName: i18nT('schema.alert.cluster', 'Cluster')
-         }
+          type: 'string',
+          displayName: i18nT('schema.alert.cluster', 'Cluster')
+        }
       }
     },
     perspectives: [
@@ -345,7 +345,7 @@ alert: {
         // Local filters are specific to entity
         type: 'simple',
         value: {
-          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}',
+          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}'
         }
       }
     },
