@@ -223,9 +223,6 @@ const entity_configs = {
       }
     },
     gettingStarted: {
-      // createActionId: 'create_sc',
-      // gettingStartedPrompt: i18nT('noFiles',
-      //   'Minerva files have not been defined. Start by defining one.')
     }
   },
   alert: {
@@ -350,9 +347,6 @@ const entity_configs = {
       }
     },
     gettingStarted: {
-      // createActionId: 'create_sc',
-      // gettingStartedPrompt: i18nT('noFiles',
-      //   'Minerva files have not been defined. Start by defining one.')
     }
   }
 };
