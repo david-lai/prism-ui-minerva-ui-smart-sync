@@ -30,6 +30,13 @@
         "acknowledged": "Acknowledged",
         "createdTime": "Create Time",
         "cluster": "Cluster"
+      },
+      "event": {
+        "description": "Description",
+        "sourceEntity": "Source Entity",
+        "classification": "Event Type",
+        "cluster": "Cluster",
+        "createdTime": "Create Time"
       }
     }
   },
@@ -47,7 +54,8 @@
   },
 
   "EBComponentFactory": {
-    "manage": "Manage"
+    "manage": "Manage",
+    "yes": "Yes"
   },
 
   "FileServersDetails": {
