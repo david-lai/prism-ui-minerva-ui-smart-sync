@@ -1,7 +1,7 @@
 //
 // Copyright (c) 2020 Nutanix Inc. All rights reserved.
 //
-// Quesy Utils
+// Query Utils
 //
 
 import axios from 'axios';
@@ -23,7 +23,7 @@ const FilesQuery = {
 
   // Get files
   groupFetch(entityType, doneCB, errorCB) {
-    // Groups Query to get all filss by name
+    // Groups Query to get all files by name
     const url = AppConstants.APIS.GROUPS_API;
     const query = {
       entity_type: entityType,
