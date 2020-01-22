@@ -119,37 +119,30 @@ const entity_configs = {
   event: {
     schema: {
       idAttribute: 'entity_id',
-      nameAttribute: 'name',
+      nameAttribute: 'title',
       attributes: {
-        name: {
+        title: {
           type: 'string',
-          displayName: i18nT('schema.file_server.name', 'Name')
+          select: true,
+          displayName: i18nT('schema.event.description', 'Description')
         },
-        file_server_vms: {
+        source_entity_name: {
           type: 'string',
-          displayName: i18nT('schema.file_server.file_server_vms', 'File Server Vms')
+          displayName: i18nT('schema.event.sourceEntity', 'Source Entity')
         },
-        cluster: {
-          type: 'string',
-          displayName: i18nT('schema.file_server.cluster', 'Cluster')
-        },
-        // Virtual Attribute
-        versions : {
-          type: 'string',
-          displayName: i18nT('schema.file_server.versions', 'Versions')
-        },
-        // Virtual Attribute
-        network_function_categories : {
+        classification: {
           type: 'string',
           isList: true,
-          displayName: i18nT('schema.file_server.networkServiceProviders',
-            'Network Service Providers')
+          displayName: i18nT('schema.event.classification', 'Event Type')
         },
-        // Joined Attribute
-        policies : {
+        // Virtual Attribute
+        cluster : {
           type: 'string',
-          isList: true,
-          displayName: i18nT('schema.file_server.policies', 'Polices')
+          displayName: i18nT('schema.event.cluster', 'Cluster')
+        },
+        _created_timestamp_usecs_ : {
+          type: 'integer',
+          displayName: i18nT('schema.event.createdTime', 'Create Time')
         }
       }
     },
@@ -158,33 +151,34 @@ const entity_configs = {
         name: '_common_',
         entityAttributes: {
           idAttribute: 'entity_id',
-          primaryAttribute: 'name',
+          primaryAttribute: '_created_timestamp_usecs_',
           customRenders: {
-            name : {
-              columnWidth: '25%'
+            title : {
+              columnWidth: '30%'
             },
-            cluster : {
-              columnWidth: '15%'
-            },
-            file_server_vms: {
+            source_entity_name: {
               columnWidth: '20%'
             },
-            versions : {
-              columnWidth: '15%'
+            classification: {
+              columnWidth: '10%'
+            },
+            cluster : {
+              columnWidth: '20%'
+            },
+            _created_timestamp_usecs_: {
+              formatter: 'timestampformatterUSec',
+              columnWidth: '20%'
             }
           },
           groupByAttributes: [
           ],
           helperAttributes: [
-            'network_function_list'
           ],
           virtualAttributes: [
-            'network_function_type',
-            'network_function_categories'
           ],
           filterByAttributes: [
-            'name'
-          ]
+          ],
+          defaultSortingAttribute: '_created_timestamp_usecs_'
         },
         visualizations: [
           {
@@ -197,17 +191,20 @@ const entity_configs = {
         name: 'General',
         entityAttributes: {
           idAttribute: 'entity_id',
-          primaryAttribute: 'name',
+          primaryAttribute: '_created_timestamp_usecs_',
           displayAttributes: [
-            'name',
+            'title',
+            'source_entity_name',
+            'classification',
             'cluster',
-            'file_server_vms',
-            'versions'
+            '_created_timestamp_usecs_'
           ],
           sortByAttributes: [
-            'name'
+            '_created_timestamp_usecs_'
           ],
-          groupByAttributes: ['cluster'],
+          groupByAttributes: [
+            'title'
+          ],
           colorByAttributes: [],
           helperAttributes: [],
           summaries: {}
@@ -216,47 +213,55 @@ const entity_configs = {
     ],
     actions: {},
     details: [],
-    filters: {},
+    filters: {
+      local: {
+        // Local filters are specific to entity
+        type: 'simple',
+        value: {
+          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}'
+        }
+      }
+    },
     gettingStarted: {
-      createActionId: 'create_sc',
-      gettingStartedPrompt: i18nT('noFiles',
-        'Minerva files have not been defined. Start by defining one.')
     }
   },
   alert: {
     schema: {
       idAttribute: 'entity_id',
-      nameAttribute: 'name',
+      nameAttribute: 'title',
       attributes: {
-        name: {
+        title: {
           type: 'string',
-          displayName: i18nT('schema.file_server.name', 'Name')
+          select: true,
+          displayName: i18nT('schema.alert.description', 'Description')
         },
-        file_server_vms: {
+        source_entity_name: {
           type: 'string',
-          displayName: i18nT('schema.file_server.file_server_vms', 'File Server Vms')
+          displayName: i18nT('schema.alert.sourceEntity', 'Source Entity')
+        },
+        impact_type: {
+          type: 'string',
+          displayName: i18nT('schema.alert.impactType', 'Impact Type')
+        },
+        severity : {
+          type: 'string',
+          displayName: i18nT('schema.alert.severity', 'Severity')
+        },
+        resolved: {
+          type: 'boolean',
+          displayName: i18nT('schema.alert.resolved', 'Resolved')
+        },
+        acknowledged: {
+          type: 'boolean',
+          displayName: i18nT('schema.alert.acknowledged', 'Acknowledged')
+        },
+        _created_timestamp_usecs_ : {
+          type: 'integer',
+          displayName: i18nT('schema.alert.createdTime', 'Create Time')
         },
         cluster: {
           type: 'string',
-          displayName: i18nT('schema.file_server.cluster', 'Cluster')
-        },
-        // Virtual Attribute
-        versions : {
-          type: 'string',
-          displayName: i18nT('schema.file_server.versions', 'Versions')
-        },
-        // Virtual Attribute
-        network_function_categories : {
-          type: 'string',
-          isList: true,
-          displayName: i18nT('schema.file_server.networkServiceProviders',
-            'Network Service Providers')
-        },
-        // Joined Attribute
-        policies : {
-          type: 'string',
-          isList: true,
-          displayName: i18nT('schema.file_server.policies', 'Polices')
+          displayName: i18nT('schema.alert.cluster', 'Cluster')
         }
       }
     },
@@ -265,33 +270,39 @@ const entity_configs = {
         name: '_common_',
         entityAttributes: {
           idAttribute: 'entity_id',
-          primaryAttribute: 'name',
+          primaryAttribute: '_created_timestamp_usecs_',
           customRenders: {
-            name : {
-              columnWidth: '25%'
-            },
-            cluster : {
-              columnWidth: '15%'
-            },
-            file_server_vms: {
+            title : {
               columnWidth: '20%'
             },
-            versions : {
+            source_entity_name: {
               columnWidth: '15%'
+            },
+            impact_type: {
+              columnWidth: '15%'
+            },
+            severity: {
+              columnWidth: '10%'
+            },
+            _created_timestamp_usecs_: {
+              formatter: 'timestampformatterUSec',
+              columnWidth: '10%'
+            },
+            cluster : {
+              columnWidth: '10%'
             }
           },
           groupByAttributes: [
           ],
           helperAttributes: [
-            'network_function_list'
           ],
           virtualAttributes: [
-            'network_function_type',
-            'network_function_categories'
           ],
           filterByAttributes: [
-            'name'
-          ]
+            'cluster',
+            'source_entity_name'
+          ],
+          defaultSortingAttribute: '_created_timestamp_usecs_'
         },
         visualizations: [
           {
@@ -304,30 +315,38 @@ const entity_configs = {
         name: 'General',
         entityAttributes: {
           idAttribute: 'entity_id',
-          primaryAttribute: 'name',
+          primaryAttribute: '_created_timestamp_usecs_',
           displayAttributes: [
-            'name',
-            'cluster',
-            'file_server_vms',
-            'versions'
+            'title',
+            'source_entity_name',
+            'impact_type',
+            'severity',
+            '_created_timestamp_usecs_',
+            'cluster'
           ],
           sortByAttributes: [
-            'name'
+            '_created_timestamp_usecs_'
           ],
-          groupByAttributes: ['cluster'],
+          sortByOrder: 'DESCENDING',
+          groupByAttributes: ['title'],
           colorByAttributes: [],
           helperAttributes: [],
           summaries: {}
         }
       }
     ],
-    actions: {},
+    actions: [],
     details: [],
-    filters: {},
+    filters: {
+      local: {
+        // Local filters are specific to entity
+        type: 'simple',
+        value: {
+          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}'
+        }
+      }
+    },
     gettingStarted: {
-      createActionId: 'create_sc',
-      gettingStartedPrompt: i18nT('noFiles',
-        'Minerva files have not been defined. Start by defining one.')
     }
   }
 };
