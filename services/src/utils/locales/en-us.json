@@ -20,6 +20,16 @@
         "policies": "Policies",
         "tap": "Tap",
         "inline": "Inline"
+      },
+      "alert": {
+        "description": "Description",
+        "sourceEntity": "Source Entity",
+        "impactType": "Impact Type",
+        "severity": "Severity",
+        "resolved": "Resolved",
+        "acknowledged": "Acknowledged",
+        "createdTime": "Create Time",
+        "cluster": "Cluster"
       }
     }
   },
