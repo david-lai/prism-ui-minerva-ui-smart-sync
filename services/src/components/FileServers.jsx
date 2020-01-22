@@ -13,6 +13,7 @@ import EntityConfigs from '../config/entity_configs.js';
 import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
 import EBComponentFactory from '../utils/EBComponentFactory';
+import FilesQuery from '../utils/FilesQuery';
 import i18n from '../utils/i18n';
 
 // Actions
@@ -33,7 +34,8 @@ class FileServers extends React.Component {
     super(props);
 
     this.state = {
-      fileServersNum: 4,
+      loading: true,
+      fileServersNum: '',
       ebConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER)
     };
   }
@@ -147,12 +149,33 @@ class FileServers extends React.Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return <Loader />;
+    }
     return (
       <LeftNavLayout leftPanel={ this.getLeftPanel() } itemSpacing="0"
         rightBodyContent={
           <EntityBrowser { ...this.state.ebConfiguration } />
         } />
     );
+  }
+
+  componentWillMount() {
+    // Fetch the policies for all NetworkServiceProvider cats
+    FilesQuery.fetchFsData(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER)
+      .then(
+        (files) => {
+          // Register the map with the component factory
+          this.setState({
+            loading: false,
+            fileServersNum: files.length
+          });
+        })
+      .catch(() => {
+        this.setState({
+          loading: false,
+          errorMessage: i18nT('errorFetchingPolicies', 'Error fetching File Servers') });
+      });
   }
 }
 
