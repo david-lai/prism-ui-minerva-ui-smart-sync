@@ -10,9 +10,9 @@ var webpack = require('webpack');
 
 var prodConfig = Object.assign({}, config, {
   bail: true,
-  plugins: [
+  plugins: config.plugins.concat([
     new webpack.optimize.UglifyJsPlugin()
-  ]
+  ])
 });
 
 module.exports = prodConfig;
