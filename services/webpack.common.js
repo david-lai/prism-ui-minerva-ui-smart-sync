@@ -22,7 +22,8 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     libraryTarget: 'umd',
-    filename: 'minervaFiles.js'
+    filename: 'minervaFiles.js',
+    publicPath: '/files_manager'
   },
   // Tell webpack to use html plugin
   plugins: [
