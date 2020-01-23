@@ -6,7 +6,16 @@
 /* eslint-env node */
 var path = require('path');
 var webpack = require('webpack');
-var externals = require('prism-subapps-react-common/tools/externals');
+
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+// Constant with our paths
+const paths = {
+  public: path.resolve(__dirname, 'public'),
+  dist: path.resolve(__dirname, 'dist'),
+  src: path.resolve(__dirname, 'src')
+};
 
 module.exports = {
   entry: ['babel-polyfill', path.resolve(__dirname, 'src/index_dev.js')],
@@ -15,19 +24,33 @@ module.exports = {
     libraryTarget: 'umd',
     filename: 'minervaFiles.js'
   },
-  externals: Object.assign({}, externals, {
-    // Add any other external dependencies here.
-  }),
+  // Tell webpack to use html plugin
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.join(paths.public, 'index.html')
+    }),
+    new ExtractTextPlugin('style.bundle.css')
+  ],
   resolve: {
     extensions: ['.js', '.jsx']
   },
   module: {
     rules: [
       {
-        test: /\.jsx?$/,
-        include: path.join(__dirname, 'src'),
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        use: [
+          'babel-loader'
+        ]
+      },
+      // CSS loader for CSS files
+      // Files will get handled by css loader and then passed to the extract text plugin
+      // which will write it to the file we defined above
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract({
+          use: 'css-loader'
+        })
       },
       {
         test: /\.less$/,
@@ -37,17 +60,10 @@ module.exports = {
           'less-loader'
         ]
       },
+      // File loader for image assets -> ADDED IN THIS STEP
+      // We'll add only image extensions, but you can add things like svgs, fonts and videos
       {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
-      },
-      // For loading fonts.
-      // This is only needed for the styleguide.
-      {
-        test: /\.(woff|woff2|eot|eot\?iefix|ttf|svg|gif)$/,
+        test: /\.(woff|woff2|eot|eot\?iefix|ttf|svg|gif|png|jpg)$/,
         loader: 'file-loader',
         options: {
           name: '[name].[ext]'
