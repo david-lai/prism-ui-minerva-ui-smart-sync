@@ -50,13 +50,13 @@ class EBComponentFactory {
   }
 
   onOpenPeClick(e) {
-    const clusterUuid = '000597f7-e2bc-4a93-0000-00000000b7b7';
+    const clusterUuid = e.currentTarget.getAttribute('data-name');
     WindowsMessageUtil.postMessage({
       service: AppConstants.SERVICE_NAME.PRISM_UI,
       target: AppConstants.IFRAME_EVENT_OPEN_PE,
       state: AppConstants.FS_PC_TO_PE,
       serviceTargets: clusterUuid
-    }, window.location.ancestorOrigins[0], window.parent);
+    }, '*', window.parent);
   }
 
   getComponent(componentId, options) {
@@ -67,7 +67,7 @@ class EBComponentFactory {
         );
       case COMPONENTS.ACTIONS:
         return (
-          <Link className="manage-link" data-name={ options.options.entity.nvm_uuid_list }
+          <Link className="manage-link" data-name={ options.options.entity.cluster_uuid }
             onClick={ this.onOpenPeClick }>
             <FlexLayout alignItems="center" itemSpacing="5px">
               <TextLabel className="nsg-example-icon-text">{i18nT('manage', 'Manage')}</TextLabel>
