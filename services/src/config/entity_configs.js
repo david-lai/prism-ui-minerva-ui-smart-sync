@@ -160,6 +160,10 @@ const entity_configs = {
               columnWidth: '20%'
             },
             classification: {
+              formatter: 'join_pascal_case_array',
+              formatterOptions: {
+                delimiter: ', '
+              },
               columnWidth: '10%'
             },
             cluster : {
@@ -279,9 +283,11 @@ const entity_configs = {
               columnWidth: '15%'
             },
             impact_type: {
+              formatter: 'separate_pascal_case',
               columnWidth: '15%'
             },
             severity: {
+              formatter: 'capitalize_sentence',
               columnWidth: '10%'
             },
             _created_timestamp_usecs_: {

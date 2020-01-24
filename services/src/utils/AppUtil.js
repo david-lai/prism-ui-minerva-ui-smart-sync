@@ -279,6 +279,7 @@ const AppUtil = {
         ...alertSummary.totals
       });
     }
+
     return alertSummary;
   },
 

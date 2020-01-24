@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { EntityBrowser } from 'ebr-ui';
 import { LeftNavLayout, Loader, Menu, MenuGroup, MenuItem, StackingLayout, TextLabel, Title,
-  Divider, FlexLayout, FlexItem } from 'prism-reactjs';
+  Divider, FlexLayout, FlexItem, Dashboard, DashboardWidgetLayout } from 'prism-reactjs';
 import EntityConfigs from '../config/entity_configs.js';
 import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
@@ -172,18 +172,53 @@ class FileServers extends React.Component {
         rightBodyContent={ !this.state.showSummary ? (
           <EntityBrowser { ...this.state.ebConfiguration } />
         ) : (
-          <FlexLayout className="entity-browser" itemSpacing="0px" flexGrow="1">
-            <FlexItem className="main-content" flexGrow="1">
-              <FlexLayout itemSpacing="10px" flexGrow="1" itemFlexBasis="100pc">
-                <FlexItem>
-                  <FileServerSummary />
-                </FlexItem>
-                <FlexItem>
-                  <AlertSummary />
-                </FlexItem>
-              </FlexLayout>
-            </FlexItem>
-          </FlexLayout>
+          <Dashboard
+            cols={
+              {
+                lg: 2,
+                md: 2,
+                sm: 2,
+                xs: 1,
+                xxs: 1
+              }
+            }
+            layouts={
+              {
+                lg: [
+                  {
+                    i: 'fileServerSummary'
+                  },
+                  {
+                    i: 'alertSummary',
+                    x: 1
+                  }
+                ]
+              }
+            }
+          >
+            <div key="fileServerSummary">
+              <DashboardWidgetLayout
+                bodyContent={ (<FileServerSummary />) }
+                bodyContentProps={
+                  {
+                    flexDirection: 'column',
+                    alignItems: 'stretch'
+                  }
+                }
+              />
+            </div>
+            <div key="alertSummary">
+              <DashboardWidgetLayout
+                bodyContent={ (<AlertSummary />) }
+                bodyContentProps={
+                  {
+                    flexDirection: 'column',
+                    alignItems: 'stretch'
+                  }
+                }
+              />
+            </div>
+          </Dashboard>
         )
         } />
     );

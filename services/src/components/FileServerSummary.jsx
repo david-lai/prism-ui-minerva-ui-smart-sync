@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Badge, ContainerLayout, StackingLayout, Title, Table } from 'prism-reactjs';
+import { Badge, ContainerLayout, Title, Table } from 'prism-reactjs';
 import AppUtil from '../utils/AppUtil';
 import i18n from '../utils/i18n';
 
@@ -25,11 +25,6 @@ class FileServerSummary extends React.Component {
 
     this.state = {
       loading: true,
-      alertColors: {
-        info: 'light-gray-1',
-        warning: 'yellow-1',
-        critical: 'red-1'
-      },
       summaryData: {},
       tableStructure: {
         hideHeader: true,
@@ -63,11 +58,11 @@ class FileServerSummary extends React.Component {
   }
 
   renderAlertCell(alertSeverity, cellData) {
-    let color = 'gray';
+    let color = Badge.BADGE_COLOR_TYPES.GRAY;
     if (alertSeverity === 'warning') {
-      color = 'yellow';
+      color = Badge.BADGE_COLOR_TYPES.YELLOW;
     } else if (alertSeverity === 'critical') {
-      color = 'red';
+      color = Badge.BADGE_COLOR_TYPES.RED;
     }
     return (
       <Badge color={ color } text={ cellData } />
@@ -86,24 +81,22 @@ class FileServerSummary extends React.Component {
     );
 
     return (
-      <StackingLayout padding="20px">
-        <ContainerLayout backgroundColor="white" padding="15px">
-          <Table
-            border={ false }
-            loading={ this.state.loading }
-            structure={ this.state.tableStructure }
-            topSection={
-              {
-                leftContent: tableTitle
-              }
+      <ContainerLayout backgroundColor="white" padding="15px">
+        <Table
+          border={ false }
+          loading={ this.state.loading }
+          structure={ this.state.tableStructure }
+          topSection={
+            {
+              leftContent: tableTitle
             }
-            oldTable={ false }
-            rowKey="entity_id"
-            columns={ this.state.tableColumns }
-            dataSource={ this.state.tableDataSource }
-          />
-        </ContainerLayout>
-      </StackingLayout>
+          }
+          oldTable={ false }
+          rowKey="entity_id"
+          columns={ this.state.tableColumns }
+          dataSource={ this.state.tableDataSource }
+        />
+      </ContainerLayout>
     );
   }
 

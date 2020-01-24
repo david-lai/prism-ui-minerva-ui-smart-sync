@@ -13,7 +13,7 @@ import {
   FlexItem,
   FlexLayout,
   Loader,
-  StackingLayout,
+  TextLabel,
   ThemeManager,
   Title
 } from 'prism-reactjs';
@@ -35,11 +35,6 @@ class AlertSummary extends React.Component {
     this.state = {
       loading: true,
       errorMessage: '',
-      alertColors: {
-        info: 'light-gray-1',
-        warning: 'yellow-1',
-        critical: 'red-1'
-      },
       summaryData: {
         totals: {
           info: 0,
@@ -57,12 +52,10 @@ class AlertSummary extends React.Component {
       const alerts = this.state.summaryData.items ? this.state.summaryData.items : [];
       const items = alerts.map((alert) => {
         const alertTimestamp = parseInt((alert._created_timestamp_usecs_ / 1000), 10);
-        const dayTimestamp = moment(alertTimestamp).startOf('day').valueOf();
         const dayName = moment(alertTimestamp).format('MMM D');
         return {
           ...alert,
           alertTimestamp,
-          dayTimestamp,
           dayName
         };
       });
@@ -98,126 +91,147 @@ class AlertSummary extends React.Component {
     const infoColor = ThemeManager.getVar('light-gray-1');
 
     return (
-      <StackingLayout padding="20px">
-        <ContainerLayout backgroundColor="white" padding="15px">
-          <StackingLayout>
-            <FlexLayout itemSpacing="10px" alignItems="center" justifyContent="center">
-              <FlexItem flexGrow="0" >
-                <Title size="h3">
-                  { i18nT('alertsSummaryTitle', 'Alerts') }
-                </Title>
+      <ContainerLayout backgroundColor="white" padding="15px">
+        <FlexLayout itemSpacing="10px" alignItems="center" justifyContent="center">
+          <FlexItem flexGrow="0" >
+            <Title size="h3">
+              { i18nT('alertsSummaryTitle', 'Alerts') }
+            </Title>
+          </FlexItem>
+          { !this.state.loading &&
+            (
+              <FlexItem flexGrow="1">
+                <Badge
+                  color={ Badge.BADGE_COLOR_TYPES.RED }
+                  text=" "
+                  count={ this.state.summaryData.totals.critical }
+                />
+                <Badge
+                  color={ Badge.BADGE_COLOR_TYPES.YELLOW }
+                  text=" "
+                  count={ this.state.summaryData.totals.warning }
+                />
+                <Badge
+                  color={ Badge.BADGE_COLOR_TYPES.GRAY }
+                  text=" "
+                  count={ this.state.summaryData.totals.info }
+                />
               </FlexItem>
-              { !this.state.loading &&
-                (
-                  <FlexItem flexGrow="1">
-                    <Badge
-                      color="red"
-                      text=" "
-                      count={ this.state.summaryData.totals.critical }
-                    />
-                    <Badge
-                      color="yellow"
-                      text=" "
-                      count={ this.state.summaryData.totals.warning}
-                    />
-                    <Badge
-                      color="gray"
-                      text=" "
-                      count={ this.state.summaryData.totals.info }
-                    />
-                  </FlexItem>
-                )
-              }
-              { this.state.loading &&
-                (
-                  <FlexItem flexGrow="1">
-                    <Loader />
-                  </FlexItem>
-                )
-              }
-              <FlexItem flexGrow="0" />
-            </FlexLayout>
-            { this.state.loading &&
-              (
+            )
+          }
+          { this.state.loading &&
+            (
+              <FlexItem flexGrow="1" />
+            )
+          }
+          <FlexItem flexGrow="0" />
+        </FlexLayout>
+        { this.state.loading &&
+          (
+            <FlexLayout
+              itemSpacing="5px"
+              alignItems="center"
+              justifyContent="center"
+              flexDirection="column"
+              padding="40px"
+            >
+              <FlexItem />
+              <FlexItem>
                 <Loader tip={ i18nT('fetchingData', 'Fetching data') } />
-              )
-            }
+              </FlexItem>
+            </FlexLayout>
+          )
+        }
 
-            { !this.state.loading && this.state.errorMessage &&
-              (
-                <div>
+        { !this.state.loading && this.state.errorMessage &&
+          (
+            <FlexLayout alignItems="center" justifyContent="center" flexDirection="column">
+              <FlexItem>
+                <TextLabel
+                  type={ TextLabel.TEXT_LABEL_TYPE.ERROR }
+                  size={ TextLabel.TEXT_LABEL_SIZE.MEDIUM }
+                >
                   { this.state.errorMessage }
-                </div>
-              )
-            }
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
+          )
+        }
 
-            { !this.state.loading && !this.state.errorMessage &&
-              (
-                <FlexLayout alignItems="center" justifyContent="center" flexDirection="column">
+        { !this.state.loading && !this.state.errorMessage &&
+          (
+            <FlexLayout alignItems="center" justifyContent="center" flexDirection="column">
+              <FlexItem>
+                <BarChart
+                  width={ 400 }
+                  height={ 200 }
+                  barSize={ 20 }
+                  tooltipProps={ {} }
+                  bars={
+                    [
+                      {
+                        dataKey: 'warning',
+                        fill: warningColor,
+                        stackId: 1
+                      },
+                      {
+                        dataKey: 'info',
+                        fill: infoColor,
+                        stackId: 1
+                      },
+                      {
+                        dataKey: 'critical',
+                        fill: criticalColor,
+                        stackId: 1
+                      }
+                    ]
+                  }
+                  data={ data }
+                  xAxisProps={
+                    {
+                      padding: {
+                        left: 40,
+                        right: 0
+                      }
+                    }
+                  }
+                  yAxisProps={
+                    {
+                      allowDecimals: false,
+                      domain: [
+                        'dataMin',
+                        4
+                      ]
+                    }
+                  }
+                />
+              </FlexItem>
+              <FlexItem flexGrow="0">
+                <FlexLayout alignItems="center">
                   <FlexItem>
-                    <BarChart
-                      width={ 400 }
-                      height={ 200 }
-                      barSize={ 20 }
-                      tooltipProps={ {} }
-                      bars={
-                        [
-                          {
-                            dataKey: 'warning',
-                            fill: warningColor,
-                            stackId: 1
-                          },
-                          {
-                            dataKey: 'info',
-                            fill: infoColor,
-                            stackId: 1
-                          },
-                          {
-                            dataKey: 'critical',
-                            fill: criticalColor,
-                            stackId: 1
-                          }
-                        ]
-                      }
-                      data={ data }
-                      xAxisProps={
-                        {
-                          padding: {
-                            left: 40,
-                            right: 0
-                          }
-                        }
-                      }
-                      yAxisProps={
-                        {
-                          allowDecimals: false,
-                          domain: [
-                            'dataMin',
-                            4
-                          ]
-                        }
-                      }
+                    <Badge
+                      color={ Badge.BADGE_COLOR_TYPES.RED }
+                      text={ i18nT('alertLegendCritical', 'Critical') }
                     />
                   </FlexItem>
-                  <FlexItem flexGrow="0">
-                    <FlexLayout alignItems="center">
-                      <FlexItem>
-                        <Badge color="red" text={ i18nT('alertLegendCritical', 'Critical') } />
-                      </FlexItem>
-                      <FlexItem>
-                        <Badge color="yellow" text={ i18nT('alertLegendWarning', 'Warning') } />
-                      </FlexItem>
-                      <FlexItem>
-                        <Badge color="gray" text={ i18nT('alertLegendInfo', 'Info') } />
-                      </FlexItem>
-                    </FlexLayout>
+                  <FlexItem>
+                    <Badge
+                      color={ Badge.BADGE_COLOR_TYPES.YELLOW }
+                      text={ i18nT('alertLegendWarning', 'Warning') }
+                    />
+                  </FlexItem>
+                  <FlexItem>
+                    <Badge
+                      color={ Badge.BADGE_COLOR_TYPES.GRAY }
+                      text={ i18nT('alertLegendInfo', 'Info') }
+                    />
                   </FlexItem>
                 </FlexLayout>
-              )
-            }
-          </StackingLayout>
-        </ContainerLayout>
-      </StackingLayout>
+              </FlexItem>
+            </FlexLayout>
+          )
+        }
+      </ContainerLayout>
     );
   }
 

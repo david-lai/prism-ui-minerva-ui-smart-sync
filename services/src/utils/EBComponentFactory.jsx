@@ -15,6 +15,7 @@ import FileServersName from '../components/FileServersName.jsx';
 
 // Local includes
 import AppConstants from './AppConstants';
+import FormatterUtil from './FormatterUtil';
 
 import i18n from './i18n';
 // Helper to translate strings from this module
@@ -26,7 +27,12 @@ const COMPONENTS = {
   NAME: 'fs_name',
   ACTIONS: 'actions',
   NUMBER_OF_VMS: 'number_of_vms',
-  VERSION: 'version'
+  VERSION: 'version',
+  SEPARATE_PASCAL_CASE: 'separate_pascal_case',
+  CAPITALIZE_SENTENCE: 'capitalize_sentence',
+  CAPITALIZE_WORDS: 'capitalize_words',
+  JOIN_STRING_ARRAY: 'join_string_array',
+  JOIN_PASCAL_CASE_ARRAY: 'join_pascal_case_array'
 };
 
 // Components
@@ -80,6 +86,36 @@ class EBComponentFactory {
       case COMPONENTS.NUMBER_OF_VMS:
         const numberOfVms = options.options.entity.nvm_uuid_list.split(',').length || 0;
         return (<span>{ numberOfVms }</span>);
+      case COMPONENTS.SEPARATE_PASCAL_CASE:
+        let separatedPascalCase = '';
+        if (options && options.text) {
+          separatedPascalCase = FormatterUtil.separatePascalCase(options.text, options.options);
+        }
+        return (<span>{ separatedPascalCase }</span>);
+      case COMPONENTS.CAPITALIZE_SENTENCE:
+        let capitalizedSentence = '';
+        if (options && options.text) {
+          capitalizedSentence = FormatterUtil.capitalizeSentence(options.text, options.options);
+        }
+        return (<span>{ capitalizedSentence }</span>);
+      case COMPONENTS.CAPITALIZE_WORDS:
+        let capitalizedWords = '';
+        if (options && options.text) {
+          capitalizedWords = FormatterUtil.capitalizeWords(options.text, options.options);
+        }
+        return (<span>{ capitalizedWords }</span>);
+      case COMPONENTS.JOIN_STRING_ARRAY:
+        let joinedStringArray = '';
+        if (options && options.text) {
+          joinedStringArray = FormatterUtil.joinStringArray(options.text, options.options);
+        }
+        return (<span>{ joinedStringArray }</span>);
+      case COMPONENTS.JOIN_PASCAL_CASE_ARRAY:
+        let joinedPascalCaseArray = '';
+        if (options && options.text) {
+          joinedPascalCaseArray = FormatterUtil.separatePascalCase(FormatterUtil.joinStringArray(options.text, options.options), options.options);
+        }
+        return (<span>{ joinedPascalCaseArray }</span>);
       default:
         return this.defaultFactory.getComponent(componentId, options);
     }
