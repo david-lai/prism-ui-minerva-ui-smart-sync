@@ -32,13 +32,13 @@ const AppConstants = {
   },
 
   ENTITY_TYPE_NAME: {
-    ENTITY_FILE_SERVER: 'File',
+    ENTITY_FILE_SERVER: 'File Server',
     ENTITY_ALERT      : 'Alert',
     ENTITY_EVENT      : 'Event'
   },
 
   ENTITY_TYPE_NAME_PLURAL: {
-    ENTITY_FILE_SERVER: 'Files',
+    ENTITY_FILE_SERVER: 'File Servers',
     ENTITY_ALERT      : 'Alerts',
     ENTITY_EVENT      : 'Events'
   },
