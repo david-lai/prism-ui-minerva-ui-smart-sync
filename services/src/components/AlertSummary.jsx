@@ -142,8 +142,7 @@ class AlertSummary extends React.Component {
               <FlexItem flexGrow="1">
                 { !this.state.loading && this.renderAlertCounts() }
               </FlexItem>
-              <FlexItem flexGrow="0">
-              </FlexItem>
+              <FlexItem flexGrow="0" />
             </FlexLayout>
             { this.state.loading &&
               (
