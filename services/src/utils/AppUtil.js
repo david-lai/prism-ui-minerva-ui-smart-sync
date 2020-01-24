@@ -10,6 +10,8 @@ import AppConstants from './AppConstants';
 
 const AppUtil = {
 
+  apiUrl: '/api/nutanix/v3/groups',
+
   // @param error - error from axios
   extractErrorMsg(error = {}) {
     if (error && error.response && error.response.data) {
@@ -86,11 +88,315 @@ const AppUtil = {
     };
   },
 
+
+  entityToPlainObject(entity) {
+    if (entity && entity.data && Array.isArray(entity.data)) {
+      return entity.data.reduce((acc, val) => {
+        const value = val.values && val.values.length &&
+          val.values[0].values && val.values[0].values.length ? val.values[0].values[0] : null;
+        acc[val.name] = value;
+        return acc;
+      }, {
+        entity_id: entity.entity_id
+      });
+    }
+    return {};
+  },
+
+  /**
+   * Fetches cluster info for given entity IDs
+   *
+   * @async
+   *
+   * @param  {String[]}  entityIds   An array of entity IDs
+   *
+   * @return {Object}                Cluster info data
+   */
+  async fetchFileServers() {
+    return new Promise((resolve, reject) => {
+      const query = {
+        entity_type: 'file_server_service',
+        group_member_sort_attribute: 'name',
+        group_member_sort_order: 'ASCENDING',
+        group_member_count: 20,
+        group_member_offset: 0,
+        group_member_attributes: [
+          {
+            attribute: 'name'
+          },
+          {
+            attribute: 'cluster'
+          },
+          {
+            attribute: 'nvm_uuid_list'
+          },
+          {
+            attribute: 'afs_version'
+          },
+          {
+            attribute: 'cluster_uuid'
+          }
+        ]
+      };
+      return axios.post(this.apiUrl, query)
+        .then((resp) => {
+          if (resp && resp.data) {
+            resolve(resp.data);
+          } else {
+            reject(new Error(`Unrecognized response: ${JSON.stringify(resp)}`));
+          }
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  /**
+   * Fetches alerts info for given file server entity IDs
+   *
+   * @async
+   *
+   * @param  {String[]}  entityIds   An array of entity IDs
+   *
+   * @return {Object}                Cluster info data
+   */
+  async fetchFSAlerts(entityIds = []) {
+    return new Promise((resolve, reject) => {
+      let filter_criteria = 'file_server!=[no_val];resolved==false';
+      if (Array.isArray(entityIds) && entityIds.length) {
+        filter_criteria = `file_server=in=${entityIds.join(',')};resolved==false`;
+      }
+      const query = {
+        entity_type: 'alert',
+        query_name: 'eb:data-1578012630011',
+        grouping_attribute: '',
+        group_count: 3,
+        group_offset: 0,
+        group_attributes: [],
+        group_member_count: 120,
+        group_member_offset: 0,
+        group_member_sort_attribute: '_created_timestamp_usecs_',
+        group_member_sort_order: 'DESCENDING',
+        group_member_attributes: [
+          {
+            attribute: 'title'
+          },
+          {
+            attribute: 'source_entity_name'
+          },
+          {
+            attribute: 'impact_type'
+          },
+          {
+            attribute: 'severity'
+          },
+          {
+            attribute: 'resolved'
+          },
+          {
+            attribute: 'acknowledged'
+          },
+          {
+            attribute: '_created_timestamp_usecs_'
+          },
+          {
+            attribute: 'cluster'
+          },
+          {
+            attribute: 'default_message'
+          },
+          {
+            attribute: 'param_name_list'
+          },
+          {
+            attribute: 'param_value_list'
+          },
+          {
+            attribute: 'auto_resolved'
+          },
+          {
+            attribute: 'acknowledging_user'
+          },
+          {
+            attribute: 'acknowledged_timestamp_usecs'
+          },
+          {
+            attribute: 'resolving_user'
+          },
+          {
+            attribute: 'resolved_timestamp_usecs'
+          },
+          {
+            attribute: 'source_entity_uuid'
+          },
+          {
+            attribute: 'source_entity_type'
+          }
+        ],
+        filter_criteria
+      };
+      return axios.post(this.apiUrl, query)
+        .then((resp) => {
+          if (resp && resp.data) {
+            resolve(resp.data);
+          } else {
+            reject(new Error(`Unrecognized response: ${JSON.stringify(resp)}`));
+          }
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
+  /**
+   * Fetches and aggregates data needed for summary tab alert table
+   *
+   * @async
+   *
+   * @return {Object} An object with file server count under 'total' prop and servers data in 'items' array
+   */
+  async fetchSummaryAlertData() {
+    const alertSummary = {
+      totals: {
+        info: 0,
+        warning: 0,
+        critical: 0
+      },
+      items: []
+    };
+    const alertData = await this.fetchFSAlerts();
+    if (alertData && alertData.filtered_entity_count) {
+      alertSummary.items = alertData.group_results
+        .flatMap(gr => gr.entity_results.map(er => this.entityToPlainObject(er)));
+
+      alertSummary.totals = alertSummary.items.reduce((acc, val) => {
+        acc[val.severity]++;
+        return acc;
+      }, {
+        ...{},
+        ...alertSummary.totals
+      });
+    }
+    return alertSummary;
+  },
+
+  /**
+   * Fetches and aggregates data needed for summary tab file servers table
+   *
+   * @async
+   *
+   * @return {Object} An object with file server count under 'total' prop and servers data in 'items' array
+   */
+  async fetchSummaryFSData() {
+    const summaryData = {
+      total: 0,
+      items: []
+    };
+    const fsData = await this.fetchFileServers();
+    if (fsData && fsData.filtered_entity_count) {
+      summaryData.total = fsData.filtered_entity_count;
+      summaryData.items = fsData.group_results.flatMap((gr) => {
+        return gr.entity_results.map((er) => {
+          return {
+            entity_id: er.entity_id,
+            title: ((er.data.find(ed => ed.name === 'name')).values[0].values[0] || ''),
+            info: 0,
+            warning: 0,
+            critical: 0
+          };
+        });
+      });
+
+
+      if (summaryData.items && summaryData.items.length) {
+        for (let i = 0; i < summaryData.items.length; i++) {
+          const fsItem = summaryData.items[i];
+          const fsAlerts = await this.fetchFSAlerts([fsItem.entity_id]);
+          if (fsAlerts && fsAlerts.filtered_entity_count) {
+            const alertItems = fsAlerts.group_results.flatMap(gr => gr.entity_results);
+            const alertData = alertItems.reduce((acc, val) => {
+              const severity = val.data.find(aid => aid.name === 'severity');
+              acc[severity.values[0].values[0]]++;
+              return acc;
+            }, {
+              info: 0,
+              warning: 0,
+              critical: 0
+            });
+            fsItem.info = alertData.info;
+            fsItem.warning = alertData.warning;
+            fsItem.critical = alertData.critical;
+          }
+        }
+      }
+    }
+    return summaryData;
+  },
+
+  /**
+   * Fetches cluster info for given entity IDs
+   *
+   * @async
+   *
+   * @param  {String[]}  entityIds   An array of entity IDs
+   *
+   * @return {Object}                Cluster info data
+   */
+  async fetchClusterInfo(entityIds = []) {
+    return new Promise((resolve, reject) => {
+      const query = {
+        entity_type: 'cluster',
+        entity_ids: entityIds,
+        group_member_attributes: [
+          {
+            attribute: 'cluster_name'
+          },
+          {
+            attribute: 'check.overall_score'
+          },
+          {
+            attribute: 'capacity.runway'
+          },
+          {
+            attribute: 'version'
+          },
+          {
+            attribute: 'cluster_upgrade_status'
+          },
+          {
+            attribute: 'hypervisor_types'
+          },
+          {
+            attribute: 'num_vms'
+          },
+          {
+            attribute: 'num_nodes'
+          },
+          {
+            attribute: 'external_ip_address'
+          }
+        ]
+      };
+      return axios.post(this.apiUrl, query)
+        .then((resp) => {
+          if (resp && resp.data) {
+            resolve(resp.data);
+          } else {
+            reject(new Error(`Unrecognized response: ${JSON.stringify(resp)}`));
+          }
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  },
+
   // Fetch categories by category name
   // TODO: Consolidate this with sec planning UI
   fetchCategories(catName, doneCB, errorCB) {
     // Groups Query to get all categories by name
-    const url = '/api/nutanix/v3/groups';
     const query = {
       entity_type: 'category',
       grouping_attribute: 'abac_category_key',
@@ -124,7 +430,7 @@ const AppUtil = {
       filter_criteria: `name==${catName}`
     };
 
-    return axios.post(url, query)
+    return axios.post(this.apiUrl, query)
       .then((resp) => {
         const cats = AppUtil.extractGroupResults(resp.data);
         doneCB(cats);
