@@ -7,15 +7,15 @@ import moment from 'moment';
 import React from 'react';
 import { connect } from 'react-redux';
 import {
+  Badge,
   BarChart,
   ContainerLayout,
-  StackingLayout,
-  FlexLayout,
   FlexItem,
+  FlexLayout,
   Loader,
-  Title,
-  TextLabel,
-  ThemeManager
+  StackingLayout,
+  ThemeManager,
+  Title
 } from 'prism-reactjs';
 import AppUtil from '../utils/AppUtil';
 import i18n from '../utils/i18n';
@@ -49,38 +49,6 @@ class AlertSummary extends React.Component {
         items: []
       }
     };
-  }
-
-  renderAlertCount(alertSeverity, count) {
-    return (
-      <span style={
-        {
-          width: '20px',
-          height: '20px',
-          backgroundColor: ThemeManager.getVar(this.state.alertColors[alertSeverity]),
-          borderRadius: '10px',
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginLeft: '10px',
-          color: 'white',
-          fontSize: '0.9em'
-        }
-      }
-      >
-        { count }
-      </span>
-    );
-  }
-
-  renderAlertCounts() {
-    return (
-      <div>
-        { this.renderAlertCount('critical', this.state.summaryData.totals.critical) }
-        { this.renderAlertCount('warning', this.state.summaryData.totals.warning) }
-        { this.renderAlertCount('info', this.state.summaryData.totals.info) }
-      </div>
-    );
   }
 
   getAlertBarChartData() {
@@ -139,9 +107,34 @@ class AlertSummary extends React.Component {
                   { i18nT('alertsSummaryTitle', 'Alerts') }
                 </Title>
               </FlexItem>
-              <FlexItem flexGrow="1">
-                { !this.state.loading && this.renderAlertCounts() }
-              </FlexItem>
+              { !this.state.loading &&
+                (
+                  <FlexItem flexGrow="1">
+                    <Badge
+                      color="red"
+                      text=" "
+                      count={ this.state.summaryData.totals.critical }
+                    />
+                    <Badge
+                      color="yellow"
+                      text=" "
+                      count={ this.state.summaryData.totals.warning}
+                    />
+                    <Badge
+                      color="gray"
+                      text=" "
+                      count={ this.state.summaryData.totals.info }
+                    />
+                  </FlexItem>
+                )
+              }
+              { this.state.loading &&
+                (
+                  <FlexItem flexGrow="1">
+                    <Loader />
+                  </FlexItem>
+                )
+              }
               <FlexItem flexGrow="0" />
             </FlexLayout>
             { this.state.loading &&
@@ -209,52 +202,13 @@ class AlertSummary extends React.Component {
                   <FlexItem flexGrow="0">
                     <FlexLayout alignItems="center">
                       <FlexItem>
-                        <span style={
-                          {
-                            marginRight: '10px',
-                            width: '6px',
-                            height: '6px',
-                            borderRadius: '3px',
-                            display: 'inline-block',
-                            backgroundColor: ThemeManager.getVar(this.state.alertColors.critical)
-                          }
-                        }
-                        />
-                        <TextLabel>
-                          { i18nT('alertLegendCritical', 'Critical') }
-                        </TextLabel>
+                        <Badge color="red" text={ i18nT('alertLegendCritical', 'Critical') } />
                       </FlexItem>
                       <FlexItem>
-                        <span style={
-                          {
-                            marginRight: '10px',
-                            width: '6px',
-                            height: '6px',
-                            borderRadius: '3px',
-                            display: 'inline-block',
-                            backgroundColor: ThemeManager.getVar(this.state.alertColors.critical)
-                          }
-                        }
-                        />
-                        <TextLabel>
-                          { i18nT('alertLegendWarning', 'Warning') }
-                        </TextLabel>
+                        <Badge color="yellow" text={ i18nT('alertLegendWarning', 'Warning') } />
                       </FlexItem>
                       <FlexItem>
-                        <span style={
-                          {
-                            marginRight: '10px',
-                            width: '6px',
-                            height: '6px',
-                            borderRadius: '3px',
-                            display: 'inline-block',
-                            backgroundColor: ThemeManager.getVar(this.state.alertColors.critical)
-                          }
-                        }
-                        />
-                        <TextLabel>
-                          { i18nT('alertLegendInfo', 'Info') }
-                        </TextLabel>
+                        <Badge color="gray" text={ i18nT('alertLegendInfo', 'Info') } />
                       </FlexItem>
                     </FlexLayout>
                   </FlexItem>

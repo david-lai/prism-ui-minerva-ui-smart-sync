@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { ContainerLayout, StackingLayout, Title, Table, ThemeManager } from 'prism-reactjs';
+import { Badge, ContainerLayout, StackingLayout, Title, Table } from 'prism-reactjs';
 import AppUtil from '../utils/AppUtil';
 import i18n from '../utils/i18n';
 
@@ -63,27 +63,14 @@ class FileServerSummary extends React.Component {
   }
 
   renderAlertCell(alertSeverity, cellData) {
+    let color = 'gray';
+    if (alertSeverity === 'warning') {
+      color = 'yellow';
+    } else if (alertSeverity === 'critical') {
+      color = 'red';
+    }
     return (
-      <span style={
-        {
-          display: 'flex',
-          alignItems: 'center'
-        }
-      }
-      >
-        <span style={
-          {
-            width: '6px',
-            height: '6px',
-            backgroundColor: ThemeManager.getVar(this.state.alertColors[alertSeverity]),
-            borderRadius: '3px',
-            display: 'inline-flex',
-            marginRight: '10px'
-          }
-        }
-        />
-        { cellData }
-      </span>
+      <Badge color={ color } text={ cellData } />
     );
   }
 
