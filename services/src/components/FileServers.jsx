@@ -154,7 +154,7 @@ class FileServers extends React.Component {
       case -1:
         return <Loader tip={ i18nT('files', 'Files') } />;
       case 0:
-        return i18nT('noFileServer', 'No File Server');
+        return i18nT('noFileServer', 'No File Servers');
       case 1:
         return i18nT('oneFileServer', 'One File Server');
       default:
