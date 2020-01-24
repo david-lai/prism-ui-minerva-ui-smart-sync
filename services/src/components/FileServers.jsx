@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { EntityBrowser } from 'ebr-ui';
 import { LeftNavLayout, Loader, Menu, MenuGroup, MenuItem, StackingLayout, TextLabel, Title,
-  Divider, FlexLayout, FlexItem, Dashboard, DashboardWidgetLayout } from 'prism-reactjs';
+  Divider, Dashboard, DashboardWidgetLayout } from 'prism-reactjs';
 import EntityConfigs from '../config/entity_configs.js';
 import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
