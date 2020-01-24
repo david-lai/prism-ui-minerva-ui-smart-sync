@@ -17,7 +17,6 @@ import {
   TextLabel,
   ThemeManager
 } from 'prism-reactjs';
-// import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
 import i18n from '../utils/i18n';
 
@@ -144,7 +143,6 @@ class AlertSummary extends React.Component {
                 { !this.state.loading && this.renderAlertCounts() }
               </FlexItem>
               <FlexItem flexGrow="0">
-                { /* !this.state.loading && i18nT('last24Hours', 'Last 24 Hours')*/ }
               </FlexItem>
             </FlexLayout>
             { this.state.loading &&
