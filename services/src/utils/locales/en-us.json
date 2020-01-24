@@ -45,9 +45,9 @@
     "files": "Files",
     "typeName": "Type name to filter",
     "fileServers": "File Servers",
-    "noFileServer": "No File Server",
-    "oneFileServer": "One File Server",
-    "numOfFileServers": "{num} File Servers",
+    "noFile": "No File",
+    "oneFile": "One File",
+    "numOfFiles": "{num} Files",
     "summary": "Summary",
     "alerts": "Alerts",
     "events": "Events"

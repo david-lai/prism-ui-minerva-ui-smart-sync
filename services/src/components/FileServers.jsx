@@ -132,7 +132,7 @@ class FileServers extends React.Component {
             { i18nT('summary', 'Summary') }
           </MenuItem>
           <MenuItem key={ AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER }>
-            { i18nT('fileServers', 'File Servers') }
+            { i18nT('files', 'Files') }
           </MenuItem>
           <MenuItem key={ AppConstants.ENTITY_TYPES.ENTITY_ALERT }>
             { i18nT('alerts', 'Alerts') }
@@ -148,17 +148,17 @@ class FileServers extends React.Component {
   // Render buckets counts accounting for unavailability
   renderFileServersCount(count) {
     if (isNaN(count)) {
-      return <Loader tip={ i18nT('fileServers', 'File Servers') } />;
+      return <Loader tip={ i18nT('files', 'Files') } />;
     }
     switch (count) {
       case -1:
-        return <Loader tip={ i18nT('fileServers', 'File Servers') } />;
+        return <Loader tip={ i18nT('files', 'Files') } />;
       case 0:
-        return i18nT('noFileServer', 'No File Server');
+        return i18nT('noFile', 'No File');
       case 1:
-        return i18nT('oneFileServer', 'One File Server');
+        return i18nT('oneFile', 'One File');
       default:
-        return i18nT('numOfFileServers', '{num} File Servers',
+        return i18nT('numOfFiles', '{num} Files',
           { num: AppUtil.rawNumericFormat(count) });
     }
   }
