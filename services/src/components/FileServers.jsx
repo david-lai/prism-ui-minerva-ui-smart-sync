@@ -8,13 +8,16 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { EntityBrowser } from 'ebr-ui';
 import { LeftNavLayout, Loader, Menu, MenuGroup, MenuItem, StackingLayout, TextLabel, Title,
-  Divider } from 'prism-reactjs';
+  Divider, FlexLayout, FlexItem } from 'prism-reactjs';
 import EntityConfigs from '../config/entity_configs.js';
 import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
 import EBComponentFactory from '../utils/EBComponentFactory';
 import FilesQuery from '../utils/FilesQuery';
 import i18n from '../utils/i18n';
+
+import FileServerSummary from './FileServerSummary.jsx';
+import AlertSummary from './AlertSummary.jsx';
 
 // Actions
 import {
@@ -34,8 +37,9 @@ class FileServers extends React.Component {
     super(props);
 
     this.state = {
-      loading: true,
+      loading: false,
       fileServersNum: '',
+      showSummary: true,
       ebConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER)
     };
   }
@@ -94,7 +98,16 @@ class FileServers extends React.Component {
   }
 
   onMenuChange = (e) => {
-    this.setState({ ebConfiguration: this.getEbConfiguration(e.key) });
+    if (e.key !== AppConstants.SUMMARY_TAB_KEY) {
+      this.setState({
+        showSummary: false,
+        ebConfiguration: this.getEbConfiguration(e.key)
+      });
+    } else {
+      this.setState({
+        showSummary: true
+      });
+    }
   }
 
   getLeftPanel() {
@@ -112,10 +125,12 @@ class FileServers extends React.Component {
           <Title>{ i18nT('files', 'Files') }</Title>
           <div><TextLabel>{ numFileServers }</TextLabel></div>
           <Divider type="short" />
-          <div><TextLabel>{ i18nT('summary', 'Summary') }</TextLabel></div>
         </StackingLayout>
 
         <MenuGroup key="1">
+          <MenuItem key={ AppConstants.SUMMARY_TAB_KEY }>
+            { i18nT('summary', 'Summary') }
+          </MenuItem>
           <MenuItem key={ AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER }>
             { i18nT('fileServers', 'File Servers') }
           </MenuItem>
@@ -137,9 +152,9 @@ class FileServers extends React.Component {
     }
     switch (count) {
       case -1:
-        return <Loader tip={ i18nT('fileServers', 'File Servers') } />;
+        return <Loader tip={ i18nT('files', 'Files') } />;
       case 0:
-        return i18nT('noFileServer', 'No File Server');
+        return i18nT('noFileServer', 'No File Servers');
       case 1:
         return i18nT('oneFileServer', 'One File Server');
       default:
@@ -154,8 +169,22 @@ class FileServers extends React.Component {
     }
     return (
       <LeftNavLayout leftPanel={ this.getLeftPanel() } itemSpacing="0"
-        rightBodyContent={
+        rightBodyContent={ !this.state.showSummary ? (
           <EntityBrowser { ...this.state.ebConfiguration } />
+        ) : (
+          <FlexLayout className="entity-browser" itemSpacing="0px" flexGrow="1">
+            <FlexItem className="main-content" flexGrow="1">
+              <FlexLayout itemSpacing="10px" flexGrow="1" itemFlexBasis="100pc">
+                <FlexItem>
+                  <FileServerSummary />
+                </FlexItem>
+                <FlexItem>
+                  <AlertSummary />
+                </FlexItem>
+              </FlexLayout>
+            </FlexItem>
+          </FlexLayout>
+        )
         } />
     );
   }
@@ -177,6 +206,7 @@ class FileServers extends React.Component {
           errorMessage: i18nT('errorFetchingPolicies', 'Error fetching File Servers') });
       });
   }
+
 }
 
 const mapDispatchToProps = dispatch => {

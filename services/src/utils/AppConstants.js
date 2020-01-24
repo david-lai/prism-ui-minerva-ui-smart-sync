@@ -19,6 +19,7 @@ const AppConstants = {
     PRISM_UI: 'prismui'
   },
 
+  SUMMARY_TAB_KEY: 'summary',
 
   // Target and State for Header IFrame dom click listener
   IFRAME_EVENT_OPEN_PE: 'iframe_event_open_pe',
