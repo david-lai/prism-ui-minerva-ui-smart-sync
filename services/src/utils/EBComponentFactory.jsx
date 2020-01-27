@@ -113,7 +113,9 @@ class EBComponentFactory {
       case COMPONENTS.JOIN_PASCAL_CASE_ARRAY:
         let joinedPascalCaseArray = '';
         if (options && options.text) {
-          joinedPascalCaseArray = FormatterUtil.separatePascalCase(FormatterUtil.joinStringArray(options.text, options.options), options.options);
+          joinedPascalCaseArray = FormatterUtil.separatePascalCase(
+            FormatterUtil.joinStringArray(options.text, options.options), options.options
+          );
         }
         return (<span>{ joinedPascalCaseArray }</span>);
       default:
