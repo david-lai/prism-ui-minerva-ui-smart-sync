@@ -7,7 +7,9 @@ import { combineReducers } from 'redux';
 
 // Reducers
 import modals from './modals';
+import groupsapi from './groupsapi';
 
 export default combineReducers({
-  modals
+  modals,
+  groupsapi
 });

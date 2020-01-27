@@ -13,7 +13,6 @@ import EntityConfigs from '../config/entity_configs.js';
 import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
 import EBComponentFactory from '../utils/EBComponentFactory';
-import FilesQuery from '../utils/FilesQuery';
 import i18n from '../utils/i18n';
 
 import FileServerSummary from './FileServerSummary.jsx';
@@ -21,12 +20,14 @@ import AlertSummary from './AlertSummary.jsx';
 
 // Actions
 import {
-  openModal
+  openModal,
+  fetchFsData
 } from '../actions';
 
 // Helper to translate strings from this module
 const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
   'FileServers', key, defaultValue, replacedValue);
+const DURATION = 30000;
 
 class FileServers extends React.Component {
 
@@ -38,7 +39,6 @@ class FileServers extends React.Component {
 
     this.state = {
       loading: false,
-      fileServersNum: '',
       showSummary: true,
       ebConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER)
     };
@@ -111,7 +111,7 @@ class FileServers extends React.Component {
   }
 
   getLeftPanel() {
-    const fileServers_num = Number(this.state.fileServersNum);
+    const fileServers_num = Number(this.props.fsData && this.props.fsData.filtered_entity_count);
     const numFileServers = this.renderFileServersCount(fileServers_num);
 
     return (
@@ -189,37 +189,42 @@ class FileServers extends React.Component {
     );
   }
 
+  // Start Polling FS data
   componentWillMount() {
-    // Fetch the policies for all NetworkServiceProvider cats
-    FilesQuery.fetchFsData(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER)
-      .then(
-        (files) => {
-          // Register the map with the component factory
-          this.setState({
-            loading: false,
-            fileServersNum: files.length
-          });
-        })
-      .catch(() => {
-        this.setState({
-          loading: false,
-          errorMessage: i18nT('errorFetchingPolicies', 'Error fetching File Servers') });
-      });
+    this.props.fetchFsData();
+    this.dataPolling = setInterval(
+      () => {
+        this.props.fetchFsData();
+      }, DURATION);
   }
 
+  // Stop Polling FS data
+  componentWillUnmount() {
+    clearInterval(this.dataPolling);
+  }
 }
+
+const mapStateToProps = state => {
+  return {
+    fsData: state.groupsapi.fsData
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
-    openModal: (type, options) => dispatch(openModal(type, options))
+    openModal: (type, options) => dispatch(openModal(type, options)),
+    fetchFsData: () => dispatch(fetchFsData())
   };
 };
 
 FileServers.propTypes = {
-  openModal: PropTypes.func
+  openModal: PropTypes.func,
+  fsData: PropTypes.object,
+  filtered_entity_count: PropTypes.string,
+  fetchFsData: PropTypes.func
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(FileServers);

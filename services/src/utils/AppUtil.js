@@ -112,7 +112,7 @@ const AppUtil = {
    *
    * @return {Object}                Cluster info data
    */
-  async fetchFileServers() {
+  fetchFileServers() {
     return new Promise((resolve, reject) => {
       const query = {
         entity_type: 'file_server_service',
@@ -161,7 +161,7 @@ const AppUtil = {
    *
    * @return {Object}                Cluster info data
    */
-  async fetchFSAlerts(entityIds = []) {
+  fetchFSAlerts(entityIds = []) {
     return new Promise((resolve, reject) => {
       let filter_criteria = 'file_server!=[no_val];resolved==false';
       if (Array.isArray(entityIds) && entityIds.length) {
