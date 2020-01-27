@@ -18,7 +18,6 @@ export const fetchFsData = () => {
       entity_type: 'file_server_service',
       group_member_sort_attribute: 'name',
       group_member_sort_order: 'ASCENDING',
-      // group_member_count: 120,
       group_member_offset: 0,
       group_member_attributes: [
         {

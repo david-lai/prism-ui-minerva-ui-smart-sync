@@ -1,7 +1,7 @@
 //
 // Copyright (c) 2020 Nutanix Inc. All rights reserved.
 //
-// Groups API Redcer
+// Groups API Reducer
 //
 
 // Actions
