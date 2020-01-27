@@ -167,12 +167,30 @@ class FileServers extends React.Component {
     if (this.state.loading) {
       return <Loader />;
     }
+    const layout = [
+      {
+        i: 'fileServerSummary'
+      },
+      {
+        i: 'alertSummary',
+        x: 1
+      }
+    ];
     return (
       <LeftNavLayout leftPanel={ this.getLeftPanel() } itemSpacing="0"
         rightBodyContent={ !this.state.showSummary ? (
           <EntityBrowser { ...this.state.ebConfiguration } />
         ) : (
           <Dashboard
+            breakpoints={
+              {
+                lg: 1200,
+                md: 996,
+                sm: 768,
+                xs: 480,
+                xxs: 0
+              }
+            }
             cols={
               {
                 lg: 2,
@@ -184,15 +202,11 @@ class FileServers extends React.Component {
             }
             layouts={
               {
-                lg: [
-                  {
-                    i: 'fileServerSummary'
-                  },
-                  {
-                    i: 'alertSummary',
-                    x: 1
-                  }
-                ]
+                lg: layout,
+                md: layout,
+                sm: layout,
+                xs: layout,
+                xxs: layout
               }
             }
           >

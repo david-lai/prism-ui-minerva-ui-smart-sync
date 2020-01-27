@@ -4,6 +4,16 @@
 // Various helper functions for value formatting
 //
 const FormatterUtil = {
+
+  /**
+   * Capitalizes just first letter for given sentence
+   *
+   * e.g. user action required. > User action required.
+   *
+   * @param  {String} sentence Source text
+   *
+   * @return {String}          Capitalized result
+   */
   capitalizeSentence(sentence) {
     let formatted = sentence;
     if (sentence && sentence.substring && typeof sentence.substring === 'function') {
@@ -12,18 +22,44 @@ const FormatterUtil = {
     return formatted;
   },
 
-  capitalizeWords(textValue) {
+  /**
+   * Capitalizes all words in given text, depending on their length (default is 2)
+   *
+   * e.g. display a summary of events > Display a Summary of Events
+   *
+   * @param  {String} textValue Source text
+   * @param  {Object} options   Options hash, default: { minLength: 2 }
+   *
+   * @return {String}           Text with capitalized words
+   */
+  capitalizeWords(textValue, options) {
     let formatted = textValue;
+    if (!(options && typeof options === 'object')) {
+      options = {};
+    }
+    if (!options.minLength) {
+      options.minLength = 2;
+    }
     if (textValue && textValue.replace && typeof textValue.replace === 'function') {
-      formatted = textValue.replace(/(\s[a-z](?=[\w]{2,}))/g, (tMatch) => {
+      const re = new RegExp(`(\\s[a-z](?=[\\w]{${options.minLength},}))`, 'g');
+      formatted = textValue.replace(re, (tMatch) => {
         return tMatch.toUpperCase();
-      }).replace(/^([a-z])/g, (tMatch) => {
+      }).replace(/^([a-z])/, (tMatch) => {
         return tMatch.toUpperCase();
       });
     }
     return formatted;
   },
 
+  /**
+   * Separates words in pascal-case strings with space
+   *
+   * e.g. UserActionRequired > User Action Required
+   *
+   * @param  {String} textValue Source PascalCase text
+   *
+   * @return {String}           Formatted text
+   */
   separatePascalCase(textValue) {
     let formatted = textValue;
     if (textValue && textValue.replace && typeof textValue.replace === 'function') {
@@ -32,8 +68,17 @@ const FormatterUtil = {
     return formatted;
   },
 
+  /**
+   * Joins an array of strings using delimiter passed in options (default: ' ')
+   *
+   *  e.g. ["Alert", "Event", "Status"] > "Alert Event Status"
+   *
+   * @param  {String[]}   stringArray   An array of strings to join
+   * @param  {Object}     options       Options hash (default: { delimiter: ' ' })
+   *
+   * @return {String}                   Formatted string value
+   */
   joinStringArray(stringArray, options) {
-    console.log(stringArray, options);
     let formatted = '';
     if (!(options && typeof options === 'object')) {
       options = {};
