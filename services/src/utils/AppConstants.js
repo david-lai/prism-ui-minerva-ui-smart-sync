@@ -60,6 +60,12 @@ const AppConstants = {
   ENTITY_CATEGORY_SEPARATOR: ':',
   CATEGORY : {
     NET_SERVICE_PROVIDER: 'NetworkServiceProvider'
+  },
+
+
+  // Action Types
+  ACTIONS: {
+    FETCH_FS: 'fetch_fs'
   }
 };
 

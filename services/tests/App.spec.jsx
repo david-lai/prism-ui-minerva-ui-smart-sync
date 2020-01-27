@@ -1,18 +1,23 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
+import thunk from 'redux-thunk'
 import { mount } from 'enzyme';
 import App from '../src/App';
 
 describe('App', () => {
-  const mockStore = configureStore();
+  const middlewares = [thunk];
+  const mockStore = configureStore(middlewares);
   let store;
   const initStore = {
   	modals:{
   	visible: true,
   	options: {},
     type: ''
-  	}
+  	},
+    groupsapi: {
+      fsData: {}
+    }
   }
 
   it('Mounts main App', () => {
