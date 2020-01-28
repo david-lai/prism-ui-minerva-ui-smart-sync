@@ -6,7 +6,8 @@
 
 // Actions
 import {
-  FETCH_FS
+  FETCH_FS,
+  FETCH_ALERTS
 } from '../actions/groupsapis';
 
 /**
@@ -23,6 +24,11 @@ function groupsapis(state = {}, action) {
       return {
         ...state,
         fsData: payload
+      };
+    case FETCH_ALERTS:
+      return {
+        ...state,
+        alertsData: payload
       };
     default:
       return state;

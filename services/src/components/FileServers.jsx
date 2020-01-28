@@ -7,21 +7,34 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { EntityBrowser } from 'ebr-ui';
-import { LeftNavLayout, Loader, Menu, MenuGroup, MenuItem, StackingLayout, TextLabel, Title,
-  Divider, Dashboard, DashboardWidgetLayout } from 'prism-reactjs';
+import {
+  Badge,
+  Divider,
+  FlexItem,
+  FlexLayout,
+  LeftNavLayout,
+  Loader,
+  Menu,
+  MenuGroup,
+  MenuItem,
+  StackingLayout,
+  TextLabel,
+  Title
+} from 'prism-reactjs';
 import EntityConfigs from '../config/entity_configs.js';
 import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
 import EBComponentFactory from '../utils/EBComponentFactory';
 import i18n from '../utils/i18n';
 
-import FileServerSummary from './FileServerSummary.jsx';
-import AlertSummary from './AlertSummary.jsx';
+import Summary from './Summary.jsx';
+
 
 // Actions
 import {
   openModal,
-  fetchFsData
+  fetchFsData,
+  setTab
 } from '../actions';
 
 // Helper to translate strings from this module
@@ -40,11 +53,17 @@ class FileServers extends React.Component {
     this.state = {
       loading: false,
       showSummary: true,
-      ebConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER)
+      ebConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER),
+      tabKeys: [
+        AppConstants.SUMMARY_TAB_KEY,
+        AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER,
+        AppConstants.ENTITY_TYPES.ENTITY_ALERT,
+        AppConstants.ENTITY_TYPES.ENTITY_EVENT
+      ]
     };
   }
 
-  getEbConfiguration= (entityType) => {
+  getEbConfiguration = (entityType) => {
     // EB Configurations
     this.entityTypes = [
       entityType
@@ -98,21 +117,20 @@ class FileServers extends React.Component {
   }
 
   onMenuChange = (e) => {
-    if (e.key !== AppConstants.SUMMARY_TAB_KEY) {
-      this.setState({
-        showSummary: false,
-        ebConfiguration: this.getEbConfiguration(e.key)
-      });
-    } else {
-      this.setState({
-        showSummary: true
-      });
+    let tabIndex = +(e.key.substr(e.key.lastIndexOf('_') + 1));
+    if (isNaN(tabIndex)) {
+      tabIndex = 0;
     }
+    this.props.setTab(tabIndex);
   }
 
   getLeftPanel() {
     const fileServers_num = Number(this.props.fsData && this.props.fsData.filtered_entity_count);
     const numFileServers = this.renderFileServersCount(fileServers_num);
+
+    const alertCount = this.props.alertsData && this.props.alertsData.filtered_entity_count
+      ? +this.props.alertsData.filtered_entity_count
+      : 0;
 
     return (
       <Menu oldMenu={ false }
@@ -128,16 +146,35 @@ class FileServers extends React.Component {
         </StackingLayout>
 
         <MenuGroup key="1">
-          <MenuItem key={ AppConstants.SUMMARY_TAB_KEY }>
+          <MenuItem key={ 'tab_0' } active={ this.props.tabIndex === 0 }>
             { i18nT('summary', 'Summary') }
           </MenuItem>
-          <MenuItem key={ AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER }>
+          <MenuItem key={ 'tab_1' } active={ this.props.tabIndex === 1 }>
             { i18nT('fileServers', 'File Servers') }
           </MenuItem>
-          <MenuItem key={ AppConstants.ENTITY_TYPES.ENTITY_ALERT }>
-            { i18nT('alerts', 'Alerts') }
+          <MenuItem key={ 'tab_2' } active={ this.props.tabIndex === 2 }>
+            <FlexLayout flexGrow="1" justifyContent="space-between">
+              <FlexItem>
+                { i18nT('alerts', 'Alerts') }
+              </FlexItem>
+              <FlexItem>
+                { !alertCount &&
+                  (
+                    <Loader />
+                  )
+                }
+                { alertCount > 0 &&
+                  (
+                    <Badge
+                      color={ Badge.BADGE_COLOR_TYPES.RED }
+                      count={ AppUtil.rawNumericFormat(alertCount) }
+                    />
+                  )
+                }
+              </FlexItem>
+            </FlexLayout>
           </MenuItem>
-          <MenuItem key={ AppConstants.ENTITY_TYPES.ENTITY_EVENT }>
+          <MenuItem key={ 'tab_3' } active={ this.props.tabIndex === 3 }>
             { i18nT('events', 'Events') }
           </MenuItem>
         </MenuGroup>
@@ -167,72 +204,12 @@ class FileServers extends React.Component {
     if (this.state.loading) {
       return <Loader />;
     }
-    const layout = [
-      {
-        i: 'fileServerSummary'
-      },
-      {
-        i: 'alertSummary',
-        x: 1
-      }
-    ];
     return (
       <LeftNavLayout leftPanel={ this.getLeftPanel() } itemSpacing="0"
-        rightBodyContent={ !this.state.showSummary ? (
+        rightBodyContent={ this.props.tabIndex > 0 ? (
           <EntityBrowser { ...this.state.ebConfiguration } />
         ) : (
-          <Dashboard
-            breakpoints={
-              {
-                lg: 1200,
-                md: 996,
-                sm: 768,
-                xs: 480,
-                xxs: 0
-              }
-            }
-            cols={
-              {
-                lg: 2,
-                md: 2,
-                sm: 2,
-                xs: 1,
-                xxs: 1
-              }
-            }
-            layouts={
-              {
-                lg: layout,
-                md: layout,
-                sm: layout,
-                xs: layout,
-                xxs: layout
-              }
-            }
-          >
-            <div key="fileServerSummary">
-              <DashboardWidgetLayout
-                bodyContent={ (<FileServerSummary />) }
-                bodyContentProps={
-                  {
-                    flexDirection: 'column',
-                    alignItems: 'stretch'
-                  }
-                }
-              />
-            </div>
-            <div key="alertSummary">
-              <DashboardWidgetLayout
-                bodyContent={ (<AlertSummary />) }
-                bodyContentProps={
-                  {
-                    flexDirection: 'column',
-                    alignItems: 'stretch'
-                  }
-                }
-              />
-            </div>
-          </Dashboard>
+          <Summary />
         )
         } />
     );
@@ -247,30 +224,49 @@ class FileServers extends React.Component {
       }, DURATION);
   }
 
+  // Set eb configuration depending on tabIndex prop
+  componentWillReceiveProps(nextProps) {
+    if (this.props.tabIndex !== nextProps.tabIndex) {
+      if (nextProps.tabIndex > 0) {
+        this.setState({
+          // showSummary: false,
+          ebConfiguration: this.getEbConfiguration(this.state.tabKeys[nextProps.tabIndex])
+        });
+      }
+    }
+  }
+
   // Stop Polling FS data
   componentWillUnmount() {
     clearInterval(this.dataPolling);
   }
+
 }
 
 const mapStateToProps = state => {
   return {
-    fsData: state.groupsapi.fsData
+    fsData: state.groupsapi.fsData,
+    alertsData: state.groupsapi.alertsData,
+    tabIndex: state.tabs.tabIndex
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     openModal: (type, options) => dispatch(openModal(type, options)),
-    fetchFsData: () => dispatch(fetchFsData())
+    fetchFsData: () => dispatch(fetchFsData(true, false)),
+    setTab: (tabIndex) => dispatch(setTab(tabIndex))
   };
 };
 
 FileServers.propTypes = {
   openModal: PropTypes.func,
   fsData: PropTypes.object,
+  alertsData: PropTypes.object,
   filtered_entity_count: PropTypes.string,
-  fetchFsData: PropTypes.func
+  fetchFsData: PropTypes.func,
+  setTab: PropTypes.func,
+  tabIndex: PropTypes.number
 };
 
 export default connect(

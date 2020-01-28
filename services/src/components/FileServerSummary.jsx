@@ -6,9 +6,21 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { Badge, ContainerLayout, Title, Table } from 'prism-reactjs';
-import AppUtil from '../utils/AppUtil';
+import PropTypes from 'prop-types';
+import {
+  Badge,
+  FlexItem,
+  FlexLayout,
+  Link,
+  Table,
+  Title
+} from 'prism-reactjs';
 import i18n from '../utils/i18n';
+
+import {
+  fetchFsData,
+  setTab
+} from '../actions';
 
 
 // Helper to translate strings from this module
@@ -24,8 +36,6 @@ class FileServerSummary extends React.Component {
     super(props);
 
     this.state = {
-      loading: true,
-      summaryData: {},
       tableStructure: {
         hideHeader: true,
         columnWidths: {
@@ -52,8 +62,7 @@ class FileServerSummary extends React.Component {
           key: 'info',
           render: this.renderAlertCell.bind(this, 'info')
         }
-      ],
-      tableDataSource: []
+      ]
     };
   }
 
@@ -69,10 +78,49 @@ class FileServerSummary extends React.Component {
     );
   }
 
+  prepareSummaryFSData() {
+    if (!this.props.fsData) {
+      return false;
+    }
+
+    const summaryData = {
+      total: 0,
+      items: []
+    };
+
+    if (this.props.fsData && this.props.fsData.filtered_entity_count) {
+      summaryData.total = this.props.fsData.filtered_entity_count;
+      summaryData.items = this.props.fsData.group_results.flatMap((gr) => {
+        return gr.entity_results.map((er) => {
+          const fsResult = {
+            entity_id: er.entity_id,
+            title: ((er.data.find(ed => ed.name === 'name')).values[0].values[0] || ''),
+            info: 0,
+            warning: 0,
+            critical: 0
+          };
+          if (er.alerts) {
+            fsResult.info = er.alerts.filter(alert => alert.severity === 'info').length;
+            fsResult.warning = er.alerts.filter(alert => alert.severity === 'warning').length;
+            fsResult.critical = er.alerts.filter(alert => alert.severity === 'critical').length;
+          }
+          return fsResult;
+        });
+      });
+    }
+    return summaryData;
+  }
+
+  showAllServers = (e) => {
+    e.preventDefault();
+    this.props.setTab(1);
+  }
+
   render() {
+    const summaryData = this.prepareSummaryFSData();
     let tableTitle = i18nT('highlightedFileServers', 'Highlighted file servers');
-    if (this.state.summaryData.total) {
-      tableTitle += ` (${this.state.summaryData.total})`;
+    if (summaryData && summaryData.total) {
+      tableTitle += ` (${summaryData.total})`;
     }
     tableTitle = (
       <Title size="h3">
@@ -80,53 +128,83 @@ class FileServerSummary extends React.Component {
       </Title>
     );
 
+    const dataSource = summaryData && summaryData.items ? summaryData.items : [];
+
     return (
-      <ContainerLayout backgroundColor="white" padding="15px">
-        <Table
-          border={ false }
-          loading={ this.state.loading }
-          structure={ this.state.tableStructure }
-          topSection={
-            {
-              leftContent: tableTitle
+
+      <FlexLayout
+        flexDirection="column"
+        padding="15px"
+        flexGrow="1"
+        flexShrink="0"
+      >
+        <FlexItem>
+          <Table
+            border={ false }
+            loading={ !summaryData }
+            structure={ this.state.tableStructure }
+            topSection={
+              {
+                leftContent: tableTitle
+              }
             }
-          }
-          oldTable={ false }
-          rowKey="entity_id"
-          columns={ this.state.tableColumns }
-          dataSource={ this.state.tableDataSource }
-        />
-      </ContainerLayout>
+            oldTable={ false }
+            rowKey="entity_id"
+            columns={ this.state.tableColumns }
+            dataSource={ dataSource }
+          />
+        </FlexItem>
+
+        { summaryData &&
+          (
+            <FlexItem
+              flexShrink="1"
+              flexGrow="0"
+              alignSelf="center"
+              style={
+                {
+                  marginTop: 'auto',
+                  marginBottom: 0
+                }
+              }
+            >
+              <Link onClick={ this.showAllServers } >
+                { i18nT('viewAllFileServers', 'View all File Servers') }
+              </Link>
+            </FlexItem>
+          )
+        }
+      </FlexLayout>
+
     );
   }
 
   componentWillMount() {
-    // Fetch aggregated file server summary data
-    AppUtil.fetchSummaryFSData()
-      .then(
-        (summaryData) => {
-          // Set the datasource for the table
-          this.setState({
-            loading: false,
-            summaryData,
-            tableDataSource: summaryData.items
-          });
-        })
-      .catch(() => {
-        this.setState({
-          loading: false,
-          tableDataSource: [],
-          errorMessage: i18nT('errorFetchingPolicies', 'Error fetching File Servers') });
-      });
+    this.props.fetchFsData();
   }
 
 }
 
+const mapStateToProps = state => {
+  return {
+    fsData: state.groupsapi.fsData
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchFsData: () => dispatch(fetchFsData(true)),
+    setTab: (tabIndex) => dispatch(setTab(tabIndex))
+  };
+};
 
 FileServerSummary.propTypes = {
-
+  fsData: PropTypes.object,
+  fetchFsData: PropTypes.func,
+  setTab: PropTypes.func
 };
 
 export default connect(
-  null,
+  mapStateToProps,
+  mapDispatchToProps
 )(FileServerSummary);

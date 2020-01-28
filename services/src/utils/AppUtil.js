@@ -10,8 +10,6 @@ import AppConstants from './AppConstants';
 
 const AppUtil = {
 
-  apiUrl: '/api/nutanix/v3/groups',
-
   // @param error - error from axios
   extractErrorMsg(error = {}) {
     if (error && error.response && error.response.data) {
@@ -138,7 +136,7 @@ const AppUtil = {
           }
         ]
       };
-      return axios.post(this.apiUrl, query)
+      return axios.post(AppConstants.APIS.GROUPS_API, query)
         .then((resp) => {
           if (resp && resp.data) {
             resolve(resp.data);
@@ -153,187 +151,122 @@ const AppUtil = {
   },
 
   /**
-   * Fetches alerts info for given file server entity IDs
+   * Iterates through all servers and populates alert data for them
    *
-   * @async
+   * @todo determine how to pass multiple server ids to api to avoid looping
    *
-   * @param  {String[]}  entityIds   An array of entity IDs
+   * @param  {Object}  fsData         API response for file server service call
+   * @param  {Boolean} unresolvedOnly Fetch only unresolved alerts
    *
-   * @return {Object}                Cluster info data
+   * @return {Object}                 API response for file server service call
+   *                                  with 'alerts' array added to each entity
    */
-  fetchFSAlerts(entityIds = []) {
-    return new Promise((resolve, reject) => {
-      let filter_criteria = 'file_server!=[no_val];resolved==false';
-      if (Array.isArray(entityIds) && entityIds.length) {
-        filter_criteria = `file_server=in=${entityIds.join(',')};resolved==false`;
-      }
-      const query = {
-        entity_type: 'alert',
-        query_name: 'eb:data-1578012630011',
-        grouping_attribute: '',
-        group_count: 3,
-        group_offset: 0,
-        group_attributes: [],
-        group_member_count: 120,
-        group_member_offset: 0,
-        group_member_sort_attribute: '_created_timestamp_usecs_',
-        group_member_sort_order: 'DESCENDING',
-        group_member_attributes: [
-          {
-            attribute: 'title'
-          },
-          {
-            attribute: 'source_entity_name'
-          },
-          {
-            attribute: 'impact_type'
-          },
-          {
-            attribute: 'severity'
-          },
-          {
-            attribute: 'resolved'
-          },
-          {
-            attribute: 'acknowledged'
-          },
-          {
-            attribute: '_created_timestamp_usecs_'
-          },
-          {
-            attribute: 'cluster'
-          },
-          {
-            attribute: 'default_message'
-          },
-          {
-            attribute: 'param_name_list'
-          },
-          {
-            attribute: 'param_value_list'
-          },
-          {
-            attribute: 'auto_resolved'
-          },
-          {
-            attribute: 'acknowledging_user'
-          },
-          {
-            attribute: 'acknowledged_timestamp_usecs'
-          },
-          {
-            attribute: 'resolving_user'
-          },
-          {
-            attribute: 'resolved_timestamp_usecs'
-          },
-          {
-            attribute: 'source_entity_uuid'
-          },
-          {
-            attribute: 'source_entity_type'
-          }
-        ],
-        filter_criteria
-      };
-      return axios.post(this.apiUrl, query)
-        .then((resp) => {
-          if (resp && resp.data) {
-            resolve(resp.data);
-          } else {
-            reject(new Error(`Unrecognized response: ${JSON.stringify(resp)}`));
-          }
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-  },
-
-  /**
-   * Fetches and aggregates data needed for summary tab alert table
-   *
-   * @async
-   *
-   * @return {Object} An object with file server count under 'total' prop and servers data in 'items' array
-   */
-  async fetchSummaryAlertData() {
-    const alertSummary = {
-      totals: {
-        info: 0,
-        warning: 0,
-        critical: 0
-      },
-      items: []
+  async populateServersAlertData(fsData, unresolvedOnly = true) {
+    const data = {
+      ...{},
+      ...fsData
     };
-    const alertData = await this.fetchFSAlerts();
-    if (alertData && alertData.filtered_entity_count) {
-      alertSummary.items = alertData.group_results
-        .flatMap(gr => gr.entity_results.map(er => this.entityToPlainObject(er)));
-
-      alertSummary.totals = alertSummary.items.reduce((acc, val) => {
-        acc[val.severity]++;
-        return acc;
-      }, {
-        ...{},
-        ...alertSummary.totals
-      });
-    }
-
-    return alertSummary;
-  },
-
-  /**
-   * Fetches and aggregates data needed for summary tab file servers table
-   *
-   * @async
-   *
-   * @return {Object} An object with file server count under 'total' prop and servers data in 'items' array
-   */
-  async fetchSummaryFSData() {
-    const summaryData = {
-      total: 0,
-      items: []
-    };
-    const fsData = await this.fetchFileServers();
-    if (fsData && fsData.filtered_entity_count) {
-      summaryData.total = fsData.filtered_entity_count;
-      summaryData.items = fsData.group_results.flatMap((gr) => {
-        return gr.entity_results.map((er) => {
-          return {
-            entity_id: er.entity_id,
-            title: ((er.data.find(ed => ed.name === 'name')).values[0].values[0] || ''),
-            info: 0,
-            warning: 0,
-            critical: 0
-          };
-        });
-      });
-
-
-      if (summaryData.items && summaryData.items.length) {
-        for (let i = 0; i < summaryData.items.length; i++) {
-          const fsItem = summaryData.items[i];
-          const fsAlerts = await this.fetchFSAlerts([fsItem.entity_id]);
-          if (fsAlerts && fsAlerts.filtered_entity_count) {
-            const alertItems = fsAlerts.group_results.flatMap(gr => gr.entity_results);
-            const alertData = alertItems.reduce((acc, val) => {
-              const severity = val.data.find(aid => aid.name === 'severity');
-              acc[severity.values[0].values[0]]++;
-              return acc;
-            }, {
-              info: 0,
-              warning: 0,
-              critical: 0
-            });
-            fsItem.info = alertData.info;
-            fsItem.warning = alertData.warning;
-            fsItem.critical = alertData.critical;
-          }
+    for (let i = 0; i < data.group_results.length; i++) {
+      const gr = data.group_results[i];
+      for (let j = 0; j < gr.entity_results.length; j++) {
+        const serverAlerts = await this.fetchSingleServerAlertData(
+          gr.entity_results[j].entity_id,
+          unresolvedOnly
+        );
+        if (serverAlerts && serverAlerts.data) {
+          data.group_results[i].entity_results[j].alerts =
+            this.extractGroupResults(serverAlerts.data);
         }
       }
     }
-    return summaryData;
+    return data;
+  },
+
+  /**
+   * Fetches alerts info for single server entity ID
+   *
+   * @async
+   *
+   * @param  {String}    entityId         File server entity id
+   * @param  {Boolean}   unresolvedOnly   Fetch only unresolved alerts
+   *
+   * @return {Object}                     File server alert data
+   */
+  async fetchSingleServerAlertData(entityId, unresolvedOnly = true) {
+    const query = {
+      entity_type: 'alert',
+      query_name: 'eb:data-1578012630011',
+      grouping_attribute: '',
+      group_count: 3,
+      group_offset: 0,
+      group_attributes: [],
+      group_member_count: 120,
+      group_member_offset: 0,
+      group_member_sort_attribute: '_created_timestamp_usecs_',
+      group_member_sort_order: 'DESCENDING',
+      group_member_attributes: [
+        {
+          attribute: 'title'
+        },
+        {
+          attribute: 'source_entity_name'
+        },
+        {
+          attribute: 'impact_type'
+        },
+        {
+          attribute: 'severity'
+        },
+        {
+          attribute: 'resolved'
+        },
+        {
+          attribute: 'acknowledged'
+        },
+        {
+          attribute: '_created_timestamp_usecs_'
+        },
+        {
+          attribute: 'cluster'
+        },
+        {
+          attribute: 'default_message'
+        },
+        {
+          attribute: 'param_name_list'
+        },
+        {
+          attribute: 'param_value_list'
+        },
+        {
+          attribute: 'auto_resolved'
+        },
+        {
+          attribute: 'acknowledging_user'
+        },
+        {
+          attribute: 'acknowledged_timestamp_usecs'
+        },
+        {
+          attribute: 'resolving_user'
+        },
+        {
+          attribute: 'resolved_timestamp_usecs'
+        },
+        {
+          attribute: 'source_entity_uuid'
+        },
+        {
+          attribute: 'source_entity_type'
+        }
+      ],
+      filter_criteria: `file_server=in=${entityId}`
+    };
+    if (unresolvedOnly) {
+      query.filter_criteria += ';resolved==false';
+    }
+    const resp = await axios.post(AppConstants.APIS.GROUPS_API, query);
+    return resp;
   },
 
   /**
@@ -380,7 +313,7 @@ const AppUtil = {
           }
         ]
       };
-      return axios.post(this.apiUrl, query)
+      return axios.post(AppConstants.APIS.GROUPS_API, query)
         .then((resp) => {
           if (resp && resp.data) {
             resolve(resp.data);
@@ -431,7 +364,7 @@ const AppUtil = {
       filter_criteria: `name==${catName}`
     };
 
-    return axios.post(this.apiUrl, query)
+    return axios.post(AppConstants.APIS.GROUPS_API, query)
       .then((resp) => {
         const cats = AppUtil.extractGroupResults(resp.data);
         doneCB(cats);

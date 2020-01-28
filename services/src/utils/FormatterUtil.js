@@ -23,35 +23,6 @@ const FormatterUtil = {
   },
 
   /**
-   * Capitalizes all words in given text, depending on their length (default is 2)
-   *
-   * e.g. display a summary of events > Display a Summary of Events
-   *
-   * @param  {String} textValue Source text
-   * @param  {Object} options   Options hash, default: { minLength: 2 }
-   *
-   * @return {String}           Text with capitalized words
-   */
-  capitalizeWords(textValue, options) {
-    let formatted = textValue;
-    if (!(options && typeof options === 'object')) {
-      options = {};
-    }
-    if (!options.minLength) {
-      options.minLength = 2;
-    }
-    if (textValue && textValue.replace && typeof textValue.replace === 'function') {
-      const re = new RegExp(`(\\s[a-z](?=[\\w]{${options.minLength},}))`, 'g');
-      formatted = textValue.replace(re, (tMatch) => {
-        return tMatch.toUpperCase();
-      }).replace(/^([a-z])/, (tMatch) => {
-        return tMatch.toUpperCase();
-      });
-    }
-    return formatted;
-  },
-
-  /**
    * Separates words in pascal-case strings with space
    *
    * e.g. UserActionRequired > User Action Required

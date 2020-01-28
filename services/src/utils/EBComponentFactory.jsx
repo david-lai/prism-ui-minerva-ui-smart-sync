@@ -30,7 +30,6 @@ const COMPONENTS = {
   VERSION: 'version',
   SEPARATE_PASCAL_CASE: 'separate_pascal_case',
   CAPITALIZE_SENTENCE: 'capitalize_sentence',
-  CAPITALIZE_WORDS: 'capitalize_words',
   JOIN_STRING_ARRAY: 'join_string_array',
   JOIN_PASCAL_CASE_ARRAY: 'join_pascal_case_array'
 };
@@ -98,12 +97,6 @@ class EBComponentFactory {
           capitalizedSentence = FormatterUtil.capitalizeSentence(options.text, options.options);
         }
         return (<span>{ capitalizedSentence }</span>);
-      case COMPONENTS.CAPITALIZE_WORDS:
-        let capitalizedWords = '';
-        if (options && options.text) {
-          capitalizedWords = FormatterUtil.capitalizeWords(options.text, options.options);
-        }
-        return (<span>{ capitalizedWords }</span>);
       case COMPONENTS.JOIN_STRING_ARRAY:
         let joinedStringArray = '';
         if (options && options.text) {

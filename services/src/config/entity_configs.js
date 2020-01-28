@@ -341,7 +341,7 @@ const entity_configs = {
         }
       }
     ],
-    actions: [],
+    actions: {},
     details: [],
     filters: {
       local: {

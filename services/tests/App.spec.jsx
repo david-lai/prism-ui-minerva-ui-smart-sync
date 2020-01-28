@@ -17,6 +17,9 @@ describe('App', () => {
   	},
     groupsapi: {
       fsData: {}
+    },
+    tabs: {
+      tabIndex: 0,
     }
   }
 
@@ -27,9 +30,3 @@ describe('App', () => {
     expect(cbp).toBeTruthy();
   });
 });
-
-// describe('App', () => {
-//   it('Mounts main App', () => {	
-//     expect(1).toBeTruthy();
-//   });
-// });
