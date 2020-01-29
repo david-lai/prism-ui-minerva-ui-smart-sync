@@ -80,5 +80,28 @@
 
   "EntityConfigs": {
     "noFiles": "Minerva files have not been defined. Start by defining one."
+  },
+
+  "Summary": {
+    "highlightedFileServers": "Highlighted File Servers{count}",
+    "viewAllFileServers": "View all File Servers",
+    "last24Hours": "Last 24 Hours",
+    "lastWeek": "Last Week",
+    "alertLegendCritical": "Critical",
+    "alertLegendWarning": "Warning",
+    "alertLegendInfo": "Info",
+    "alertsSummaryTitle": "Alerts"
+  },
+
+  "AlertSummary": {
+    "fetchingData": "Fetching data...",
+    "fetchingDataFailed": "Fetching data failed"
+  },
+
+  "FileServerSummary": {
+    "fileServers": "File Servers",
+    "fileServerAlertCritical": "Critical",
+    "fileServerAlertWarning": "Warning",
+    "fileServerAlertInfo": "Info"
   }
 }

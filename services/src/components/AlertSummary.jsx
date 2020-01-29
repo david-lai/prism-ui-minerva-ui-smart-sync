@@ -8,29 +8,21 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  Badge,
   BarChart,
   ContainerLayout,
   FlexItem,
   FlexLayout,
   Loader,
   TextLabel,
-  ThemeManager,
-  Title
+  ThemeManager
 } from 'prism-reactjs';
 import AppUtil from '../utils/AppUtil';
 import i18n from '../utils/i18n';
 
 
-// Actions
-import {
-  fetchAlerts
-} from '../actions';
-
-
 // Helper to translate strings from this module
 const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
-  'Summary', key, defaultValue, replacedValue);
+  'AlertSummary', key, defaultValue, replacedValue);
 
 /**
  * AlertSummary component class
@@ -129,41 +121,15 @@ class AlertSummary extends React.Component {
     const infoColor = ThemeManager.getVar('light-gray-1');
 
     return (
-      <ContainerLayout backgroundColor="white" padding="15px">
-        <FlexLayout itemSpacing="10px" alignItems="center" justifyContent="center">
-          <FlexItem flexGrow="0" >
-            <Title size="h3">
-              { i18nT('alertsSummaryTitle', 'Alerts') }
-            </Title>
-          </FlexItem>
-          { summaryData && summaryData.totals &&
-            (
-              <FlexItem flexGrow="1">
-                <Badge
-                  color={ Badge.BADGE_COLOR_TYPES.RED }
-                  text=" "
-                  count={ summaryData.totals.critical }
-                />
-                <Badge
-                  color={ Badge.BADGE_COLOR_TYPES.YELLOW }
-                  text=" "
-                  count={ summaryData.totals.warning }
-                />
-                <Badge
-                  color={ Badge.BADGE_COLOR_TYPES.GRAY }
-                  text=" "
-                  count={ summaryData.totals.info }
-                />
-              </FlexItem>
-            )
+      <ContainerLayout
+        backgroundColor="white"
+        padding="15px"
+        style={
+          {
+            height: '100%'
           }
-          { !(summaryData && summaryData.totals) &&
-            (
-              <FlexItem flexGrow="1" />
-            )
-          }
-          <FlexItem flexGrow="0" />
-        </FlexLayout>
+        }
+      >
         { !(summaryData && summaryData.totals) && this.props.alertsData !== false &&
           (
             <FlexLayout
@@ -183,7 +149,11 @@ class AlertSummary extends React.Component {
 
         { this.props.alertsData === false &&
           (
-            <FlexLayout alignItems="center" justifyContent="center" flexDirection="column">
+            <FlexLayout
+              alignItems="center"
+              justifyContent="center"
+              flexDirection="column"
+            >
               <FlexItem>
                 <TextLabel
                   type={ TextLabel.TEXT_LABEL_TYPE.ERROR }
@@ -198,83 +168,51 @@ class AlertSummary extends React.Component {
 
         { summaryData && summaryData.totals &&
           (
-            <FlexLayout alignItems="center" justifyContent="center" flexDirection="column">
-              <FlexItem>
-                <BarChart
-                  width={ 400 }
-                  height={ 200 }
-                  barSize={ 20 }
-                  tooltipProps={ {} }
-                  bars={
-                    [
-                      {
-                        dataKey: 'warning',
-                        fill: warningColor,
-                        stackId: 1
-                      },
-                      {
-                        dataKey: 'info',
-                        fill: infoColor,
-                        stackId: 1
-                      },
-                      {
-                        dataKey: 'critical',
-                        fill: criticalColor,
-                        stackId: 1
-                      }
-                    ]
+            <BarChart
+              barSize={ 8 }
+              tooltipProps={ {} }
+              bars={
+                [
+                  {
+                    dataKey: 'warning',
+                    fill: warningColor,
+                    stackId: 1
+                  },
+                  {
+                    dataKey: 'info',
+                    fill: infoColor,
+                    stackId: 1
+                  },
+                  {
+                    dataKey: 'critical',
+                    fill: criticalColor,
+                    stackId: 1
                   }
-                  data={ data }
-                  xAxisProps={
-                    {
-                      padding: {
-                        left: 40,
-                        right: 0
-                      }
-                    }
+                ]
+              }
+              data={ data }
+              xAxisProps={
+                {
+                  padding: {
+                    left: 40,
+                    right: 0
                   }
-                  yAxisProps={
-                    {
-                      allowDecimals: false,
-                      domain: [
-                        'dataMin',
-                        4
-                      ]
-                    }
-                  }
-                />
-              </FlexItem>
-              <FlexItem flexGrow="0">
-                <FlexLayout alignItems="center">
-                  <FlexItem>
-                    <Badge
-                      color={ Badge.BADGE_COLOR_TYPES.RED }
-                      text={ i18nT('alertLegendCritical', 'Critical') }
-                    />
-                  </FlexItem>
-                  <FlexItem>
-                    <Badge
-                      color={ Badge.BADGE_COLOR_TYPES.YELLOW }
-                      text={ i18nT('alertLegendWarning', 'Warning') }
-                    />
-                  </FlexItem>
-                  <FlexItem>
-                    <Badge
-                      color={ Badge.BADGE_COLOR_TYPES.GRAY }
-                      text={ i18nT('alertLegendInfo', 'Info') }
-                    />
-                  </FlexItem>
-                </FlexLayout>
-              </FlexItem>
-            </FlexLayout>
+                }
+              }
+              yAxisProps={
+                {
+                  allowDecimals: false,
+                  domain: [
+                    'dataMin',
+                    4
+                  ]
+                }
+              }
+            />
           )
         }
       </ContainerLayout>
     );
-  }
-
-  componentWillMount() {
-    this.props.fetchAlerts();
   }
 
 }
@@ -286,18 +224,11 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = dispatch => {
-  return {
-    fetchAlerts: () => dispatch(fetchAlerts())
-  };
-};
-
 AlertSummary.propTypes = {
-  alertsData: PropTypes.object,
-  fetchAlerts: PropTypes.func
+  alertsData: PropTypes.object
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null,
 )(AlertSummary);

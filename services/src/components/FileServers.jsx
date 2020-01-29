@@ -34,13 +34,15 @@ import Summary from './Summary.jsx';
 import {
   openModal,
   fetchFsData,
+  fetchAlerts,
+  fetchServerAlerts,
+  fetchClusterInfo,
   setTab
 } from '../actions';
 
 // Helper to translate strings from this module
 const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
   'FileServers', key, defaultValue, replacedValue);
-const DURATION = 30000;
 
 class FileServers extends React.Component {
 
@@ -52,7 +54,6 @@ class FileServers extends React.Component {
 
     this.state = {
       loading: false,
-      showSummary: true,
       ebConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER),
       tabKeys: [
         AppConstants.SUMMARY_TAB_KEY,
@@ -124,19 +125,94 @@ class FileServers extends React.Component {
     this.props.setTab(tabIndex);
   }
 
+  /**
+   * Fetches and populates server alert data if not present
+   *
+   * @return {undefined}
+   */
+  populateServerAlerts() {
+    if (this.props.fsData && this.props.fsData.filtered_entity_count) {
+      const fsIds = this.props.fsData.group_results.flatMap((gr) => {
+        return gr.entity_results.map(er => er.entity_id);
+      });
+      if (fsIds && Array.isArray(fsIds) && fsIds.length) {
+        fsIds.forEach(this.props.fetchServerAlerts);
+      }
+    }
+  }
+
+  /**
+   * Fetches and populates cluster data for missing cluster uuids
+   *
+   * @return {undefined}
+   */
+  populateClusterData() {
+    if (this.props.fsData && this.props.fsData.filtered_entity_count) {
+      const clusterIds = Array.from(
+        new Set(
+          AppUtil.extractGroupResults(this.props.fsData)
+            .map(er => er.cluster_uuid)
+        )
+      );
+
+      if (clusterIds && Array.isArray(clusterIds) && clusterIds.length) {
+        let clusterKeys = [];
+        if (this.props.clusters) {
+          clusterKeys = Object.keys(this.props.clusters);
+        }
+
+        clusterIds.forEach((clusterId) => {
+          if (clusterKeys.indexOf(clusterId) === -1) {
+            this.props.fetchClusterInfo(clusterId);
+          }
+        });
+      }
+    }
+  }
+
+  /**
+   * Data polling method
+   *
+   * @return {undefined}
+   */
+  refreshSummaryData() {
+    this.props.fetchFsData();
+    this.props.fetchAlerts();
+    this.populateServerAlerts();
+    this.populateClusterData();
+  }
+
   getLeftPanel() {
     const fileServers_num = Number(this.props.fsData && this.props.fsData.filtered_entity_count);
     const numFileServers = this.renderFileServersCount(fileServers_num);
-
-    const alertCount = this.props.alertsData && this.props.alertsData.filtered_entity_count
-      ? +this.props.alertsData.filtered_entity_count
-      : 0;
+    let alertCount = 0;
+    let maxSeverity = -1;
+    const severities = [
+      'info',
+      'warning',
+      'critical'
+    ];
+    let alertBadgeColor = Badge.BADGE_COLOR_TYPES.GRAY;
+    if (this.props.alertsData && this.props.alertsData.filtered_entity_count) {
+      alertCount = +this.props.alertsData.filtered_entity_count;
+      AppUtil.extractGroupResults(this.props.alertsData).forEach((alert) => {
+        const asIndex = severities.indexOf(alert.severity);
+        if (maxSeverity < asIndex) {
+          maxSeverity = asIndex;
+        }
+      });
+    }
+    if (maxSeverity === 1) {
+      alertBadgeColor = Badge.BADGE_COLOR_TYPES.YELLOW;
+    } else if (maxSeverity === 2) {
+      alertBadgeColor = Badge.BADGE_COLOR_TYPES.RED;
+    }
 
     return (
       <Menu oldMenu={ false }
         itemSpacing="10px"
         padding="20px-0px"
-        activeKeyPath={ [this.state.currentPanelKey, '1'] }
+        activeKeyPath={ [`tab_${this.props.tabIndex}`, '1'] }
         onClick={ this.onMenuChange } style={ { width: '240px' } } >
 
         <StackingLayout padding="0px-20px" itemSpacing="10px">
@@ -166,7 +242,7 @@ class FileServers extends React.Component {
                 { alertCount > 0 &&
                   (
                     <Badge
-                      color={ Badge.BADGE_COLOR_TYPES.RED }
+                      color={ alertBadgeColor }
                       count={ AppUtil.rawNumericFormat(alertCount) }
                     />
                   )
@@ -215,13 +291,14 @@ class FileServers extends React.Component {
     );
   }
 
-  // Start Polling FS data
+
+  // Start Polling alerts data
   componentWillMount() {
-    this.props.fetchFsData();
+    this.refreshSummaryData();
     this.dataPolling = setInterval(
       () => {
-        this.props.fetchFsData();
-      }, DURATION);
+        this.refreshSummaryData();
+      }, AppConstants.POLLING_FREQ_SECS * 1000);
   }
 
   // Set eb configuration depending on tabIndex prop
@@ -229,10 +306,17 @@ class FileServers extends React.Component {
     if (this.props.tabIndex !== nextProps.tabIndex) {
       if (nextProps.tabIndex > 0) {
         this.setState({
-          // showSummary: false,
           ebConfiguration: this.getEbConfiguration(this.state.tabKeys[nextProps.tabIndex])
         });
       }
+    }
+  }
+
+  // Load initial fs alerts if not present
+  componentDidUpdate(prevProps) {
+    if (!prevProps.fsData && this.props.fsData) {
+      this.populateServerAlerts();
+      this.populateClusterData();
     }
   }
 
@@ -247,6 +331,7 @@ const mapStateToProps = state => {
   return {
     fsData: state.groupsapi.fsData,
     alertsData: state.groupsapi.alertsData,
+    clusters: state.groupsapi.clusters,
     tabIndex: state.tabs.tabIndex
   };
 };
@@ -254,7 +339,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     openModal: (type, options) => dispatch(openModal(type, options)),
-    fetchFsData: () => dispatch(fetchFsData(true, false)),
+    fetchFsData: () => dispatch(fetchFsData()),
+    fetchServerAlerts: (serverId) => dispatch(fetchServerAlerts(serverId)),
+    fetchAlerts: () => dispatch(fetchAlerts()),
+    fetchClusterInfo: (clusterId) => dispatch(fetchClusterInfo(clusterId)),
     setTab: (tabIndex) => dispatch(setTab(tabIndex))
   };
 };
@@ -263,8 +351,12 @@ FileServers.propTypes = {
   openModal: PropTypes.func,
   fsData: PropTypes.object,
   alertsData: PropTypes.object,
+  clusters: PropTypes.object,
   filtered_entity_count: PropTypes.string,
+  fetchClusterInfo: PropTypes.func,
   fetchFsData: PropTypes.func,
+  fetchServerAlerts: PropTypes.func,
+  fetchAlerts: PropTypes.func,
   setTab: PropTypes.func,
   tabIndex: PropTypes.number
 };
