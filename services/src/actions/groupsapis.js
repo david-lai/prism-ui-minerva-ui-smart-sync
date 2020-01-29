@@ -25,7 +25,7 @@ export const FETCH_CLUSTER_INFO = AppConstants.ACTIONS.FETCH_CLUSTER_INFO;
  * @return {Function}               Dispatcher method
  */
 export const fetchAlerts = (entityIds = [], dateRange = 'week') => {
-  return async(dispatch) => {
+  return (dispatch) => {
     let filter_criteria = 'file_server!=[no_val]';
     if (Array.isArray(entityIds) && entityIds.length) {
       filter_criteria = `file_server=in=${entityIds.join(',')}`;
@@ -54,21 +54,19 @@ export const fetchAlerts = (entityIds = [], dateRange = 'week') => {
       ],
       filter_criteria
     };
-    let alertsData = null;
-    try {
-      const resp = await axios.post(AppConstants.APIS.GROUPS_API, query);
-      if (resp && resp.data) {
-        alertsData = resp.data;
-      } else {
-        alertsData = false;
-      }
-    } catch (ex) {
-      alertsData = false;
-    }
-    dispatch({
-      type: FETCH_ALERTS,
-      payload: alertsData
-    });
+    axios.post(AppConstants.APIS.GROUPS_API, query)
+      .then((resp) => {
+        dispatch({
+          type: FETCH_ALERTS,
+          payload: resp.data
+        });
+      })
+      .catch((ex) => {
+        dispatch({
+          type: FETCH_ALERTS,
+          payload: false
+        });
+      });
   };
 };
 
@@ -80,7 +78,7 @@ export const fetchAlerts = (entityIds = [], dateRange = 'week') => {
  * @return {Function}               Dispatcher method
  */
 export const fetchServerAlerts = (entityId) => {
-  return async(dispatch) => {
+  return (dispatch) => {
     const filter_criteria = `file_server=in=${entityId};resolved==false`;
     const query = {
       entity_type: 'alert',
@@ -100,24 +98,16 @@ export const fetchServerAlerts = (entityId) => {
       ],
       filter_criteria
     };
-    let alertsData = null;
-    try {
-      const resp = await axios.post(AppConstants.APIS.GROUPS_API, query);
-      if (resp && resp.data) {
-        alertsData = resp.data;
-      } else {
-        alertsData = false;
-      }
-    } catch (ex) {
-      alertsData = false;
-    }
-    dispatch({
-      type: FETCH_SERVER_ALERTS,
-      payload: {
-        entityId,
-        alertsData
-      }
-    });
+    axios.post(AppConstants.APIS.GROUPS_API, query)
+      .then((resp) => {
+        dispatch({
+          type: FETCH_SERVER_ALERTS,
+          payload: {
+            entityId,
+            alertsData: resp.data
+          }
+        });
+      });
   };
 };
 

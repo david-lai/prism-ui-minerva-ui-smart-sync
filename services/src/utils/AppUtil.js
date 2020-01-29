@@ -104,8 +104,6 @@ const AppUtil = {
   /**
    * Fetches cluster info for given entity IDs
    *
-   * @async
-   *
    * @param  {String[]}  entityIds   An array of entity IDs
    *
    * @return {Object}                Cluster info data
