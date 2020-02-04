@@ -72,8 +72,7 @@ class Summary extends React.Component {
       info: 0
     };
     if (this.props.alertsData && this.props.alertsData.filtered_entity_count) {
-      totals = this.props.alertsData.group_results
-        .flatMap(gr => gr.entity_results.map(er => AppUtil.entityToPlainObject(er)))
+      totals = AppUtil.extractGroupResults(this.props.alertsData)
         .reduce((acc, val) => {
           acc[val.severity]++;
           return acc;
@@ -280,8 +279,7 @@ const mapStateToProps = state => {
   return {
     fsData: state.groupsapi.fsData,
     alertsWidgetRange: state.groupsapi.alertsWidgetRange,
-    alertsData: state.groupsapi.alertsData,
-    clusters: state.groupsapi.clusters
+    alertsData: state.groupsapi.alertsData
   };
 };
 
@@ -296,8 +294,8 @@ Summary.propTypes = {
   setAlertsWidgetRange: PropTypes.func,
   setTab: PropTypes.func,
   alertsWidgetRange: PropTypes.string,
-  fsData: PropTypes.object,
-  alertsData: PropTypes.object
+  fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  alertsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
 };
 
 

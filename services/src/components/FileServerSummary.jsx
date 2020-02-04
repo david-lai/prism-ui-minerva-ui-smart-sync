@@ -10,8 +10,11 @@ import PropTypes from 'prop-types';
 import {
   Badge,
   ContainerLayout,
+  FlexLayout,
+  FlexItem,
   Loader,
-  Table
+  Table,
+  TextLabel
 } from 'prism-reactjs';
 import i18n from '../utils/i18n';
 
@@ -107,24 +110,22 @@ class FileServerSummary extends React.Component {
 
     if (this.props.fsData.filtered_entity_count) {
       summaryData.total = this.props.fsData.filtered_entity_count;
-      summaryData.items = this.props.fsData.group_results.flatMap((gr) => {
-        return gr.entity_results.map((er) => {
-          const fsResult = {
-            entity_id: er.entity_id,
-            title: ((er.data.find(ed => ed.name === 'name')).values[0].values[0] || ''),
-            info: null,
-            warning: null,
-            critical: null
-          };
-          if (this.props.serverAlerts && this.props.serverAlerts[er.entity_id]) {
-            const fsAlerts = AppUtil.extractGroupResults(this.props.serverAlerts[er.entity_id]);
-            fsResult.info = fsAlerts.filter(alert => alert.severity === 'info').length;
-            fsResult.warning = fsAlerts.filter(alert => alert.severity === 'warning').length;
-            fsResult.critical = fsAlerts.filter(alert => alert.severity === 'critical').length;
-          }
+      summaryData.items = AppUtil.extractGroupResults(this.props.fsData).map((er) => {
+        const fsResult = {
+          entity_id: er.entity_id,
+          title: er.name,
+          info: null,
+          warning: null,
+          critical: null
+        };
+        if (this.props.serverAlerts && this.props.serverAlerts[er.entity_id]) {
+          const fsAlerts = AppUtil.extractGroupResults(this.props.serverAlerts[er.entity_id]);
+          fsResult.info = fsAlerts.filter(alert => alert.severity === 'info').length;
+          fsResult.warning = fsAlerts.filter(alert => alert.severity === 'warning').length;
+          fsResult.critical = fsAlerts.filter(alert => alert.severity === 'critical').length;
+        }
 
-          return fsResult;
-        });
+        return fsResult;
       });
     }
     return summaryData;
@@ -138,19 +139,39 @@ class FileServerSummary extends React.Component {
   render() {
     const summaryData = this.prepareSummaryFSData();
     const dataSource = summaryData && summaryData.items ? summaryData.items : [];
-
     return (
-
       <ContainerLayout padding="15px">
-        <Table
-          border={ false }
-          loading={ !summaryData }
-          structure={ this.state.tableStructure }
-          oldTable={ false }
-          rowKey="entity_id"
-          columns={ this.state.tableColumns }
-          dataSource={ dataSource }
-        />
+        { this.props.fsData === false &&
+          (
+            <FlexLayout
+              alignItems="center"
+              justifyContent="center"
+              flexDirection="column"
+            >
+              <FlexItem>
+                <TextLabel
+                  type={ TextLabel.TEXT_LABEL_TYPE.ERROR }
+                  size={ TextLabel.TEXT_LABEL_SIZE.MEDIUM }
+                >
+                  { i18nT('fetchingDataFailed', 'Fetching data failed') }
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
+          )
+        }
+        { this.props.fsData !== false &&
+          (
+            <Table
+              border={ false }
+              loading={ !summaryData || !this.props.fsData }
+              structure={ this.state.tableStructure }
+              oldTable={ false }
+              rowKey="entity_id"
+              columns={ this.state.tableColumns }
+              dataSource={ dataSource }
+            />
+          )
+        }
       </ContainerLayout>
     );
   }
@@ -172,7 +193,7 @@ const mapStateToProps = state => {
 
 FileServerSummary.propTypes = {
   serverAlerts: PropTypes.object,
-  fsData: PropTypes.object
+  fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
 };
 
 export default connect(

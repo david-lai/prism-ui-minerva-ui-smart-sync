@@ -9,15 +9,14 @@ import {
   FETCH_FS,
   FETCH_ALERTS,
   FETCH_SERVER_ALERTS,
-  FETCH_CLUSTER_INFO,
   SET_ALERTS_WIDGET_RANGE
 } from '../actions/groupsapis';
 
 // default state
 const initialState = {
+  baseApiUrl: 'https://localhost:3000',
   alertsWidgetRange: 'day',
-  serverAlerts: {},
-  clusters: {}
+  serverAlerts: {}
 };
 
 
@@ -47,14 +46,6 @@ function groupsapis(state = initialState, action) {
         serverAlerts: {
           ...state.serverAlerts,
           [payload.entityId]: payload.alertsData
-        }
-      };
-    case FETCH_CLUSTER_INFO:
-      return {
-        ...state,
-        clusters: {
-          ...state.clusters,
-          [payload.entityId]: payload.clusterData
         }
       };
     case SET_ALERTS_WIDGET_RANGE:

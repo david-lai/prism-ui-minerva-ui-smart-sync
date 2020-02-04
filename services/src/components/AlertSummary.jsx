@@ -26,7 +26,7 @@ const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
 
 /**
  * AlertSummary component class
- *
+ * @class
  */
 class AlertSummary extends React.Component {
 
@@ -96,9 +96,7 @@ class AlertSummary extends React.Component {
     };
     const alertData = this.props.alertsData;
     if (alertData && alertData.filtered_entity_count) {
-      alertSummary.items = alertData.group_results
-        .flatMap(gr => gr.entity_results.map(er => AppUtil.entityToPlainObject(er)));
-
+      alertSummary.items = AppUtil.extractGroupResults(alertData);
       alertSummary.totals = alertSummary.items.reduce((acc, val) => {
         acc[val.severity]++;
         return acc;
@@ -225,7 +223,7 @@ const mapStateToProps = state => {
 };
 
 AlertSummary.propTypes = {
-  alertsData: PropTypes.object
+  alertsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
 };
 
 export default connect(

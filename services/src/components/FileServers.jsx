@@ -36,7 +36,6 @@ import {
   fetchFsData,
   fetchAlerts,
   fetchServerAlerts,
-  fetchClusterInfo,
   setTab
 } from '../actions';
 
@@ -132,40 +131,9 @@ class FileServers extends React.Component {
    */
   populateServerAlerts() {
     if (this.props.fsData && this.props.fsData.filtered_entity_count) {
-      const fsIds = this.props.fsData.group_results.flatMap((gr) => {
-        return gr.entity_results.map(er => er.entity_id);
-      });
+      const fsIds = AppUtil.extractGroupResults(this.props.fsData).map(fsItem => fsItem.entity_id);
       if (fsIds && Array.isArray(fsIds) && fsIds.length) {
         fsIds.forEach(this.props.fetchServerAlerts);
-      }
-    }
-  }
-
-  /**
-   * Fetches and populates cluster data for missing cluster uuids
-   *
-   * @return {undefined}
-   */
-  populateClusterData() {
-    if (this.props.fsData && this.props.fsData.filtered_entity_count) {
-      const clusterIds = Array.from(
-        new Set(
-          AppUtil.extractGroupResults(this.props.fsData)
-            .map(er => er.cluster_uuid)
-        )
-      );
-
-      if (clusterIds && Array.isArray(clusterIds) && clusterIds.length) {
-        let clusterKeys = [];
-        if (this.props.clusters) {
-          clusterKeys = Object.keys(this.props.clusters);
-        }
-
-        clusterIds.forEach((clusterId) => {
-          if (clusterKeys.indexOf(clusterId) === -1) {
-            this.props.fetchClusterInfo(clusterId);
-          }
-        });
       }
     }
   }
@@ -176,10 +144,15 @@ class FileServers extends React.Component {
    * @return {undefined}
    */
   refreshSummaryData() {
-    this.props.fetchFsData();
-    this.props.fetchAlerts();
+    if (!this.props.fsData ||
+      typeof this.props.fsData.filtered_entity_count === 'undefined') {
+      this.props.fetchFsData();
+    }
+    if (!this.props.alertsData ||
+      typeof this.props.alertsData.filtered_entity_count === 'undefined') {
+      this.props.fetchAlerts();
+    }
     this.populateServerAlerts();
-    this.populateClusterData();
   }
 
   getLeftPanel() {
@@ -316,7 +289,6 @@ class FileServers extends React.Component {
   componentDidUpdate(prevProps) {
     if (!prevProps.fsData && this.props.fsData) {
       this.populateServerAlerts();
-      this.populateClusterData();
     }
   }
 
@@ -331,7 +303,6 @@ const mapStateToProps = state => {
   return {
     fsData: state.groupsapi.fsData,
     alertsData: state.groupsapi.alertsData,
-    clusters: state.groupsapi.clusters,
     tabIndex: state.tabs.tabIndex
   };
 };
@@ -342,18 +313,15 @@ const mapDispatchToProps = dispatch => {
     fetchFsData: () => dispatch(fetchFsData()),
     fetchServerAlerts: (serverId) => dispatch(fetchServerAlerts(serverId)),
     fetchAlerts: () => dispatch(fetchAlerts()),
-    fetchClusterInfo: (clusterId) => dispatch(fetchClusterInfo(clusterId)),
     setTab: (tabIndex) => dispatch(setTab(tabIndex))
   };
 };
 
 FileServers.propTypes = {
   openModal: PropTypes.func,
-  fsData: PropTypes.object,
-  alertsData: PropTypes.object,
-  clusters: PropTypes.object,
+  fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  alertsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   filtered_entity_count: PropTypes.string,
-  fetchClusterInfo: PropTypes.func,
   fetchFsData: PropTypes.func,
   fetchServerAlerts: PropTypes.func,
   fetchAlerts: PropTypes.func,

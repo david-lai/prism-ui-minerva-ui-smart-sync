@@ -4,16 +4,13 @@
 // Tabs Reducer
 //
 
-// Actions
 import {
   SET_TAB
 } from '../actions/tabs';
 
-// default state
 const initialState = {
   tabIndex: 0
 };
-
 
 /**
  * Tabs reducer
@@ -24,9 +21,10 @@ const initialState = {
  * @returns {Object}   New state
  */
 function tabs(state = initialState, action) {
-  // define default payload
-  const { payload = 0 } = action;
-
+  let payload = 0;
+  if (action.payload) {
+    payload = action.payload;
+  }
   switch (action.type) {
     case SET_TAB:
       return {
@@ -38,5 +36,4 @@ function tabs(state = initialState, action) {
   }
 }
 
-// export reducer
 export default tabs;

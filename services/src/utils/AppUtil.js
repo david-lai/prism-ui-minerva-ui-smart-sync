@@ -102,11 +102,11 @@ const AppUtil = {
   },
 
   /**
-   * Fetches cluster info for given entity IDs
+   * Fetches file servers for given entity IDs
    *
    * @param  {String[]}  entityIds   An array of entity IDs
    *
-   * @return {Object}                Cluster info data
+   * @return {Object}                Files servers data
    */
   fetchFileServers() {
     return new Promise((resolve, reject) => {

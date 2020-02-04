@@ -10,11 +10,12 @@ import AppConstants from './../utils/AppConstants';
 // ------------
 // Action Types
 // ------------
-export const FETCH_FS = AppConstants.ACTIONS.FETCH_FS;
-export const FETCH_ALERTS = AppConstants.ACTIONS.FETCH_ALERTS;
-export const FETCH_SERVER_ALERTS = AppConstants.ACTIONS.FETCH_SERVER_ALERTS;
-export const SET_ALERTS_WIDGET_RANGE = AppConstants.ACTIONS.SET_ALERTS_WIDGET_RANGE;
-export const FETCH_CLUSTER_INFO = AppConstants.ACTIONS.FETCH_CLUSTER_INFO;
+export const {
+  FETCH_FS,
+  FETCH_ALERTS,
+  FETCH_SERVER_ALERTS,
+  SET_ALERTS_WIDGET_RANGE
+} = AppConstants.ACTIONS;
 
 /**
  * Fetches alerts data from the API
@@ -107,6 +108,12 @@ export const fetchServerAlerts = (entityId) => {
             alertsData: resp.data
           }
         });
+      })
+      .catch((ex) => {
+        dispatch({
+          type: FETCH_SERVER_ALERTS,
+          payload: false
+        });
       });
   };
 };
@@ -146,7 +153,7 @@ export const fetchFsData = () => {
       .catch((ex) => {
         dispatch({
           type: FETCH_FS,
-          payload: null
+          payload: false
         });
       });
   };
@@ -167,72 +174,3 @@ export const setAlertsWidgetRange = (value) => {
     });
   };
 };
-
-
-/**
- * Fetches cluster info for given entity IDs
- *
- * @async
- *
- * @param  {String}  entityId     Cluster entity ID
- *
- * @return {Function}             Dispatcher method
- */
-export const fetchClusterInfo = (entityId) => {
-  return (dispatch) => {
-    const query = {
-      entity_type: 'cluster',
-      entity_ids: [entityId],
-      group_member_attributes: [
-        {
-          attribute: 'cluster_name'
-        },
-        {
-          attribute: 'check.overall_score'
-        },
-        {
-          attribute: 'capacity.runway'
-        },
-        {
-          attribute: 'version'
-        },
-        {
-          attribute: 'cluster_upgrade_status'
-        },
-        {
-          attribute: 'hypervisor_types'
-        },
-        {
-          attribute: 'num_vms'
-        },
-        {
-          attribute: 'num_nodes'
-        },
-        {
-          attribute: 'external_ip_address'
-        }
-      ]
-    };
-
-    return axios.post(AppConstants.APIS.GROUPS_API, query)
-      .then((resp) => {
-        dispatch({
-          type: FETCH_CLUSTER_INFO,
-          payload: {
-            entityId,
-            clusterData: resp.data
-          }
-        });
-      })
-      .catch((ex) => {
-        dispatch({
-          type: FETCH_CLUSTER_INFO,
-          payload: {
-            entityId,
-            clusterData: null
-          }
-        });
-      });
-  };
-};
-

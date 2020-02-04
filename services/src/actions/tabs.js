@@ -22,9 +22,9 @@ export const SET_TAB = AppConstants.ACTIONS.SET_TAB;
  *
  * @returns {Object}                  Action object
  */
-export function setTab(tabIndex = 0) {
+export const setTab = (tabIndex = 0) => {
   return {
     type: SET_TAB,
     payload: tabIndex
   };
-}
+};
