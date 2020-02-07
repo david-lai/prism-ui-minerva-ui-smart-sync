@@ -4,6 +4,7 @@
 // Groups API Actions
 //
 
+import moment from 'moment';
 import axios from 'axios';
 import AppConstants from './../utils/AppConstants';
 
@@ -75,19 +76,17 @@ export const fetchAlerts = (entityIds = []) => {
  */
 export const fetchSummaryAlerts = (dateRange = 'day') => {
   return (dispatch) => {
-    let timestamp = new Date().getTime();
+    let timestamp;
 
     if (dateRange === 'week') {
-      timestamp -= (7 * 86400000);
+      timestamp = (moment().subtract('1', 'weeks')).valueOf();
     } else if (dateRange === 'day') {
-      timestamp -= 86400000;
+      timestamp = (moment().subtract('1', 'days')).valueOf();
     }
-    const filter_criteria = `_created_timestamp_usecs_=ge=${timestamp};resolved==false`;
+    const filter_criteria = `_created_timestamp_usecs_=ge=${timestamp}000;resolved==false`;
     const query = {
       entity_type: 'alert',
       group_member_count: 1,
-      group_member_sort_attribute: '_created_timestamp_usecs_',
-      group_member_sort_order: 'DESCENDING',
       group_member_attributes: [
         {
           attribute: 'title'

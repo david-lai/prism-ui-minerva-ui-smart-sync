@@ -15,7 +15,7 @@ import {
 
 // default state
 const initialState = {
-  alertsWidgetRange: 'week',
+  alertsWidgetRange: 'day',
   serverAlerts: {}
 };
 

@@ -144,14 +144,8 @@ class FileServers extends React.Component {
    * @return {undefined}
    */
   refreshSummaryData() {
-    if (!this.props.fsData ||
-      typeof this.props.fsData.filtered_entity_count === 'undefined') {
-      this.props.fetchFsData();
-    }
-    if (!this.props.alertsData ||
-      typeof this.props.alertsData.filtered_entity_count === 'undefined') {
-      this.props.fetchAlerts();
-    }
+    this.props.fetchFsData();
+    this.props.fetchAlerts();
     this.populateServerAlerts();
   }
 
