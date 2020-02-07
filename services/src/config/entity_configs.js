@@ -109,12 +109,14 @@ const entity_configs = {
     ],
     actions: {},
     details: [],
-    filters: {},
-    gettingStarted: {
-      createActionId: 'create_sc',
-      gettingStartedPrompt: i18nT('noFiles',
-        'Minerva files have not been defined. Start by defining one.')
-    }
+    filters: {}
+    // Temporary Comment out. UmComment it when PC add FS workflow is
+    // supported
+    // gettingStarted: {
+    //   createActionId: 'create_sc',
+    //   gettingStartedPrompt: i18nT('noFiles',
+    //     'Minerva files have not been defined. Start by defining one.')
+    // }
   },
   event: {
     schema: {
