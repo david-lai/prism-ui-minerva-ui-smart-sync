@@ -9,13 +9,13 @@ import {
   FETCH_FS,
   FETCH_ALERTS,
   FETCH_SERVER_ALERTS,
+  FETCH_SUMMARY_ALERTS,
   SET_ALERTS_WIDGET_RANGE
 } from '../actions/groupsapis';
 
 // default state
 const initialState = {
-  baseApiUrl: 'https://localhost:3000',
-  alertsWidgetRange: 'day',
+  alertsWidgetRange: 'week',
   serverAlerts: {}
 };
 
@@ -39,6 +39,11 @@ function groupsapis(state = initialState, action) {
       return {
         ...state,
         alertsData: payload
+      };
+    case FETCH_SUMMARY_ALERTS:
+      return {
+        ...state,
+        summaryAlerts: payload
       };
     case FETCH_SERVER_ALERTS:
       return {

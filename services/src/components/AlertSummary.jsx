@@ -16,6 +16,7 @@ import {
   TextLabel,
   ThemeManager
 } from 'prism-reactjs';
+
 import AppUtil from '../utils/AppUtil';
 import i18n from '../utils/i18n';
 
@@ -82,7 +83,7 @@ class AlertSummary extends React.Component {
    *                     counts for all alert types and items array with alert objects
    */
   prepareSummaryAlertData() {
-    if (!this.props.alertsData) {
+    if (!this.props.summaryAlerts) {
       return null;
     }
 
@@ -94,7 +95,7 @@ class AlertSummary extends React.Component {
       },
       items: []
     };
-    const alertData = this.props.alertsData;
+    const alertData = this.props.summaryAlerts;
     if (alertData && alertData.filtered_entity_count) {
       alertSummary.items = AppUtil.extractGroupResults(alertData);
       alertSummary.totals = alertSummary.items.reduce((acc, val) => {
@@ -110,7 +111,7 @@ class AlertSummary extends React.Component {
   }
 
   render() {
-    const summaryData = this.prepareSummaryAlertData(this.props.alertsData);
+    const summaryData = this.prepareSummaryAlertData(this.props.summaryAlerts);
 
     const data = this.prepareAlertBarChartData(summaryData);
 
@@ -128,7 +129,7 @@ class AlertSummary extends React.Component {
           }
         }
       >
-        { !(summaryData && summaryData.totals) && this.props.alertsData !== false &&
+        { !(summaryData && summaryData.totals) && this.props.summaryAlerts !== false &&
           (
             <FlexLayout
               itemSpacing="5px"
@@ -145,7 +146,7 @@ class AlertSummary extends React.Component {
           )
         }
 
-        { this.props.alertsData === false &&
+        { this.props.summaryAlerts === false &&
           (
             <FlexLayout
               alignItems="center"
@@ -218,15 +219,16 @@ class AlertSummary extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    alertsData: state.groupsapi.alertsData
+    summaryAlerts: state.groupsapi.summaryAlerts
   };
 };
 
+
 AlertSummary.propTypes = {
-  alertsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+  summaryAlerts: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
 };
 
 export default connect(
   mapStateToProps,
-  null,
+  null
 )(AlertSummary);

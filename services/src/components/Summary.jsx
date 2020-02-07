@@ -18,6 +18,7 @@ import {
   Title
 } from 'prism-reactjs';
 
+import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
 
 import FileServerSummary from './FileServerSummary.jsx';
@@ -25,6 +26,7 @@ import AlertSummary from './AlertSummary.jsx';
 
 // Actions
 import {
+  fetchSummaryAlerts,
   setAlertsWidgetRange,
   setTab
 } from '../actions';
@@ -58,6 +60,7 @@ class Summary extends React.Component {
    */
   handleAlertRangeChange = (value) => {
     this.props.setAlertsWidgetRange(value);
+    this.props.fetchSummaryAlerts(value);
   }
 
   /**
@@ -71,8 +74,8 @@ class Summary extends React.Component {
       warning: 0,
       info: 0
     };
-    if (this.props.alertsData && this.props.alertsData.filtered_entity_count) {
-      totals = AppUtil.extractGroupResults(this.props.alertsData)
+    if (this.props.summaryAlerts && this.props.summaryAlerts.filtered_entity_count) {
+      totals = AppUtil.extractGroupResults(this.props.summaryAlerts)
         .reduce((acc, val) => {
           acc[val.severity]++;
           return acc;
@@ -176,7 +179,7 @@ class Summary extends React.Component {
                         { i18nT('alertsSummaryTitle', 'Alerts') }
                       </Title>
                     </FlexItem>
-                    { this.props.alertsData && this.props.alertsData.filtered_entity_count &&
+                    { this.props.summaryAlerts && this.props.summaryAlerts.filtered_entity_count &&
                       (
                         <FlexItem flexGrow="1">
                           <Badge
@@ -197,14 +200,15 @@ class Summary extends React.Component {
                         </FlexItem>
                       )
                     }
-                    { !(this.props.alertsData && this.props.alertsData.filtered_entity_count) &&
+                    { !(this.props.summaryAlerts &&
+                        this.props.summaryAlerts.filtered_entity_count) &&
                       (
                         <FlexItem flexGrow="1" />
                       )
                     }
                     <FlexItem flexGrow="0" alignSelf="flex-end">
                       <Select
-                        disabled={ !this.props.alertsData }
+                        disabled={ !this.props.summaryAlerts }
                         onChange={ this.handleAlertRangeChange }
                         selectOptions={
                           [
@@ -267,6 +271,20 @@ class Summary extends React.Component {
     );
   }
 
+  // Start Polling alerts data
+  componentWillMount() {
+    this.props.fetchSummaryAlerts(this.props.alertsWidgetRange);
+    this.dataPolling = setInterval(
+      () => {
+        this.props.fetchSummaryAlerts(this.props.alertsWidgetRange);
+      }, AppConstants.POLLING_FREQ_SECS * 1000);
+  }
+
+  // Stop Polling FS data
+  componentWillUnmount() {
+    clearInterval(this.dataPolling);
+  }
+
 }
 
 /**
@@ -279,23 +297,25 @@ const mapStateToProps = state => {
   return {
     fsData: state.groupsapi.fsData,
     alertsWidgetRange: state.groupsapi.alertsWidgetRange,
-    alertsData: state.groupsapi.alertsData
+    summaryAlerts: state.groupsapi.summaryAlerts
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     setTab: (tabIndex) => dispatch(setTab(tabIndex)),
-    setAlertsWidgetRange: (value) => dispatch(setAlertsWidgetRange(value))
+    setAlertsWidgetRange: (value) => dispatch(setAlertsWidgetRange(value)),
+    fetchSummaryAlerts: (value) => dispatch(fetchSummaryAlerts(value))
   };
 };
 
 Summary.propTypes = {
   setAlertsWidgetRange: PropTypes.func,
   setTab: PropTypes.func,
+  fetchSummaryAlerts: PropTypes.func,
   alertsWidgetRange: PropTypes.string,
   fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-  alertsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+  summaryAlerts: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
 };
 
 
