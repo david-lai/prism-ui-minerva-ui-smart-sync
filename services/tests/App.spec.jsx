@@ -22,6 +22,7 @@ describe('App', () => {
     groupsapi: {
       fsData,
       alertsData,
+      summaryAlerts: alertsData,
       alertsWidgetRange: 'day'
     },
     tabs: {
