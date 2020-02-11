@@ -7,27 +7,41 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { EntityBrowser } from 'ebr-ui';
-import { LeftNavLayout, Loader, Menu, MenuGroup, MenuItem, StackingLayout, TextLabel, Title,
-  Divider, FlexLayout, FlexItem } from 'prism-reactjs';
+import {
+  Badge,
+  Divider,
+  FlexItem,
+  FlexLayout,
+  LeftNavLayout,
+  Loader,
+  Menu,
+  MenuGroup,
+  MenuItem,
+  StackingLayout,
+  TextLabel,
+  Title
+} from 'prism-reactjs';
 import EntityConfigs from '../config/entity_configs.js';
 import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
 import EBComponentFactory from '../utils/EBComponentFactory';
 import i18n from '../utils/i18n';
 
-import FileServerSummary from './FileServerSummary.jsx';
-import AlertSummary from './AlertSummary.jsx';
+import Summary from './Summary.jsx';
+
 
 // Actions
 import {
   openModal,
-  fetchFsData
+  fetchFsData,
+  fetchAlerts,
+  fetchServerAlerts,
+  setTab
 } from '../actions';
 
 // Helper to translate strings from this module
 const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
   'FileServers', key, defaultValue, replacedValue);
-const DURATION = 30000;
 
 class FileServers extends React.Component {
 
@@ -39,12 +53,17 @@ class FileServers extends React.Component {
 
     this.state = {
       loading: false,
-      showSummary: true,
-      ebConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER)
+      ebConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER),
+      tabKeys: [
+        AppConstants.SUMMARY_TAB_KEY,
+        AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER,
+        AppConstants.ENTITY_TYPES.ENTITY_ALERT,
+        AppConstants.ENTITY_TYPES.ENTITY_EVENT
+      ]
     };
   }
 
-  getEbConfiguration= (entityType) => {
+  getEbConfiguration = (entityType) => {
     // EB Configurations
     this.entityTypes = [
       entityType
@@ -98,27 +117,69 @@ class FileServers extends React.Component {
   }
 
   onMenuChange = (e) => {
-    if (e.key !== AppConstants.SUMMARY_TAB_KEY) {
-      this.setState({
-        showSummary: false,
-        ebConfiguration: this.getEbConfiguration(e.key)
-      });
-    } else {
-      this.setState({
-        showSummary: true
-      });
+    let tabIndex = +(e.key.substr(e.key.lastIndexOf('_') + 1));
+    if (isNaN(tabIndex)) {
+      tabIndex = 0;
     }
+    this.props.setTab(tabIndex);
+  }
+
+  /**
+   * Fetches and populates server alert data if not present
+   *
+   * @return {undefined}
+   */
+  populateServerAlerts() {
+    if (this.props.fsData && this.props.fsData.filtered_entity_count) {
+      const fsIds = AppUtil.extractGroupResults(this.props.fsData).map(fsItem => fsItem.entity_id);
+      if (fsIds && Array.isArray(fsIds) && fsIds.length) {
+        fsIds.forEach(this.props.fetchServerAlerts);
+      }
+    }
+  }
+
+  /**
+   * Data polling method
+   *
+   * @return {undefined}
+   */
+  refreshSummaryData() {
+    this.props.fetchFsData();
+    this.props.fetchAlerts();
+    this.populateServerAlerts();
   }
 
   getLeftPanel() {
     const fileServers_num = Number(this.props.fsData && this.props.fsData.filtered_entity_count);
     const numFileServers = this.renderFileServersCount(fileServers_num);
+    let alertCount = 0;
+    let maxSeverity = -1;
+    const severities = [
+      'info',
+      'warning',
+      'critical'
+    ];
+    let alertBadgeColor = Badge.BADGE_COLOR_TYPES.GRAY;
+    if (this.props.alertsData && this.props.alertsData.filtered_entity_count) {
+      alertCount = +this.props.alertsData.filtered_entity_count;
+      AppUtil.extractGroupResults(this.props.alertsData).forEach((alert) => {
+        const asIndex = severities.indexOf(alert.severity);
+        if (maxSeverity < asIndex) {
+          maxSeverity = asIndex;
+        }
+      });
+    }
+    if (maxSeverity === 1) {
+      alertBadgeColor = Badge.BADGE_COLOR_TYPES.YELLOW;
+    } else if (maxSeverity === 2) {
+      alertBadgeColor = Badge.BADGE_COLOR_TYPES.RED;
+    }
 
     return (
       <Menu oldMenu={ false }
         itemSpacing="10px"
         padding="20px-0px"
-        activeKeyPath={ [this.state.currentPanelKey, '1'] }
+        activeKeyPath={ [`tab_${this.props.tabIndex}`, '1'] }
         onClick={ this.onMenuChange } style={ { width: '240px' } } >
 
         <StackingLayout padding="0px-20px" itemSpacing="10px">
@@ -128,16 +189,35 @@ class FileServers extends React.Component {
         </StackingLayout>
 
         <MenuGroup key="1">
-          <MenuItem key={ AppConstants.SUMMARY_TAB_KEY }>
+          <MenuItem key={ 'tab_0' } active={ this.props.tabIndex === 0 }>
             { i18nT('summary', 'Summary') }
           </MenuItem>
-          <MenuItem key={ AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER }>
+          <MenuItem key={ 'tab_1' } active={ this.props.tabIndex === 1 }>
             { i18nT('fileServers', 'File Servers') }
           </MenuItem>
-          <MenuItem key={ AppConstants.ENTITY_TYPES.ENTITY_ALERT }>
-            { i18nT('alerts', 'Alerts') }
+          <MenuItem key={ 'tab_2' } active={ this.props.tabIndex === 2 }>
+            <FlexLayout flexGrow="1" justifyContent="space-between">
+              <FlexItem>
+                { i18nT('alerts', 'Alerts') }
+              </FlexItem>
+              <FlexItem>
+                { !alertCount &&
+                  (
+                    <Loader />
+                  )
+                }
+                { alertCount > 0 &&
+                  (
+                    <Badge
+                      color={ alertBadgeColor }
+                      count={ AppUtil.rawNumericFormat(alertCount) }
+                    />
+                  )
+                }
+              </FlexItem>
+            </FlexLayout>
           </MenuItem>
-          <MenuItem key={ AppConstants.ENTITY_TYPES.ENTITY_EVENT }>
+          <MenuItem key={ 'tab_3' } active={ this.props.tabIndex === 3 }>
             { i18nT('events', 'Events') }
           </MenuItem>
         </MenuGroup>
@@ -169,59 +249,78 @@ class FileServers extends React.Component {
     }
     return (
       <LeftNavLayout leftPanel={ this.getLeftPanel() } itemSpacing="0"
-        rightBodyContent={ !this.state.showSummary ? (
+        rightBodyContent={ this.props.tabIndex > 0 ? (
           <EntityBrowser { ...this.state.ebConfiguration } />
         ) : (
-          <FlexLayout className="entity-browser" itemSpacing="0px" flexGrow="1">
-            <FlexItem className="main-content" flexGrow="1">
-              <FlexLayout itemSpacing="10px" flexGrow="1" itemFlexBasis="100pc">
-                <FlexItem>
-                  <FileServerSummary />
-                </FlexItem>
-                <FlexItem>
-                  <AlertSummary />
-                </FlexItem>
-              </FlexLayout>
-            </FlexItem>
-          </FlexLayout>
+          <Summary />
         )
         } />
     );
   }
 
-  // Start Polling FS data
+
+  // Start Polling alerts data
   componentWillMount() {
-    this.props.fetchFsData();
+    this.refreshSummaryData();
     this.dataPolling = setInterval(
       () => {
-        this.props.fetchFsData();
-      }, DURATION);
+        this.refreshSummaryData();
+      }, AppConstants.POLLING_FREQ_SECS * 1000);
+  }
+
+  // Set eb configuration depending on tabIndex prop
+  componentWillReceiveProps(nextProps) {
+    if (this.props.tabIndex !== nextProps.tabIndex) {
+      if (nextProps.tabIndex > 0) {
+        this.setState({
+          ebConfiguration: this.getEbConfiguration(this.state.tabKeys[nextProps.tabIndex])
+        });
+      }
+    }
+  }
+
+  // Load initial fs alerts if not present
+  componentDidUpdate(prevProps) {
+    if (!prevProps.fsData && this.props.fsData) {
+      this.populateServerAlerts();
+    }
   }
 
   // Stop Polling FS data
   componentWillUnmount() {
     clearInterval(this.dataPolling);
   }
+
 }
 
 const mapStateToProps = state => {
   return {
-    fsData: state.groupsapi.fsData
+    fsData: state.groupsapi.fsData,
+    alertsData: state.groupsapi.alertsData,
+    tabIndex: state.tabs.tabIndex
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     openModal: (type, options) => dispatch(openModal(type, options)),
-    fetchFsData: () => dispatch(fetchFsData())
+    fetchFsData: () => dispatch(fetchFsData()),
+    fetchServerAlerts: (serverId) => dispatch(fetchServerAlerts(serverId)),
+    fetchAlerts: () => dispatch(fetchAlerts()),
+    setTab: (tabIndex) => dispatch(setTab(tabIndex))
   };
 };
 
 FileServers.propTypes = {
   openModal: PropTypes.func,
-  fsData: PropTypes.object,
+  fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  alertsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   filtered_entity_count: PropTypes.string,
-  fetchFsData: PropTypes.func
+  fetchFsData: PropTypes.func,
+  fetchServerAlerts: PropTypes.func,
+  fetchAlerts: PropTypes.func,
+  setTab: PropTypes.func,
+  tabIndex: PropTypes.number
 };
 
 export default connect(

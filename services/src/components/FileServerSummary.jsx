@@ -6,10 +6,19 @@
 
 import React from 'react';
 import { connect } from 'react-redux';
-import { ContainerLayout, StackingLayout, Title, Table, ThemeManager } from 'prism-reactjs';
-import AppUtil from '../utils/AppUtil';
+import PropTypes from 'prop-types';
+import {
+  Badge,
+  ContainerLayout,
+  FlexLayout,
+  FlexItem,
+  Loader,
+  Table,
+  TextLabel
+} from 'prism-reactjs';
 import i18n from '../utils/i18n';
 
+import AppUtil from '../utils/AppUtil';
 
 // Helper to translate strings from this module
 const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
@@ -17,20 +26,17 @@ const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
 
 class FileServerSummary extends React.Component {
 
-  static propTypes = {
-  };
-
+  /**
+   * Constructor method
+   *
+   * @param  {Object} props Component props
+   *
+   * @return {undefined}
+   */
   constructor(props) {
     super(props);
 
     this.state = {
-      loading: true,
-      alertColors: {
-        info: 'light-gray-1',
-        warning: 'yellow-1',
-        critical: 'red-1'
-      },
-      summaryData: {},
       tableStructure: {
         hideHeader: true,
         columnWidths: {
@@ -43,110 +49,154 @@ class FileServerSummary extends React.Component {
           key: 'title'
         },
         {
-          title: i18nT('critical', 'Critical'),
+          title: i18nT('fileServerAlertCritical', 'Critical'),
           key: 'critical',
           render: this.renderAlertCell.bind(this, 'critical')
         },
         {
-          title: i18nT('warning', 'Warning'),
+          title: i18nT('fileServerAlertWarning', 'Warning'),
           key: 'warning',
           render: this.renderAlertCell.bind(this, 'warning')
         },
         {
-          title: i18nT('info', 'Info'),
+          title: i18nT('fileServerAlertInfo', 'Info'),
           key: 'info',
           render: this.renderAlertCell.bind(this, 'info')
         }
-      ],
-      tableDataSource: []
+      ]
     };
   }
 
+  /**
+   * Renders single table cell for file server alerts
+   *
+   * @param  {String}       alertSeverity   Severity (info, warning, critical)
+   * @param  {String|node}  cellData        Text to display next to the badge
+   *
+   * @return {node}                         Node for table cell contents
+   */
   renderAlertCell(alertSeverity, cellData) {
-    return (
-      <span style={
-        {
-          display: 'flex',
-          alignItems: 'center'
-        }
-      }
-      >
-        <span style={
-          {
-            width: '6px',
-            height: '6px',
-            backgroundColor: ThemeManager.getVar(this.state.alertColors[alertSeverity]),
-            borderRadius: '3px',
-            display: 'inline-flex',
-            marginRight: '10px'
-          }
-        }
-        />
-        { cellData }
-      </span>
-    );
-  }
-
-  render() {
-    let tableTitle = i18nT('highlightedFileServers', 'Highlighted file servers');
-    if (this.state.summaryData.total) {
-      tableTitle += ` (${this.state.summaryData.total})`;
+    let value = cellData;
+    if (value === null) {
+      value = (
+        <Loader />
+      );
     }
-    tableTitle = (
-      <Title size="h3">
-        { tableTitle }
-      </Title>
-    );
-
+    let color = Badge.BADGE_COLOR_TYPES.GRAY;
+    if (alertSeverity === 'warning') {
+      color = Badge.BADGE_COLOR_TYPES.YELLOW;
+    } else if (alertSeverity === 'critical') {
+      color = Badge.BADGE_COLOR_TYPES.RED;
+    }
     return (
-      <StackingLayout padding="20px">
-        <ContainerLayout backgroundColor="white" padding="15px">
-          <Table
-            border={ false }
-            loading={ this.state.loading }
-            structure={ this.state.tableStructure }
-            topSection={
-              {
-                leftContent: tableTitle
-              }
-            }
-            oldTable={ false }
-            rowKey="entity_id"
-            columns={ this.state.tableColumns }
-            dataSource={ this.state.tableDataSource }
-          />
-        </ContainerLayout>
-      </StackingLayout>
+      <Badge color={ color } text={ value } />
     );
   }
 
-  componentWillMount() {
-    // Fetch aggregated file server summary data
-    AppUtil.fetchSummaryFSData()
-      .then(
-        (summaryData) => {
-          // Set the datasource for the table
-          this.setState({
-            loading: false,
-            summaryData,
-            tableDataSource: summaryData.items
-          });
-        })
-      .catch(() => {
-        this.setState({
-          loading: false,
-          tableDataSource: [],
-          errorMessage: i18nT('errorFetchingPolicies', 'Error fetching File Servers') });
+  /**
+   * Prepares summary FS data, calculating total and preparing table dataSource
+   *
+   * @return {Object}   Prepared FS data
+   */
+  prepareSummaryFSData() {
+    if (!this.props.fsData) {
+      return false;
+    }
+
+    const summaryData = {
+      total: 0,
+      items: []
+    };
+
+    if (this.props.fsData.filtered_entity_count) {
+      summaryData.total = this.props.fsData.filtered_entity_count;
+      summaryData.items = AppUtil.extractGroupResults(this.props.fsData).map((er) => {
+        const fsResult = {
+          entity_id: er.entity_id,
+          title: er.name,
+          info: null,
+          warning: null,
+          critical: null
+        };
+        if (this.props.serverAlerts && this.props.serverAlerts[er.entity_id]) {
+          const fsAlerts = AppUtil.extractGroupResults(this.props.serverAlerts[er.entity_id]);
+          fsResult.info = fsAlerts.filter(alert => alert.severity === 'info').length;
+          fsResult.warning = fsAlerts.filter(alert => alert.severity === 'warning').length;
+          fsResult.critical = fsAlerts.filter(alert => alert.severity === 'critical').length;
+        }
+
+        return fsResult;
       });
+    }
+    return summaryData;
+  }
+
+  /**
+   * Renders the component
+   *
+   * @return {node} Component contents
+   */
+  render() {
+    const summaryData = this.prepareSummaryFSData();
+    const dataSource = summaryData && summaryData.items ? summaryData.items : [];
+    return (
+      <ContainerLayout padding="15px">
+        { this.props.fsData === false &&
+          (
+            <FlexLayout
+              alignItems="center"
+              justifyContent="center"
+              flexDirection="column"
+            >
+              <FlexItem>
+                <TextLabel
+                  type={ TextLabel.TEXT_LABEL_TYPE.ERROR }
+                  size={ TextLabel.TEXT_LABEL_SIZE.MEDIUM }
+                >
+                  { i18nT('fetchingDataFailed', 'Fetching data failed') }
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
+          )
+        }
+        { this.props.fsData !== false &&
+          (
+            <Table
+              border={ false }
+              loading={ !summaryData || !this.props.fsData }
+              structure={ this.state.tableStructure }
+              oldTable={ false }
+              rowKey="entity_id"
+              columns={ this.state.tableColumns }
+              dataSource={ dataSource }
+            />
+          )
+        }
+      </ContainerLayout>
+    );
   }
 
 }
 
+/**
+ * Maps store state to props
+ * @param  {Object} state Store state
+ *
+ * @return {Object}       Props map
+ */
+const mapStateToProps = state => {
+  return {
+    fsData: state.groupsapi.fsData,
+    serverAlerts: state.groupsapi.serverAlerts
+  };
+};
 
 FileServerSummary.propTypes = {
-
+  serverAlerts: PropTypes.object,
+  fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
 };
 
 export default connect(
-  null,
+  mapStateToProps,
+  null
 )(FileServerSummary);

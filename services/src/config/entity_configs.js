@@ -162,6 +162,10 @@ const entity_configs = {
               columnWidth: '20%'
             },
             classification: {
+              formatter: 'join_pascal_case_array',
+              formatterOptions: {
+                delimiter: ', '
+              },
               columnWidth: '10%'
             },
             cluster : {
@@ -281,9 +285,11 @@ const entity_configs = {
               columnWidth: '15%'
             },
             impact_type: {
+              formatter: 'separate_pascal_case',
               columnWidth: '15%'
             },
             severity: {
+              formatter: 'capitalize_sentence',
               columnWidth: '10%'
             },
             _created_timestamp_usecs_: {
@@ -302,7 +308,9 @@ const entity_configs = {
           ],
           filterByAttributes: [
             'cluster',
-            'source_entity_name'
+            'source_entity_name',
+            'severity',
+            'resolved'
           ],
           defaultSortingAttribute: '_created_timestamp_usecs_'
         },
@@ -337,14 +345,15 @@ const entity_configs = {
         }
       }
     ],
-    actions: [],
+    actions: {},
     details: [],
     filters: {
       local: {
         // Local filters are specific to entity
         type: 'simple',
         value: {
-          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}'
+          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}',
+          2: '{"isChecked":true,"attribute":"resolved","op":"eq","value1":"false","value2":""}'
         }
       }
     },

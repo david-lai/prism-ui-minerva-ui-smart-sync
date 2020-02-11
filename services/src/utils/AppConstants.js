@@ -65,7 +65,14 @@ const AppConstants = {
 
   // Action Types
   ACTIONS: {
-    FETCH_FS: 'fetch_fs'
+    FETCH_FS: 'fetch_fs',
+
+    FETCH_ALERTS: 'fetch_alerts',
+    FETCH_SUMMARY_ALERTS: 'fetch_summary_alerts',
+    FETCH_SERVER_ALERTS: 'fetch_server_alerts',
+    SET_ALERTS_WIDGET_RANGE: 'set_alerts_widget_range',
+
+    SET_TAB: 'set_tab'
   }
 };
 

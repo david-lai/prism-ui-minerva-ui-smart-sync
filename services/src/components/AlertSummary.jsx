@@ -6,95 +6,49 @@
 import moment from 'moment';
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
   BarChart,
   ContainerLayout,
-  StackingLayout,
-  FlexLayout,
   FlexItem,
+  FlexLayout,
   Loader,
-  Title,
   TextLabel,
   ThemeManager
 } from 'prism-reactjs';
+
 import AppUtil from '../utils/AppUtil';
 import i18n from '../utils/i18n';
 
+
 // Helper to translate strings from this module
 const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
-  'Summary', key, defaultValue, replacedValue);
+  'AlertSummary', key, defaultValue, replacedValue);
 
+/**
+ * AlertSummary component class
+ * @class
+ */
 class AlertSummary extends React.Component {
 
-  static propTypes = {
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      loading: true,
-      errorMessage: '',
-      alertColors: {
-        info: 'light-gray-1',
-        warning: 'yellow-1',
-        critical: 'red-1'
-      },
-      summaryData: {
-        totals: {
-          info: 0,
-          warning: 0,
-          critical: 0
-        },
-        items: []
-      }
-    };
-  }
-
-  renderAlertCount(alertSeverity, count) {
-    return (
-      <span style={
-        {
-          width: '20px',
-          height: '20px',
-          backgroundColor: ThemeManager.getVar(this.state.alertColors[alertSeverity]),
-          borderRadius: '10px',
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginLeft: '10px',
-          color: 'white',
-          fontSize: '0.9em'
-        }
-      }
-      >
-        { count }
-      </span>
-    );
-  }
-
-  renderAlertCounts() {
-    return (
-      <div>
-        { this.renderAlertCount('critical', this.state.summaryData.totals.critical) }
-        { this.renderAlertCount('warning', this.state.summaryData.totals.warning) }
-        { this.renderAlertCount('info', this.state.summaryData.totals.info) }
-      </div>
-    );
-  }
-
-  getAlertBarChartData() {
+  /**
+   * Repacks alert summary data (from self.prepareSummaryAlertData) in order
+   * for it to be compatible with chart component
+   *
+   * @param  {Object} summaryData   Summary alert data ( @see prepareSummaryAlertData )
+   *
+   * @return {Array}                Data array ready for charts component
+   */
+  prepareAlertBarChartData(summaryData) {
     let data = [];
-    if (this.state.summaryData) {
-      const alerts = this.state.summaryData.items ? this.state.summaryData.items : [];
+    if (summaryData) {
+      const alerts = summaryData.items ? summaryData.items : [];
       const items = alerts.map((alert) => {
         const alertTimestamp = parseInt((alert._created_timestamp_usecs_ / 1000), 10);
-        const dayTimestamp = moment(alertTimestamp).startOf('day').valueOf();
         const dayName = moment(alertTimestamp).format('MMM D');
         return {
           ...alert,
           alertTimestamp,
-          dayTimestamp,
           dayName
         };
       });
@@ -122,173 +76,159 @@ class AlertSummary extends React.Component {
     }
   }
 
+  /**
+   * Prepares raw alerts data from props
+   *
+   * @return {Object}    AlertSummary object with 'totals' property containing
+   *                     counts for all alert types and items array with alert objects
+   */
+  prepareSummaryAlertData() {
+    if (!this.props.summaryAlerts) {
+      return null;
+    }
+
+    const alertSummary = {
+      totals: {
+        info: 0,
+        warning: 0,
+        critical: 0
+      },
+      items: []
+    };
+    const alertData = this.props.summaryAlerts;
+    if (alertData && alertData.filtered_entity_count) {
+      alertSummary.items = AppUtil.extractGroupResults(alertData);
+      alertSummary.totals = alertSummary.items.reduce((acc, val) => {
+        acc[val.severity]++;
+        return acc;
+      }, {
+        ...{},
+        ...alertSummary.totals
+      });
+    }
+
+    return alertSummary;
+  }
+
   render() {
-    const data = this.getAlertBarChartData();
+    const summaryData = this.prepareSummaryAlertData(this.props.summaryAlerts);
+
+    const data = this.prepareAlertBarChartData(summaryData);
 
     const criticalColor = ThemeManager.getVar('red-1');
     const warningColor = ThemeManager.getVar('yellow-1');
     const infoColor = ThemeManager.getVar('light-gray-1');
 
     return (
-      <StackingLayout padding="20px">
-        <ContainerLayout backgroundColor="white" padding="15px">
-          <StackingLayout>
-            <FlexLayout itemSpacing="10px" alignItems="center" justifyContent="center">
-              <FlexItem flexGrow="0" >
-                <Title size="h3">
-                  { i18nT('alertsSummaryTitle', 'Alerts') }
-                </Title>
-              </FlexItem>
-              <FlexItem flexGrow="1">
-                { !this.state.loading && this.renderAlertCounts() }
-              </FlexItem>
-              <FlexItem flexGrow="0" />
-            </FlexLayout>
-            { this.state.loading &&
-              (
+      <ContainerLayout
+        backgroundColor="white"
+        padding="15px"
+        style={
+          {
+            height: '100%'
+          }
+        }
+      >
+        { !(summaryData && summaryData.totals) && this.props.summaryAlerts !== false &&
+          (
+            <FlexLayout
+              itemSpacing="5px"
+              alignItems="center"
+              justifyContent="center"
+              flexDirection="column"
+              padding="40px"
+            >
+              <FlexItem />
+              <FlexItem>
                 <Loader tip={ i18nT('fetchingData', 'Fetching data') } />
-              )
-            }
+              </FlexItem>
+            </FlexLayout>
+          )
+        }
 
-            { !this.state.loading && this.state.errorMessage &&
-              (
-                <div>
-                  { this.state.errorMessage }
-                </div>
-              )
-            }
+        { this.props.summaryAlerts === false &&
+          (
+            <FlexLayout
+              alignItems="center"
+              justifyContent="center"
+              flexDirection="column"
+            >
+              <FlexItem>
+                <TextLabel
+                  type={ TextLabel.TEXT_LABEL_TYPE.ERROR }
+                  size={ TextLabel.TEXT_LABEL_SIZE.MEDIUM }
+                >
+                  { i18nT('fetchingDataFailed', 'Fetching data failed') }
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
+          )
+        }
 
-            { !this.state.loading && !this.state.errorMessage &&
-              (
-                <FlexLayout alignItems="center" justifyContent="center" flexDirection="column">
-                  <FlexItem>
-                    <BarChart
-                      width={ 400 }
-                      height={ 200 }
-                      barSize={ 20 }
-                      tooltipProps={ {} }
-                      bars={
-                        [
-                          {
-                            dataKey: 'warning',
-                            fill: warningColor,
-                            stackId: 1
-                          },
-                          {
-                            dataKey: 'info',
-                            fill: infoColor,
-                            stackId: 1
-                          },
-                          {
-                            dataKey: 'critical',
-                            fill: criticalColor,
-                            stackId: 1
-                          }
-                        ]
-                      }
-                      data={ data }
-                      xAxisProps={
-                        {
-                          padding: {
-                            left: 40,
-                            right: 0
-                          }
-                        }
-                      }
-                      yAxisProps={
-                        {
-                          allowDecimals: false,
-                          domain: [
-                            'dataMin',
-                            4
-                          ]
-                        }
-                      }
-                    />
-                  </FlexItem>
-                  <FlexItem flexGrow="0">
-                    <FlexLayout alignItems="center">
-                      <FlexItem>
-                        <span style={
-                          {
-                            marginRight: '10px',
-                            width: '6px',
-                            height: '6px',
-                            borderRadius: '3px',
-                            display: 'inline-block',
-                            backgroundColor: ThemeManager.getVar(this.state.alertColors.critical)
-                          }
-                        }
-                        />
-                        <TextLabel>
-                          { i18nT('alertLegendCritical', 'Critical') }
-                        </TextLabel>
-                      </FlexItem>
-                      <FlexItem>
-                        <span style={
-                          {
-                            marginRight: '10px',
-                            width: '6px',
-                            height: '6px',
-                            borderRadius: '3px',
-                            display: 'inline-block',
-                            backgroundColor: ThemeManager.getVar(this.state.alertColors.critical)
-                          }
-                        }
-                        />
-                        <TextLabel>
-                          { i18nT('alertLegendWarning', 'Warning') }
-                        </TextLabel>
-                      </FlexItem>
-                      <FlexItem>
-                        <span style={
-                          {
-                            marginRight: '10px',
-                            width: '6px',
-                            height: '6px',
-                            borderRadius: '3px',
-                            display: 'inline-block',
-                            backgroundColor: ThemeManager.getVar(this.state.alertColors.critical)
-                          }
-                        }
-                        />
-                        <TextLabel>
-                          { i18nT('alertLegendInfo', 'Info') }
-                        </TextLabel>
-                      </FlexItem>
-                    </FlexLayout>
-                  </FlexItem>
-                </FlexLayout>
-              )
-            }
-          </StackingLayout>
-        </ContainerLayout>
-      </StackingLayout>
+        { summaryData && summaryData.totals &&
+          (
+            <BarChart
+              barSize={ 8 }
+              tooltipProps={ {} }
+              bars={
+                [
+                  {
+                    dataKey: 'warning',
+                    fill: warningColor,
+                    stackId: 1
+                  },
+                  {
+                    dataKey: 'info',
+                    fill: infoColor,
+                    stackId: 1
+                  },
+                  {
+                    dataKey: 'critical',
+                    fill: criticalColor,
+                    stackId: 1
+                  }
+                ]
+              }
+              data={ data }
+              xAxisProps={
+                {
+                  padding: {
+                    left: 40,
+                    right: 0
+                  }
+                }
+              }
+              yAxisProps={
+                {
+                  allowDecimals: false,
+                  domain: [
+                    'dataMin',
+                    4
+                  ]
+                }
+              }
+            />
+          )
+        }
+      </ContainerLayout>
     );
-  }
-
-  componentWillMount() {
-    // Fetch aggregated summary data
-    AppUtil.fetchSummaryAlertData()
-      .then(
-        (summaryData) => {
-          this.setState({
-            loading: false,
-            summaryData
-          });
-        })
-      .catch(() => {
-        this.setState({
-          loading: false,
-          errorMessage: i18nT('errorFetchingAlerts', 'Error fetching Alerts') });
-      });
   }
 
 }
 
 
-AlertSummary.propTypes = {};
+const mapStateToProps = state => {
+  return {
+    summaryAlerts: state.groupsapi.summaryAlerts
+  };
+};
+
+
+AlertSummary.propTypes = {
+  summaryAlerts: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+};
 
 export default connect(
-  null,
+  mapStateToProps,
+  null
 )(AlertSummary);

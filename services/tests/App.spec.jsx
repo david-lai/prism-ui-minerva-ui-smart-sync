@@ -5,6 +5,10 @@ import thunk from 'redux-thunk'
 import { mount } from 'enzyme';
 import App from '../src/App';
 
+// Temporary measure until API work is done
+import fsData from '../mockserver/mock_data/groups_file_servers.json';
+import alertsData from '../mockserver/mock_data/groups_alerts.json';
+
 describe('App', () => {
   const middlewares = [thunk];
   const mockStore = configureStore(middlewares);
@@ -16,7 +20,13 @@ describe('App', () => {
     type: ''
   	},
     groupsapi: {
-      fsData: {}
+      fsData,
+      alertsData,
+      summaryAlerts: alertsData,
+      alertsWidgetRange: 'day'
+    },
+    tabs: {
+      tabIndex: 0,
     }
   }
 
@@ -27,9 +37,3 @@ describe('App', () => {
     expect(cbp).toBeTruthy();
   });
 });
-
-// describe('App', () => {
-//   it('Mounts main App', () => {	
-//     expect(1).toBeTruthy();
-//   });
-// });

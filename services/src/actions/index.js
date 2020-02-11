@@ -6,4 +6,5 @@
 
 export * from './modals';
 export * from './groupsapis';
+export * from './tabs';
 
