@@ -113,7 +113,6 @@ class EBComponentFactory {
         }
         return (<span>{ joinedPascalCaseArray }</span>);
       case COMPONENTS.PICK_LIST_ITEM:
-        console.log(options);
         const listItemValue = FormatterUtil.pickListItem(options.text, options.options);
         return (<span>{ listItemValue }</span>);
       default:
