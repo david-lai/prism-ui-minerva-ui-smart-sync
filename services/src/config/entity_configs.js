@@ -241,8 +241,9 @@ const entity_configs = {
           select: true,
           displayName: i18nT('schema.alert.description', 'Description')
         },
-        source_entity_name: {
+        param_value_list: {
           type: 'string',
+          isList: true,
           displayName: i18nT('schema.alert.sourceEntity', 'Source Entity')
         },
         impact_type: {
@@ -265,7 +266,10 @@ const entity_configs = {
           type: 'integer',
           displayName: i18nT('schema.alert.createdTime', 'Create Time')
         },
-        cluster: {
+        _cluster_uuid_: {
+          type: 'string'
+        },
+        cluster_name: {
           type: 'string',
           displayName: i18nT('schema.alert.cluster', 'Cluster')
         }
@@ -279,10 +283,14 @@ const entity_configs = {
           primaryAttribute: '_created_timestamp_usecs_',
           customRenders: {
             title : {
-              columnWidth: '20%'
+              columnWidth: '25%'
             },
-            source_entity_name: {
-              columnWidth: '15%'
+            param_value_list: {
+              columnWidth: '15%',
+              formatter: 'pick_list_item',
+              formatterOptions: {
+                index: 1
+              }
             },
             impact_type: {
               formatter: 'separate_pascal_case',
@@ -294,10 +302,10 @@ const entity_configs = {
             },
             _created_timestamp_usecs_: {
               formatter: 'timestampformatterUSec',
-              columnWidth: '10%'
+              columnWidth: '15%'
             },
-            cluster : {
-              columnWidth: '10%'
+            cluster_name : {
+              columnWidth: '20%'
             }
           },
           groupByAttributes: [
@@ -308,7 +316,6 @@ const entity_configs = {
           ],
           filterByAttributes: [
             'cluster',
-            'source_entity_name',
             'severity',
             'resolved'
           ],
@@ -328,11 +335,11 @@ const entity_configs = {
           primaryAttribute: '_created_timestamp_usecs_',
           displayAttributes: [
             'title',
-            'source_entity_name',
+            'param_value_list',
             'impact_type',
             'severity',
             '_created_timestamp_usecs_',
-            'cluster'
+            'cluster_name'
           ],
           sortByAttributes: [
             '_created_timestamp_usecs_'

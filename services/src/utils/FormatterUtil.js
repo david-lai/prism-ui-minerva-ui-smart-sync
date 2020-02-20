@@ -65,6 +65,32 @@ const FormatterUtil = {
       }
     }
     return formatted;
+  },
+
+  /**
+   * Returns single value from list
+   *
+   * @param  {Array}      list          Value list
+   * @param  {Object}     options       Options hash (default: { delimiter: ' ' })
+   *
+   * @return {Mixed}                    List item
+   */
+  pickListItem(list, options) {
+    let formatted = '';
+    if (!(options && typeof options === 'object')) {
+      options = {};
+    }
+    if (!options.index) {
+      options.index = 0;
+    }
+    if (list) {
+      if (Array.isArray(list)) {
+        formatted = list[options.index];
+      } else {
+        formatted = list;
+      }
+    }
+    return formatted;
   }
 };
 
