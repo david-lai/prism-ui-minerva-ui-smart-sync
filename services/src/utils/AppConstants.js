@@ -20,10 +20,20 @@ const AppConstants = {
   },
 
   SUMMARY_TAB_KEY: 'summary',
+  FILE_SERVERS_TAB_KEY: 'file_servers',
+  ALERTS_TAB_KEY: 'alerts',
+  EVENTS_TAB_KEY: 'events',
 
   // Target and State for Header IFrame dom click listener
   IFRAME_EVENT_OPEN_PE: 'iframe_event_open_pe',
+  IFRAME_EVENT_CHANGE_PC_URL: 'iframe_event_change_pc_url',
+  IFRAME_EVENT_REQUEST_PC_URL: 'iframe_event_request_pc_url',
+  IFRAME_EVENT_CURRENT_PC_URL: 'iframe_event_current_pc_url',
   FS_PC_TO_PE: 'fs_pc_to_pe',
+  FS_CHANGE_PC_URL: 'fs_change_pc_url',
+  FS_REQUEST_PC_URL: 'fs_request_pc_url',
+  FS_CURRENT_PC_URL: 'fs_current_pc_url',
+  FS_PC_URL_LISTENER: 'fs_pc_url_listener',
 
   ENTITY_TYPES: {
     ENTITY_FILE_SERVER: 'file_server_service',

@@ -4,6 +4,9 @@
 // The Minerva UI Sub-Application
 //
 import React from 'react';
+import {
+  HashRouter as Router
+} from 'react-router-dom';
 import FileServers from './components/FileServers';
 // Containers
 import { ModalContainer } from './containers';
@@ -18,7 +21,9 @@ class App extends React.Component {
     return (
       <div className="file-server-app">
         <ModalContainer />
-        <FileServers />
+        <Router>
+          <FileServers />
+        </Router>
       </div>
     );
   }

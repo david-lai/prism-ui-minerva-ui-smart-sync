@@ -8,10 +8,8 @@ import { combineReducers } from 'redux';
 // Reducers
 import modals from './modals';
 import groupsapi from './groupsapi';
-import tabs from './tabs';
 
 export default combineReducers({
   modals,
-  groupsapi,
-  tabs
+  groupsapi
 });
