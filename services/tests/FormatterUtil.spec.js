@@ -20,4 +20,9 @@ describe('FormatterUtil', () => {
       .toBe(sentence);
   });
 
+  it('Picks valid value from the list', () => {
+    expect(FormatterUtil.pickListItem(['one', 'two', 'three'], { index: 1 }))
+      .toBe('two');
+  });
+
 });

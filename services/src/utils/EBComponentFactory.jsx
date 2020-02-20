@@ -31,7 +31,8 @@ const COMPONENTS = {
   SEPARATE_PASCAL_CASE: 'separate_pascal_case',
   CAPITALIZE_SENTENCE: 'capitalize_sentence',
   JOIN_STRING_ARRAY: 'join_string_array',
-  JOIN_PASCAL_CASE_ARRAY: 'join_pascal_case_array'
+  JOIN_PASCAL_CASE_ARRAY: 'join_pascal_case_array',
+  PICK_LIST_ITEM: 'pick_list_item'
 };
 
 // Components
@@ -111,6 +112,9 @@ class EBComponentFactory {
           );
         }
         return (<span>{ joinedPascalCaseArray }</span>);
+      case COMPONENTS.PICK_LIST_ITEM:
+        const listItemValue = FormatterUtil.pickListItem(options.text, options.options);
+        return (<span>{ listItemValue }</span>);
       default:
         return this.defaultFactory.getComponent(componentId, options);
     }
