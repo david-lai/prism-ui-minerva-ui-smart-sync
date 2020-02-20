@@ -128,8 +128,13 @@ const entity_configs = {
           select: true,
           displayName: i18nT('schema.event.description', 'Description')
         },
-        source_entity_name: {
+        param_name_list: {
           type: 'string',
+          isList: true
+        },
+        param_value_list: {
+          type: 'string',
+          isList: true,
           displayName: i18nT('schema.event.sourceEntity', 'Source Entity')
         },
         classification: {
@@ -138,7 +143,7 @@ const entity_configs = {
           displayName: i18nT('schema.event.classification', 'Event Type')
         },
         // Virtual Attribute
-        cluster : {
+        cluster_name : {
           type: 'string',
           displayName: i18nT('schema.event.cluster', 'Cluster')
         },
@@ -158,17 +163,22 @@ const entity_configs = {
             title : {
               columnWidth: '30%'
             },
-            source_entity_name: {
-              columnWidth: '20%'
+            param_value_list: {
+              columnWidth: '15%',
+              formatter: 'pick_named_list_item',
+              formatterOptions: {
+                nameListProp: 'param_name_list',
+                valueName: 'file_server_name'
+              }
             },
             classification: {
               formatter: 'join_pascal_case_array',
               formatterOptions: {
                 delimiter: ', '
               },
-              columnWidth: '10%'
+              columnWidth: '15%'
             },
-            cluster : {
+            cluster_name : {
               columnWidth: '20%'
             },
             _created_timestamp_usecs_: {
@@ -179,6 +189,7 @@ const entity_configs = {
           groupByAttributes: [
           ],
           helperAttributes: [
+            'param_name_list'
           ],
           virtualAttributes: [
           ],
@@ -200,16 +211,16 @@ const entity_configs = {
           primaryAttribute: '_created_timestamp_usecs_',
           displayAttributes: [
             'title',
-            'source_entity_name',
+            'param_value_list',
             'classification',
-            'cluster',
+            'cluster_name',
             '_created_timestamp_usecs_'
           ],
           sortByAttributes: [
             '_created_timestamp_usecs_'
           ],
           groupByAttributes: [
-            'title'
+
           ],
           colorByAttributes: [],
           helperAttributes: [],
