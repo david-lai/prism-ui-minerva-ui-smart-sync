@@ -171,6 +171,7 @@ class FileServerSummary extends React.Component {
               alignItems="center"
               justifyContent="center"
               flexDirection="column"
+              itemSpacing="0px"
             >
               <FlexItem>
                 <img

@@ -133,7 +133,7 @@ class AlertSummary extends React.Component {
         { this.props.alertsWidgetBusy && this.props.summaryAlerts !== false &&
           (
             <FlexLayout
-              itemSpacing="5px"
+              itemSpacing="0px"
               alignItems="center"
               justifyContent="center"
               flexDirection="column"
