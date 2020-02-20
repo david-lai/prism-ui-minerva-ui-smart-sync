@@ -9,7 +9,8 @@ module.exports = {
     './node_modules'
   ],
   moduleNameMapper: {
-    '\\.(css|less)$': '<rootDir>/node_modules/prism-jest/src/styleMock.js'
+    '\\.(css|less)$': '<rootDir>/node_modules/prism-jest/src/styleMock.js',
+    '\\.svg$': '<rootDir>/svgMock.js'
   },
   collectCoverageFrom: [
     'src/**/*.{js,jsx}',

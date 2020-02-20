@@ -14,6 +14,7 @@ import {
   FlexLayout,
   FlexItem,
   Link,
+  Loader,
   Select,
   Title
 } from 'prism-reactjs';
@@ -98,6 +99,38 @@ class Summary extends React.Component {
       ? AppUtil.rawNumericFormat(+this.props.fsData.filtered_entity_count)
       : 0;
 
+    const alertsWidgetFooter = (this.props.alertsWidgetBusy ||
+      !(
+        this.props.summaryAlerts &&
+        this.props.summaryAlerts.filtered_entity_count > 0
+      )
+    )
+      ? (
+        <div />
+      )
+      : (
+        <FlexLayout flexGrow="1" alignItems="center" justifyContent="center">
+          <FlexItem>
+            <Badge
+              color={ Badge.BADGE_COLOR_TYPES.RED }
+              text={ i18nT('alertLegendCritical', 'Critical') }
+            />
+          </FlexItem>
+          <FlexItem>
+            <Badge
+              color={ Badge.BADGE_COLOR_TYPES.YELLOW }
+              text={ i18nT('alertLegendWarning', 'Warning') }
+            />
+          </FlexItem>
+          <FlexItem>
+            <Badge
+              color={ Badge.BADGE_COLOR_TYPES.GRAY }
+              text={ i18nT('alertLegendInfo', 'Info') }
+            />
+          </FlexItem>
+        </FlexLayout>
+      );
+
     return (
       <Dashboard
         breakpoints={
@@ -134,7 +167,10 @@ class Summary extends React.Component {
                     'highlightedFileServers',
                     'Highlighted File Servers',
                     {
-                      count: fileServers_num ? ` (${fileServers_num})` : ''
+                      count: !this.props.highlightedWidgetBusy &&
+                        fileServers_num > 0
+                        ? ` (${fileServers_num})`
+                        : ''
                     }
                   )
                 }
@@ -179,7 +215,9 @@ class Summary extends React.Component {
                         { i18nT('alertsSummaryTitle', 'Alerts') }
                       </Title>
                     </FlexItem>
-                    { this.props.summaryAlerts && this.props.summaryAlerts.filtered_entity_count &&
+                    { !this.props.alertsWidgetBusy &&
+                      this.props.summaryAlerts &&
+                      this.props.summaryAlerts.filtered_entity_count > 0 &&
                       (
                         <FlexItem flexGrow="1">
                           <Badge
@@ -200,15 +238,24 @@ class Summary extends React.Component {
                         </FlexItem>
                       )
                     }
-                    { !(this.props.summaryAlerts &&
-                        this.props.summaryAlerts.filtered_entity_count) &&
+                    { this.props.alertsWidgetBusy &&
+                      (
+                        <FlexItem flexGrow="1">
+                          <Loader />
+                        </FlexItem>
+                      )
+                    }
+                    { !this.props.alertsWidgetBusy &&
+                      !(this.props.summaryAlerts &&
+                        this.props.summaryAlerts.filtered_entity_count > 0) &&
                       (
                         <FlexItem flexGrow="1" />
                       )
                     }
                     <FlexItem flexGrow="0" alignSelf="flex-end">
                       <Select
-                        disabled={ !this.props.summaryAlerts }
+                        showSearch={ false }
+                        disabled={ !this.props.summaryAlerts || this.props.alertsWidgetBusy }
                         onChange={ this.handleAlertRangeChange }
                         selectOptions={
                           [
@@ -236,28 +283,7 @@ class Summary extends React.Component {
                 }
               />
             }
-            footer={
-              <FlexLayout flexGrow="1" alignItems="center" justifyContent="center">
-                <FlexItem>
-                  <Badge
-                    color={ Badge.BADGE_COLOR_TYPES.RED }
-                    text={ i18nT('alertLegendCritical', 'Critical') }
-                  />
-                </FlexItem>
-                <FlexItem>
-                  <Badge
-                    color={ Badge.BADGE_COLOR_TYPES.YELLOW }
-                    text={ i18nT('alertLegendWarning', 'Warning') }
-                  />
-                </FlexItem>
-                <FlexItem>
-                  <Badge
-                    color={ Badge.BADGE_COLOR_TYPES.GRAY }
-                    text={ i18nT('alertLegendInfo', 'Info') }
-                  />
-                </FlexItem>
-              </FlexLayout>
-            }
+            footer={ alertsWidgetFooter }
             bodyContent={ (<AlertSummary />) }
             bodyContentProps={
               {
@@ -296,7 +322,9 @@ class Summary extends React.Component {
 const mapStateToProps = state => {
   return {
     fsData: state.groupsapi.fsData,
+    highlightedWidgetBusy: state.groupsapi.highlightedWidgetBusy,
     alertsWidgetRange: state.groupsapi.alertsWidgetRange,
+    alertsWidgetBusy: state.groupsapi.alertsWidgetBusy,
     summaryAlerts: state.groupsapi.summaryAlerts
   };
 };
@@ -314,7 +342,9 @@ Summary.propTypes = {
   setTab: PropTypes.func,
   fetchSummaryAlerts: PropTypes.func,
   alertsWidgetRange: PropTypes.string,
+  alertsWidgetBusy: PropTypes.bool,
   fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  highlightedWidgetBusy: PropTypes.bool,
   summaryAlerts: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
 };
 

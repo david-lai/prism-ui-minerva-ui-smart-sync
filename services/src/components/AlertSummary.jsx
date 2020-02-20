@@ -20,6 +20,7 @@ import {
 import AppUtil from '../utils/AppUtil';
 import i18n from '../utils/i18n';
 
+import noAlertsIcon from '../assets/images/no-alerts.svg';
 
 // Helper to translate strings from this module
 const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
@@ -129,7 +130,7 @@ class AlertSummary extends React.Component {
           }
         }
       >
-        { !(summaryData && summaryData.totals) && this.props.summaryAlerts !== false &&
+        { this.props.alertsWidgetBusy && this.props.summaryAlerts !== false &&
           (
             <FlexLayout
               itemSpacing="5px"
@@ -165,7 +166,33 @@ class AlertSummary extends React.Component {
           )
         }
 
-        { summaryData && summaryData.totals &&
+        { !this.props.alertsWidgetBusy &&
+          summaryData &&
+          summaryData.items &&
+          summaryData.items.length === 0 &&
+          (
+            <FlexLayout
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              itemSpacing="10px"
+            >
+              <img
+                src={ noAlertsIcon }
+                alt={ i18nT('NoAlerts', 'No alerts') }
+                height="150"
+              />
+              <TextLabel>
+                { i18nT('NoAlerts', 'No alerts') }
+              </TextLabel>
+            </FlexLayout>
+          )
+        }
+
+        { !this.props.alertsWidgetBusy &&
+          summaryData &&
+          summaryData.items &&
+          summaryData.items.length > 0 &&
           (
             <BarChart
               barSize={ 8 }
@@ -219,13 +246,15 @@ class AlertSummary extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    summaryAlerts: state.groupsapi.summaryAlerts
+    summaryAlerts: state.groupsapi.summaryAlerts,
+    alertsWidgetBusy: state.groupsapi.alertsWidgetBusy
   };
 };
 
 
 AlertSummary.propTypes = {
-  summaryAlerts: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+  summaryAlerts: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  alertsWidgetBusy: PropTypes.bool
 };
 
 export default connect(

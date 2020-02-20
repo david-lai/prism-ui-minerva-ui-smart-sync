@@ -16,9 +16,11 @@ import {
   Table,
   TextLabel
 } from 'prism-reactjs';
-import i18n from '../utils/i18n';
 
+import i18n from '../utils/i18n';
 import AppUtil from '../utils/AppUtil';
+
+import noServersIcon from '../assets/images/no-servers.svg';
 
 // Helper to translate strings from this module
 const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
@@ -141,7 +143,8 @@ class FileServerSummary extends React.Component {
     const dataSource = summaryData && summaryData.items ? summaryData.items : [];
     return (
       <ContainerLayout padding="15px">
-        { this.props.fsData === false &&
+        { this.props.highlightedWidgetBusy !== true &&
+          this.props.fsData === false &&
           (
             <FlexLayout
               alignItems="center"
@@ -159,11 +162,38 @@ class FileServerSummary extends React.Component {
             </FlexLayout>
           )
         }
+        { this.props.highlightedWidgetBusy !== true &&
+          typeof this.props.fsData === 'object' &&
+          // this.props.fsData !== false &&
+          dataSource.length === 0 &&
+          (
+            <FlexLayout
+              alignItems="center"
+              justifyContent="center"
+              flexDirection="column"
+            >
+              <FlexItem>
+                <img
+                  src={ noServersIcon }
+                  alt={ i18nT('NoHighligtedFileServers', 'No Highlighted File Servers') }
+                  height="150"
+                />
+              </FlexItem>
+              <FlexItem>
+                <TextLabel>
+                  { i18nT('NoHighligtedFileServers', 'No Highlighted File Servers') }
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
+          )
+        }
+
         { this.props.fsData !== false &&
+          // dataSource.length > 0 &&
           (
             <Table
               border={ false }
-              loading={ !summaryData || !this.props.fsData }
+              loading={ !summaryData || !this.props.fsData || this.props.highlightedWidgetBusy }
               structure={ this.state.tableStructure }
               oldTable={ false }
               rowKey="entity_id"
@@ -187,13 +217,15 @@ class FileServerSummary extends React.Component {
 const mapStateToProps = state => {
   return {
     fsData: state.groupsapi.fsData,
-    serverAlerts: state.groupsapi.serverAlerts
+    serverAlerts: state.groupsapi.serverAlerts,
+    highlightedWidgetBusy: state.groupsapi.highlightedWidgetBusy
   };
 };
 
 FileServerSummary.propTypes = {
   serverAlerts: PropTypes.object,
-  fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+  fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+  highlightedWidgetBusy: PropTypes.bool
 };
 
 export default connect(

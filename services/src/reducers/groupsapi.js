@@ -7,15 +7,19 @@
 // Actions
 import {
   FETCH_FS,
+  HIGHLIGHTED_WIDGET_BUSY,
   FETCH_ALERTS,
   FETCH_SERVER_ALERTS,
   FETCH_SUMMARY_ALERTS,
+  SUMMARY_ALERTS_BUSY,
   SET_ALERTS_WIDGET_RANGE
 } from '../actions/groupsapis';
 
 // default state
 const initialState = {
   alertsWidgetRange: 'day',
+  alertsWidgetBusy: false,
+  highlightedWidgetBusy: false,
   serverAlerts: {}
 };
 
@@ -28,21 +32,32 @@ const initialState = {
  */
 function groupsapis(state = initialState, action) {
   const { payload = {} } = action;
-
   switch (action.type) {
     case FETCH_FS:
       return {
         ...state,
+        highlightedWidgetBusy: false,
         fsData: payload
+      };
+    case HIGHLIGHTED_WIDGET_BUSY:
+      return {
+        ...state,
+        highlightedWidgetBusy: payload
       };
     case FETCH_ALERTS:
       return {
         ...state,
         alertsData: payload
       };
+    case SUMMARY_ALERTS_BUSY:
+      return {
+        ...state,
+        alertsWidgetBusy: payload
+      };
     case FETCH_SUMMARY_ALERTS:
       return {
         ...state,
+        alertsWidgetBusy: false,
         summaryAlerts: payload
       };
     case FETCH_SERVER_ALERTS:
