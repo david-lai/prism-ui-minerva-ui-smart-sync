@@ -219,7 +219,7 @@ class FileServers extends React.Component {
             </FlexLayout>
           </MenuItem>
           <MenuItem key={ AppConstants.EVENTS_TAB_KEY }
-            active={ this.state.currentPanelKey === AppConstants.VENTS_TAB_KEY }>
+            active={ this.state.currentPanelKey === AppConstants.EVENTS_TAB_KEY }>
             { i18nT('events', 'Events') }
           </MenuItem>
         </MenuGroup>
