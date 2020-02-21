@@ -86,7 +86,6 @@ const AppUtil = {
     };
   },
 
-
   entityToPlainObject(entity) {
     if (entity && entity.data && Array.isArray(entity.data)) {
       return entity.data.reduce((acc, val) => {
@@ -100,101 +99,6 @@ const AppUtil = {
     }
     return {};
   },
-
-  /**
-   * Fetches file servers for given entity IDs
-   *
-   * @param  {String[]}  entityIds   An array of entity IDs
-   *
-   * @return {Object}                Files servers data
-   */
-  fetchFileServers() {
-    return new Promise((resolve, reject) => {
-      const query = {
-        entity_type: 'file_server_service',
-        group_member_sort_attribute: 'name',
-        group_member_sort_order: 'ASCENDING',
-        group_member_count: 20,
-        group_member_offset: 0,
-        group_member_attributes: [
-          {
-            attribute: 'name'
-          },
-          {
-            attribute: 'cluster'
-          },
-          {
-            attribute: 'nvm_uuid_list'
-          },
-          {
-            attribute: 'afs_version'
-          },
-          {
-            attribute: 'cluster_uuid'
-          }
-        ]
-      };
-      return axios.post(AppConstants.APIS.GROUPS_API, query)
-        .then((resp) => {
-          if (resp && resp.data) {
-            resolve(resp.data);
-          } else {
-            reject(new Error(`Unrecognized response: ${JSON.stringify(resp)}`));
-          }
-        })
-        .catch((err) => {
-          reject(err);
-        });
-    });
-  },
-
-  // Fetch categories by category name
-  // TODO: Consolidate this with sec planning UI
-  fetchCategories(catName, doneCB, errorCB) {
-    // Groups Query to get all categories by name
-    const query = {
-      entity_type: 'category',
-      grouping_attribute: 'abac_category_key',
-      group_sort_attribute: 'name',
-      group_count: 64,
-      group_attributes: [{
-        attribute: 'name',
-        ancestor_entity_type: 'abac_category_key'
-      }, {
-        attribute: 'immutable',
-        ancestor_entity_type: 'abac_category_key'
-      }, {
-        attribute: 'cardinality',
-        ancestor_entity_type: 'abac_category_key'
-      }, {
-        attribute: 'description',
-        ancestor_entity_type: 'abac_category_key'
-      }, {
-        attribute: 'total_policy_counts',
-        ancestor_entity_type: 'abac_category_key'
-      }, { attribute: 'total_entity_counts',
-        ancestor_entity_type: 'abac_category_key' }],
-      group_member_count: 1000,
-      group_member_offset: 0,
-      group_member_sort_attribute: 'value',
-      group_member_attributes: [{ attribute: 'name' }, { attribute: 'value' },
-        { attribute: 'entity_counts' }, { attribute: 'policy_counts' },
-        { attribute: 'immutable' }
-      ],
-      query_name: `minervaFiles:${catName}`,
-      filter_criteria: `name==${catName}`
-    };
-
-    return axios.post(AppConstants.APIS.GROUPS_API, query)
-      .then((resp) => {
-        const cats = AppUtil.extractGroupResults(resp.data);
-        doneCB(cats);
-      })
-      .catch((err) => {
-        errorCB();
-      });
-  },
-
 
   // Only works in the Embedded Mode.
   showNotification(notificationType, msg) {
