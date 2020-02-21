@@ -5,6 +5,10 @@
 //
 import React from 'react';
 import { connect } from 'react-redux';
+import {
+  Route,
+  withRouter
+} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { EntityBrowser } from 'ebr-ui';
 import {
@@ -21,6 +25,7 @@ import {
   TextLabel,
   Title
 } from 'prism-reactjs';
+import { WindowsMessageUtil } from 'prism-utils-common';
 import EntityConfigs from '../config/entity_configs.js';
 import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
@@ -35,8 +40,7 @@ import {
   openModal,
   fetchFsData,
   fetchAlerts,
-  fetchServerAlerts,
-  setTab
+  fetchServerAlerts
 } from '../actions';
 
 // Helper to translate strings from this module
@@ -53,14 +57,16 @@ class FileServers extends React.Component {
 
     this.state = {
       loading: false,
-      ebConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER),
-      tabKeys: [
-        AppConstants.SUMMARY_TAB_KEY,
-        AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER,
-        AppConstants.ENTITY_TYPES.ENTITY_ALERT,
-        AppConstants.ENTITY_TYPES.ENTITY_EVENT
-      ]
+      fsEbConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER),
+      alertEbConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_ALERT),
+      eventEbConfiguration: this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_EVENT),
+      currentPanelKey: props.location.pathname.substring(1)
+        ? props.location.pathname.substring(1) : AppConstants.SUMMARY_TAB_KEY
     };
+
+    this.onMenuChange = this.onMenuChange.bind(this);
+    this.receiveMessage = this.receiveMessage.bind(this);
+    this.addEventListener = this.addEventListener.bind(this);
   }
 
   getEbConfiguration = (entityType) => {
@@ -114,14 +120,6 @@ class FileServers extends React.Component {
       queryConfig,
       ebComponentFactory: EBComponentFactory.getInstance({ openModal: this.props.openModal })
     };
-  }
-
-  onMenuChange = (e) => {
-    let tabIndex = +(e.key.substr(e.key.lastIndexOf('_') + 1));
-    if (isNaN(tabIndex)) {
-      tabIndex = 0;
-    }
-    this.props.setTab(tabIndex);
   }
 
   /**
@@ -179,7 +177,7 @@ class FileServers extends React.Component {
       <Menu oldMenu={ false }
         itemSpacing="10px"
         padding="20px-0px"
-        activeKeyPath={ [`tab_${this.props.tabIndex}`, '1'] }
+        activeKeyPath={ [this.state.currentPanelKey, '1'] }
         onClick={ this.onMenuChange } style={ { width: '240px' } } >
 
         <StackingLayout padding="0px-20px" itemSpacing="10px">
@@ -189,13 +187,16 @@ class FileServers extends React.Component {
         </StackingLayout>
 
         <MenuGroup key="1">
-          <MenuItem key={ 'tab_0' } active={ this.props.tabIndex === 0 }>
+          <MenuItem key={ AppConstants.SUMMARY_TAB_KEY }
+            active={ this.state.currentPanelKey === AppConstants.SUMMARY_TAB_KEY }>
             { i18nT('summary', 'Summary') }
           </MenuItem>
-          <MenuItem key={ 'tab_1' } active={ this.props.tabIndex === 1 }>
+          <MenuItem key={ AppConstants.FILE_SERVERS_TAB_KEY }
+            active={ this.state.currentPanelKey === AppConstants.FILE_SERVERS_TAB_KEY }>
             { i18nT('fileServers', 'File Servers') }
           </MenuItem>
-          <MenuItem key={ 'tab_2' } active={ this.props.tabIndex === 2 }>
+          <MenuItem key={ AppConstants.ALERTS_TAB_KEY }
+            active={ this.state.currentPanelKey === AppConstants.ALERTS_TAB_KEY }>
             <FlexLayout flexGrow="1" justifyContent="space-between">
               <FlexItem>
                 { i18nT('alerts', 'Alerts') }
@@ -217,7 +218,8 @@ class FileServers extends React.Component {
               </FlexItem>
             </FlexLayout>
           </MenuItem>
-          <MenuItem key={ 'tab_3' } active={ this.props.tabIndex === 3 }>
+          <MenuItem key={ AppConstants.EVENTS_TAB_KEY }
+            active={ this.state.currentPanelKey === AppConstants.EVENTS_TAB_KEY }>
             { i18nT('events', 'Events') }
           </MenuItem>
         </MenuGroup>
@@ -243,21 +245,102 @@ class FileServers extends React.Component {
     }
   }
 
+  // Event handler for left panel tab click
+  onMenuChange = (e) => {
+    const key = (typeof e === 'object') ? e.key : e;
+    this.setState({
+      currentPanelKey: key
+    });
+    this.props.history.push(`/${key}`);
+    this.changePcUrl(key);
+  }
+
+  // Change PC URL
+  changePcUrl(url) {
+    WindowsMessageUtil.postMessage({
+      service: AppConstants.SERVICE_NAME.PRISM_UI,
+      target: AppConstants.IFRAME_EVENT_CHANGE_PC_URL,
+      state: AppConstants.FS_CHANGE_PC_URL,
+      serviceTargets: url
+    }, '*', window.parent);
+  }
+
+  // Request to get PC URL
+  requestPcUrl() {
+    WindowsMessageUtil.postMessage({
+      service: AppConstants.SERVICE_NAME.PRISM_UI,
+      target: AppConstants.IFRAME_EVENT_REQUEST_PC_URL,
+      state: AppConstants.FS_REQUEST_PC_URL,
+      SERVICETARGETS: ''
+    }, '*', window.parent);
+  }
+
+  // Set the correspoding componets for each files route
+  getBodyContent() {
+    return (
+      <div className="app-main">
+        <Route exact={ true } path="/"
+          component={ () => <Summary onMenuChange={ this.onMenuChange } /> } />
+        <Route exact={ true } path="/summary"
+          component={ () => <Summary onMenuChange={ this.onMenuChange } /> } />
+        <Route exact={ true } path="/file_servers"
+          component={ () => <EntityBrowser { ...this.state.fsEbConfiguration } /> }
+        />
+        <Route exact={ true } path="/alerts"
+          component={ () => <EntityBrowser { ...this.state.alertEbConfiguration } /> }
+        />
+        <Route exact={ true } path="/events"
+          component={ () => <EntityBrowser { ...this.state.eventEbConfiguration } /> }
+        />
+      </div>
+    );
+  }
+
   render() {
     if (this.state.loading) {
       return <Loader />;
     }
     return (
       <LeftNavLayout leftPanel={ this.getLeftPanel() } itemSpacing="0"
-        rightBodyContent={ this.props.tabIndex > 0 ? (
-          <EntityBrowser { ...this.state.ebConfiguration } />
-        ) : (
-          <Summary />
-        )
+        rightBodyContent={
+          this.getBodyContent()
         } />
     );
   }
 
+  // Set up message listenner to get commands from the iframe to navigate to
+  // corresponding tab
+  // @param message - message used to checked if post message is for the
+  // listener
+  addEventListener(message) {
+    window.addEventListener('message', this.receiveMessage.bind(this), false);
+  }
+
+  // Remove message listenner to get commands from the iframe to navigate to
+  // corresponding tab
+  // @param message - message used to checked if post message is for the
+  // listener
+  removeEventListener(message) {
+    window.removeEventListener('message', this.receiveMessage.bind(this), false);
+  }
+
+  // Function for Event Listener
+  receiveMessage(message) {
+    if (message && message.data && message.data.action) {
+      const { data } = message;
+      const { service, action, serviceTargets } = data;
+      const { target, state } = action;
+      if (service === AppConstants.SERVICE_NAME.PRISM_UI &&
+        target === AppConstants.IFRAME_EVENT_CURRENT_PC_URL &&
+        state === AppConstants.FS_CURRENT_PC_URL &&
+        serviceTargets !== this.props.location.pathname.substring(1)) {
+        this.setState({
+          currentPanelKey: serviceTargets
+        });
+        this.props.history.push(`/${serviceTargets}`);
+      }
+    }
+  }
 
   // Start Polling alerts data
   componentWillMount() {
@@ -266,17 +349,9 @@ class FileServers extends React.Component {
       () => {
         this.refreshSummaryData();
       }, AppConstants.POLLING_FREQ_SECS * 1000);
-  }
-
-  // Set eb configuration depending on tabIndex prop
-  componentWillReceiveProps(nextProps) {
-    if (this.props.tabIndex !== nextProps.tabIndex) {
-      if (nextProps.tabIndex > 0) {
-        this.setState({
-          ebConfiguration: this.getEbConfiguration(this.state.tabKeys[nextProps.tabIndex])
-        });
-      }
-    }
+    // Get URL from PC and listen to the url change from PC
+    this.addEventListener(AppConstants.FS_PC_URL_LISTENER);
+    this.requestPcUrl();
   }
 
   // Load initial fs alerts if not present
@@ -289,15 +364,14 @@ class FileServers extends React.Component {
   // Stop Polling FS data
   componentWillUnmount() {
     clearInterval(this.dataPolling);
+    this.removeEventListener(AppConstants.FS_PC_URL_LISTENER);
   }
-
 }
 
 const mapStateToProps = state => {
   return {
     fsData: state.groupsapi.fsData,
-    alertsData: state.groupsapi.alertsData,
-    tabIndex: state.tabs.tabIndex
+    alertsData: state.groupsapi.alertsData
   };
 };
 
@@ -306,8 +380,7 @@ const mapDispatchToProps = dispatch => {
     openModal: (type, options) => dispatch(openModal(type, options)),
     fetchFsData: () => dispatch(fetchFsData()),
     fetchServerAlerts: (serverId) => dispatch(fetchServerAlerts(serverId)),
-    fetchAlerts: () => dispatch(fetchAlerts()),
-    setTab: (tabIndex) => dispatch(setTab(tabIndex))
+    fetchAlerts: () => dispatch(fetchAlerts())
   };
 };
 
@@ -319,11 +392,12 @@ FileServers.propTypes = {
   fetchFsData: PropTypes.func,
   fetchServerAlerts: PropTypes.func,
   fetchAlerts: PropTypes.func,
-  setTab: PropTypes.func,
-  tabIndex: PropTypes.number
+  location: PropTypes.object,
+  history : PropTypes.object
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FileServers);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(FileServers));

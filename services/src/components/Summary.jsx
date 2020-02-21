@@ -28,8 +28,7 @@ import AlertSummary from './AlertSummary.jsx';
 // Actions
 import {
   fetchSummaryAlerts,
-  setAlertsWidgetRange,
-  setTab
+  setAlertsWidgetRange
 } from '../actions';
 
 import i18n from '../utils/i18n';
@@ -37,8 +36,13 @@ import i18n from '../utils/i18n';
 const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
   'Summary', key, defaultValue, replacedValue);
 
-
 class Summary extends React.Component {
+
+  constructor(props) {
+    super(props);
+
+    this.showAllServers = this.showAllServers.bind(this);
+  }
 
   /**
    * Navigates to file servers tab
@@ -49,7 +53,8 @@ class Summary extends React.Component {
    */
   showAllServers = (e) => {
     e.preventDefault();
-    this.props.setTab(1);
+    // Change url to show file servers
+    this.props.onMenuChange(AppConstants.FILE_SERVERS_TAB_KEY);
   }
 
   /**
@@ -331,7 +336,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    setTab: (tabIndex) => dispatch(setTab(tabIndex)),
     setAlertsWidgetRange: (value) => dispatch(setAlertsWidgetRange(value)),
     fetchSummaryAlerts: (value) => dispatch(fetchSummaryAlerts(value))
   };
@@ -339,7 +343,7 @@ const mapDispatchToProps = dispatch => {
 
 Summary.propTypes = {
   setAlertsWidgetRange: PropTypes.func,
-  setTab: PropTypes.func,
+  onMenuChange: PropTypes.func,
   fetchSummaryAlerts: PropTypes.func,
   alertsWidgetRange: PropTypes.string,
   alertsWidgetBusy: PropTypes.bool,
