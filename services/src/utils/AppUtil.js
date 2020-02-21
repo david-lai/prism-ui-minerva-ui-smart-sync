@@ -3,7 +3,6 @@
 //
 // Application wide utilities
 //
-import axios from 'axios';
 import { AphroditeApi } from 'prism-utils-common';
 
 import AppConstants from './AppConstants';
