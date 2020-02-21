@@ -97,13 +97,15 @@
 
   "AlertSummary": {
     "fetchingData": "Fetching data...",
-    "fetchingDataFailed": "Fetching data failed"
+    "fetchingDataFailed": "Fetching data failed",
+    "NoAlerts": "No Alerts"
   },
 
   "FileServerSummary": {
     "fileServers": "File Servers",
     "fileServerAlertCritical": "Critical",
     "fileServerAlertWarning": "Warning",
-    "fileServerAlertInfo": "Info"
+    "fileServerAlertInfo": "Info",
+    "NoHighligtedFileServers": "No Highlighted File Servers"
   }
 }
