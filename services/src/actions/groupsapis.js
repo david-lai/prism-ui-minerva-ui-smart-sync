@@ -13,8 +13,10 @@ import AppConstants from './../utils/AppConstants';
 // ------------
 export const {
   FETCH_FS,
+  HIGHLIGHTED_WIDGET_BUSY,
   FETCH_ALERTS,
   FETCH_SUMMARY_ALERTS,
+  SUMMARY_ALERTS_BUSY,
   FETCH_SERVER_ALERTS,
   SET_ALERTS_WIDGET_RANGE
 } = AppConstants.ACTIONS;
@@ -76,6 +78,10 @@ export const fetchAlerts = (entityIds = []) => {
  */
 export const fetchSummaryAlerts = (dateRange = 'day') => {
   return (dispatch) => {
+    dispatch({
+      type: SUMMARY_ALERTS_BUSY,
+      payload: true
+    });
     let timestamp;
 
     if (dateRange === 'week') {
@@ -166,6 +172,10 @@ export const fetchServerAlerts = (entityId) => {
 
 export const fetchFsData = () => {
   return (dispatch) => {
+    dispatch({
+      type: HIGHLIGHTED_WIDGET_BUSY,
+      payload: true
+    });
     const query = {
       entity_type: 'file_server_service',
       group_member_sort_attribute: 'name',
