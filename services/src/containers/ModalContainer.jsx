@@ -46,13 +46,14 @@ class ModalContainer extends React.Component {
     } = this.props;
 
     if (type === MODAL_TYPE.FILE_SERVER_DETAILS) {
-      const { entity: details } = options;
+      const { entity: details, openPe } = options;
       return (
         <FileServersDetails
           closeModalAction={ close }
           visible={ visible }
           onClose={ options.onClose || close }
           details={ details }
+          openPe={ openPe }
         />
       );
     }

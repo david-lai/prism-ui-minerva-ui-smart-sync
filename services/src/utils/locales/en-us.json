@@ -63,6 +63,8 @@
     "fs_name": "File Server Name",
     "verion": "Version",
     "fs_vms": "File Server VMs",
+    "manage": "Manage",
+    "done": "Done",
     "external_ip_addresses": "External IP Addresses"
   },
 
