@@ -25,4 +25,19 @@ describe('FormatterUtil', () => {
       .toBe('two');
   });
 
+  it('Picks valid named value from the list', () => {
+    expect(FormatterUtil.pickNamedListItem(['one', 'two', 'three'], {
+      valueName: 'third_param',
+      nameListProp: 'param_name_list',
+      entity: {
+        param_name_list: [
+          'first_param',
+          'second_param',
+          'third_param'
+        ]
+      }
+    }))
+      .toBe('three');
+  });
+
 });

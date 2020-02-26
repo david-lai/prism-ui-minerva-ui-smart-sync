@@ -32,7 +32,8 @@ const COMPONENTS = {
   CAPITALIZE_SENTENCE: 'capitalize_sentence',
   JOIN_STRING_ARRAY: 'join_string_array',
   JOIN_PASCAL_CASE_ARRAY: 'join_pascal_case_array',
-  PICK_LIST_ITEM: 'pick_list_item'
+  PICK_LIST_ITEM: 'pick_list_item',
+  PICK_NAMED_LIST_ITEM: 'pick_named_list_item'
 };
 
 // Components
@@ -124,6 +125,9 @@ class EBComponentFactory {
       case COMPONENTS.PICK_LIST_ITEM:
         const listItemValue = FormatterUtil.pickListItem(options.text, options.options);
         return (<span>{ listItemValue }</span>);
+      case COMPONENTS.PICK_NAMED_LIST_ITEM:
+        const namedListItemValue = FormatterUtil.pickNamedListItem(options.text, options.options);
+        return (<span>{ namedListItemValue }</span>);
       default:
         return this.defaultFactory.getComponent(componentId, options);
     }

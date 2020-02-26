@@ -68,10 +68,10 @@ const FormatterUtil = {
   },
 
   /**
-   * Returns single value from list
+   * Returns single value from list (by numeric index)
    *
    * @param  {Array}      list          Value list
-   * @param  {Object}     options       Options hash (default: { delimiter: ' ' })
+   * @param  {Object}     options       Options hash (default: { index: 0 })
    *
    * @return {Mixed}                    List item
    */
@@ -85,13 +85,62 @@ const FormatterUtil = {
     }
     if (list) {
       if (Array.isArray(list)) {
-        formatted = list[options.index];
+        if (list.length > options.index) {
+          formatted = list[options.index];
+        }
       } else {
         formatted = list;
       }
     }
     return formatted;
+  },
+
+  /**
+   * Returns single value from list (by value name)
+   *
+   * Used in situations where we have param_name_list with list of param names
+   * and param_value_list as list of values.
+   *
+   * If we need file_server_uuid from param_value_list and don't know its index
+   * we have to fetch param_name_list as well in order to find list value
+   * in that case, options should look like this:
+   *
+   * {
+   *   nameListProps: 'param_name_list', // should be something like ['cluster', 'file_server_uuid']
+   *   valueName: 'file_server_uuid'
+   * }
+   *
+   * @param  {Array}      list          Value list
+   * @param  {Object}     options       Options hash (required properties: nameListProp, valueName)
+   *
+   * @return {Mixed}                    List item value
+   */
+  pickNamedListItem(list, options) {
+    let formatted = '';
+    if (
+      list &&
+      Array.isArray(list) &&
+
+      options &&
+      typeof options === 'object' &&
+
+      options.valueName &&
+      options.nameListProp &&
+
+      options.entity &&
+      typeof options.entity === 'object' &&
+
+      options.entity[options.nameListProp] &&
+      Array.isArray(options.entity[options.nameListProp]) &&
+
+      options.entity[options.nameListProp].indexOf(options.valueName) !== -1 &&
+      list.length > options.entity[options.nameListProp].indexOf(options.valueName)
+    ) {
+      formatted = list[options.entity[options.nameListProp].indexOf(options.valueName)];
+    }
+    return formatted;
   }
+
 };
 
 export default FormatterUtil;
