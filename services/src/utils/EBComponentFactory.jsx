@@ -56,8 +56,14 @@ class EBComponentFactory {
     this.popupContext = context;
   }
 
+  // Event handler for manage button to open PE
   onOpenPeClick(e) {
     const clusterUuid = e.currentTarget.getAttribute('data-name');
+    this.openPe(clusterUuid);
+  }
+
+  // Method to message PC to open PE
+  openPe(clusterUuid) {
     WindowsMessageUtil.postMessage({
       service: AppConstants.SERVICE_NAME.PRISM_UI,
       target: AppConstants.IFRAME_EVENT_OPEN_PE,
@@ -70,7 +76,10 @@ class EBComponentFactory {
     switch (componentId) {
       case COMPONENTS.NAME:
         return (
-          <FileServersName options={ options.options } openModal={ this.openModal } />
+          <FileServersName options={ {
+            ...options.options,
+            openPe: this.openPe
+          } } openModal={ this.openModal } />
         );
       case COMPONENTS.ACTIONS:
         return (

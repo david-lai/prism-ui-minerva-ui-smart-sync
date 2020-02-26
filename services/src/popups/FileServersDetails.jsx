@@ -4,8 +4,10 @@
 // The file servers details popup
 //
 import React from 'react';
-import { Modal, Table, StackingLayout } from 'prism-reactjs';
+import { Modal, Button, Table, StackingLayout } from 'prism-reactjs';
 import PropTypes from 'prop-types';
+
+// Local includes
 import i18n from '../utils/i18n';
 
 // Helper to translate strings from this module
@@ -13,6 +15,17 @@ const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
   'FileServersDetails', key, defaultValue, replacedValue);
 
 class FileServersDetails extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.onOpenPeClick = this.onOpenPeClick.bind(this);
+  }
+
+  // Event handler for manage button to open PE
+  onOpenPeClick() {
+    const clusterUuid = this.props.details.cluster_uuid;
+    this.props.openPe(clusterUuid);
+  }
 
   render() {
     const {
@@ -47,14 +60,26 @@ class FileServersDetails extends React.Component {
       data: 'na'
     }];
 
+    const footer = (
+      <div>
+        <Button
+          type="primary"
+          onClick={ this.onOpenPeClick }>
+          {i18nT('manage', 'Manage')}
+        </Button>
+        <Button
+          onClick={ this.props.onClose }
+          type="secondary">
+          {i18nT('done', 'Done')}
+        </Button>
+      </div>);
+
     return (
       <div>
         <Modal
           visible={ this.props.visible }
           title={ i18nT('file_server_details', 'File Server Details') }
-          primaryButtonLabel="Done"
-          primaryButtonClick={ this.props.onClose }
-          onCancel={ this.props.onClose }
+          footer={ footer }
         >
           <StackingLayout padding="20px">
             <Table structure={ { hideHeader:true } } oldTable={ false } dataSource={ data }
@@ -67,10 +92,9 @@ class FileServersDetails extends React.Component {
 }
 
 FileServersDetails.propTypes = {
-  options: PropTypes.object,
   details: PropTypes.object,
-  getChildSate: PropTypes.func,
   onClose: PropTypes.func,
+  openPe: PropTypes.func,
   visible: PropTypes.bool,
   afs_version: PropTypes.string,
   nvm_uuid_list: PropTypes.string
