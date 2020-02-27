@@ -64,7 +64,8 @@ const AppConstants = {
   },
 
   MODAL_TYPE: {
-    FILE_SERVER_DETAILS: 'file_server_details'
+    FILE_SERVER_DETAILS: 'file_server_details',
+    ALERT_INFO: 'alert_info'
   },
 
   ENTITY_CATEGORY_SEPARATOR: ':',

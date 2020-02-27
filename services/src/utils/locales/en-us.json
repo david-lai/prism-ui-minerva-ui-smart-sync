@@ -107,5 +107,27 @@
     "fileServerAlertWarning": "Warning",
     "fileServerAlertInfo": "Info",
     "NoHighligtedFileServers": "No Highlighted File Servers"
+  },
+
+  "AlertInfoModal": {
+    "alertSeverityInfo": "Info",
+    "alertSeverityWarning": "Warning",
+    "alertSeverityCritical": "Critical",
+    "AlertTitle": "Alert Title",
+    "SourceEntity": "Source Entity",
+    "Severity": "Severity",
+    "CreatedTime": "Created Time",
+    "LastOccurred": "Last Occurred",
+    "ImpactType": "Impact Type",
+    "Policy": "Policy",
+    "Status": "Status",
+    "AcknowledgedBy": "Acknowledged By",
+    "ResolvedBy": "Resolved By",
+    "Description": "Description",
+    "Resolve": "Resolve",
+    "Acknowledge": "Acknowledge",
+    "PossibleCause": "Possible Cause",
+    "Recommendations": "Recommendations",
+    "ContactNutanixSupport": "Contact Nutanix Support"
   }
 }

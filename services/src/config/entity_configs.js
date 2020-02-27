@@ -294,6 +294,7 @@ const entity_configs = {
           primaryAttribute: '_created_timestamp_usecs_',
           customRenders: {
             title : {
+              formatter: 'alert_title',
               columnWidth: '25%'
             },
             param_value_list: {
