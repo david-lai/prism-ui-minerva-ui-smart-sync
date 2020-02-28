@@ -45,4 +45,11 @@ describe('AlertInfoModal', () => {
     expect(modal).toBeTruthy();
   });
 
+  it('Mounts invisible AlertInfoModal', () => {
+    const modal = shallow(
+      <AlertInfoModal alert={ alertEntity } visible={ false } />
+    );
+    expect(modal).toBeTruthy();
+  });
+
 });
