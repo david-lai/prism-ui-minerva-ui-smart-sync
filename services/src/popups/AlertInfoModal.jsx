@@ -4,8 +4,11 @@
 // The file servers alert popup
 //
 import React from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
+  Alert,
   Badge,
   Button,
   ButtonGroup,
@@ -15,48 +18,261 @@ import {
   FlexLayout,
   FullPageModal,
   HeaderFooterLayout,
+  Loader,
+  Paragraph,
   TextLabel,
   Title,
   StackingLayout
 } from 'prism-reactjs';
-import PropTypes from 'prop-types';
 
 // Local includes
 import FormatterUtil from '../utils/FormatterUtil';
 import i18n from '../utils/i18n';
 
+// Actions
+import {
+  fetchAlertModalInfo,
+  resolveAlert,
+  acknowledgeAlert,
+  setAlertRequestType,
+  setAlertRequestStatus
+} from '../actions';
+
+
 // Helper to translate strings from this module
 const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
   'AlertInfoModal', key, defaultValue, replacedValue);
 
+
 class AlertInfoModal extends React.Component {
 
   static propTypes = {
+    alert: PropTypes.object,
+    visible: PropTypes.bool,
+    alertModalLoading: PropTypes.bool,
+    alertRequestActive: PropTypes.bool,
+    alertRequestStatus: PropTypes.bool,
+    alertRequestType: PropTypes.string,
+    alertInfo: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+    fetchAlertModalInfo: PropTypes.func,
+    setAlertRequestStatus: PropTypes.func,
+    setAlertRequestType: PropTypes.func,
+    resolveAlert: PropTypes.func,
+    acknowledgeAlert: PropTypes.func
   };
 
-  resolveAlert = (e) => {
-    // TODO add handler logic once it gets determined
+  handleResolveClick = (e) => {
     e.preventDefault();
+    this.props.resolveAlert(this.props.alert.entityId);
   }
 
-  acknowledgeAlert = (e) => {
-    // TODO add handler logic once it gets determined
-    e.preventDefault();
+  handleAcknowledgeClick = (e) => {
+    this.props.acknowledgeAlert(this.props.alert.entityId);
+  }
+
+  prepareAlertData() {
+    let defaultValue = i18nT('N/A', 'N/A');
+    if (this.props.alertModalLoading) {
+      defaultValue = (<Loader key="defaultValue" />);
+    }
+    const alertData = {
+      description: defaultValue,
+      createdLabel: defaultValue,
+      lastOccuredLabel: defaultValue,
+      severity: {
+        color: Badge.BADGE_COLOR_TYPES.GRAY,
+        label: defaultValue
+      },
+      status: {
+        acknowledged: false,
+        resolved: false,
+        statusLabel: '',
+        autoResolved: false,
+        resolvedBy: defaultValue,
+        acknowledgedBy: defaultValue
+      },
+      possibleCauses: [
+        defaultValue
+      ],
+      resolutions: [
+        defaultValue
+      ]
+    };
+
+    if (!this.props.alertModalLoading && this.props.alertInfo && this.props.alertInfo.entity) {
+      const alert = this.props.alert;
+      const alertInfo = this.props.alertInfo.entity;
+
+      alertData.description = this.populateDefaultMessage(
+        alertInfo.default_message,
+        alertInfo.parameters
+      );
+
+      const createdMoment = moment(parseInt((alert._created_timestamp_usecs_ / 1000), 10));
+      const loMoment = moment(alertInfo.latest_occurrence_time);
+      alertData.createdLabel = createdMoment.format('MM/DD/YY h:m:s A');
+      alertData.lastOccuredLabel = loMoment.format('MM/DD/YY h:m:s A');
+
+      if (alert.severity === 'info') {
+        alertData.severity.color = Badge.BADGE_COLOR_TYPES.GRAY;
+        alertData.severity.label = i18nT('alertSeverityInfo', 'Info');
+      } else if (alert.severity === 'warning') {
+        alertData.severity.color = Badge.BADGE_COLOR_TYPES.YELLOW;
+        alertData.severity.label = i18nT('alertSeverityWarning', 'Warning');
+      } else if (alert.severity === 'critical') {
+        alertData.severity.color = Badge.BADGE_COLOR_TYPES.RED;
+        alertData.severity.label = i18nT('alertSeverityCritical', 'Critical');
+      }
+
+      alertData.possibleCauses = this.getPossibleCauses();
+      alertData.resolutions = this.getResolutionList();
+
+      const resolvedStatus = alertInfo.resolution_status;
+      if (resolvedStatus) {
+        if (resolvedStatus.is_true) {
+          alertData.status.resolved = true;
+          if (resolvedStatus.is_auto_resolved) {
+            alertData.status.statusLabel = i18nT('AutoResolved', 'Auto Resolved');
+            alertData.status.autoResolved = true;
+          } else {
+            if (resolvedStatus.user) {
+              alertData.status.resolvedBy = resolvedStatus.user;
+            }
+            alertData.status.statusLabel = i18nT('Resolved', 'Resolved');
+          }
+        }
+      }
+
+      const acknowledgedStatus = alertInfo.acknowledged_status;
+      if (acknowledgedStatus) {
+        if (acknowledgedStatus.is_true) {
+          alertData.status.acknowledged = true;
+          if (acknowledgedStatus.user) {
+            alertData.status.acknowledgedBy = acknowledgedStatus.user;
+          }
+          if (!alertData.status.statusLabel) {
+            alertData.status.statusLabel = i18nT('Acknowledged', 'Acknowledged');
+          }
+        }
+      }
+      if (!alertData.status.statusLabel) {
+        alertData.status.statusLabel = defaultValue;
+      }
+    }
+    return alertData;
+  }
+
+  populateDefaultMessage = (message, parameters) => {
+    return message.replace(/(\{[^}]+\})/g, (propVar) => {
+      const propName = propVar.replace(/[{}]/g, '');
+      let propValue = '';
+      if (
+        parameters &&
+        parameters[propName] &&
+        parameters[propName].string_value
+      ) {
+        propValue = parameters[propName].string_value;
+      }
+      return propValue;
+    });
+  }
+
+  getPossibleCauses() {
+    let possibleCauses;
+    const possibleCauseList = [];
+    if (this.props.alertInfo) {
+      if (
+        this.props.alertInfo.entity.possible_cause_list &&
+        this.props.alertInfo.entity.possible_cause_list.length
+      ) {
+        const lists = this.props.alertInfo.entity.possible_cause_list;
+        possibleCauseList.push(
+          ...lists.reduce((acc, val) => {
+            if (val && val.cause_list && val.cause_list.length) {
+              acc.push(...val.cause_list);
+            }
+            return acc;
+          }, [])
+        );
+      }
+    }
+    if (possibleCauseList.length) {
+      possibleCauses = (
+        <Paragraph>
+          {
+            possibleCauseList.map((p, i) => {
+              return (
+                <TextLabel key={ `cause_${i}` } type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+                  { p }
+                </TextLabel>
+              );
+            })
+          }
+        </Paragraph>
+      );
+    } else if (this.props.alertModalLoading) {
+      possibleCauses = (
+        <Loader />
+      );
+    } else {
+      possibleCauses = (
+        <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+          { i18nT('N/A', 'N/A') }
+        </TextLabel>
+      );
+    }
+    return possibleCauses;
+  }
+
+  getResolutionList() {
+    let resolutions;
+    const resolutionList = [];
+    if (this.props.alertInfo) {
+      if (
+        this.props.alertInfo.entity.possible_cause_list &&
+        this.props.alertInfo.entity.possible_cause_list.length
+      ) {
+        const lists = this.props.alertInfo.entity.possible_cause_list;
+        resolutionList.push(
+          ...lists.reduce((acc, val) => {
+            if (val && val.cause_list && val.resolution_list.length) {
+              acc.push(...val.resolution_list);
+            }
+            return acc;
+          }, [])
+        );
+      }
+    }
+    if (resolutionList.length) {
+      resolutions = (
+        <Paragraph>
+          {
+            resolutionList.map((p, i) => {
+              return (
+                <TextLabel key={ `cause_${i}` } type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+                  { p }
+                </TextLabel>
+              );
+            })
+          }
+        </Paragraph>
+      );
+    } else if (this.props.alertModalLoading) {
+      resolutions = (
+        <Loader />
+      );
+    } else {
+      resolutions = (
+        <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+          { i18nT('ContactNutanixSupport', 'Contact Nutanix Support') }
+        </TextLabel>
+      );
+    }
+    return resolutions;
   }
 
   render() {
-    const alertTimestamp = parseInt((this.props.alert._created_timestamp_usecs_ / 1000), 10);
-
-    let color = Badge.BADGE_COLOR_TYPES.GRAY;
-    let severity = i18nT('alertSeverityInfo', 'Info');
-    if (this.props.alert.severity === 'warning') {
-      color = Badge.BADGE_COLOR_TYPES.YELLOW;
-      severity = i18nT('alertSeverityWarning', 'Warning');
-    } else if (this.props.alert.severity === 'critical') {
-      color = Badge.BADGE_COLOR_TYPES.RED;
-      severity = i18nT('alertSeverityCritical', 'Critical');
-    }
-
+    const alertData = this.prepareAlertData();
     const leftPanel = (
       <StackingLayout itemSpacing="20px">
         <StackingLayout itemSpacing="10px">
@@ -89,7 +305,7 @@ class AlertInfoModal extends React.Component {
               </TextLabel>
             </FlexItem>
             <FlexItem>
-              <Badge color={ color } text={ severity } />
+              <Badge color={ alertData.severity.color } text={ alertData.severity.label } />
             </FlexItem>
           </FlexLayout>
 
@@ -107,7 +323,7 @@ class AlertInfoModal extends React.Component {
               }
             >
               <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                { moment(alertTimestamp).format('MM/DD/YY h:m:s A') }
+                { alertData.createdLabel }
               </TextLabel>
             </FlexItem>
           </FlexLayout>
@@ -126,7 +342,7 @@ class AlertInfoModal extends React.Component {
               }
             >
               <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                { moment(alertTimestamp).format('MM/DD/YY h:m:s A') }
+                { alertData.lastOccuredLabel }
               </TextLabel>
             </FlexItem>
           </FlexLayout>
@@ -144,7 +360,7 @@ class AlertInfoModal extends React.Component {
             </FlexItem>
           </FlexLayout>
 
-          <FlexLayout padding="5px" itemSpacing="10px">
+          <FlexLayout padding="5px" itemSpacing="10px" style={ { display: 'none' } }>
             <FlexItem flexGrow="1">
               <TextLabel>
                 { i18nT('Policy', 'Policy') }
@@ -165,7 +381,7 @@ class AlertInfoModal extends React.Component {
             </FlexItem>
             <FlexItem>
               <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                -
+                { alertData.status.statusLabel }
               </TextLabel>
             </FlexItem>
           </FlexLayout>
@@ -178,7 +394,7 @@ class AlertInfoModal extends React.Component {
             </FlexItem>
             <FlexItem>
               <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                -
+                { alertData.status.acknowledgedBy }
               </TextLabel>
             </FlexItem>
           </FlexLayout>
@@ -191,7 +407,7 @@ class AlertInfoModal extends React.Component {
             </FlexItem>
             <FlexItem>
               <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                -
+                { alertData.status.resolvedBy }
               </TextLabel>
             </FlexItem>
           </FlexLayout>
@@ -204,7 +420,7 @@ class AlertInfoModal extends React.Component {
             </FlexItem>
             <FlexItem>
               <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                -
+                { alertData.description }
               </TextLabel>
             </FlexItem>
           </FlexLayout>
@@ -219,17 +435,100 @@ class AlertInfoModal extends React.Component {
 
     return (
       <div>
+
         <FullPageModal
           visible={ this.props.visible }
           title={ this.props.alert.title }
           footer={ footer }
           extraIcons={
             <ButtonGroup>
-              <Button type="secondary" onClick={ this.resolveAlert }>
-                { i18nT('Resolve', 'Resolve') }
+              <Button
+                type="secondary"
+                style={
+                  {
+                    width: '150px'
+                  }
+                }
+                onClick={ this.handleResolveClick }
+                disabled={
+                  this.props.alertModalLoading ||
+                  this.props.alertRequestActive ||
+                  this.props.alertRequestType !== ''
+                }
+              >
+                {
+                  !this.props.alertRequestActive &&
+                  this.props.alertRequestType === 'resolve' &&
+                  this.props.alertRequestStatus === true &&
+                  (
+                    i18nT('Success', 'Success')
+                  )
+                }
+                {
+                  !this.props.alertRequestActive &&
+                  this.props.alertRequestType === 'resolve' &&
+                  this.props.alertRequestStatus === false &&
+                  (
+                    i18nT('Failed', 'Failed')
+                  )
+                }
+                {
+                  this.props.alertRequestType !== 'resolve' &&
+                  (
+                    i18nT('Resolve', 'Resolve')
+                  )
+                }
+                {
+                  this.props.alertRequestActive &&
+                  this.props.alertRequestType === 'resolve' &&
+                  (
+                    <Loader />
+                  )
+                }
               </Button>
-              <Button type="secondary" onClick={ this.acknowledgeAlert }>
-                { i18nT('Acknowledge', 'Acknowledge') }
+              <Button
+                type="secondary"
+                style={
+                  {
+                    width: '150px'
+                  }
+                }
+                onClick={ this.handleAcknowledgeClick }
+                disabled={
+                  this.props.alertModalLoading ||
+                  this.props.alertRequestActive ||
+                  this.props.alertRequestType !== ''
+                }
+              >
+                {
+                  !this.props.alertRequestActive &&
+                  this.props.alertRequestType === 'acknowledge' &&
+                  this.props.alertRequestStatus === true &&
+                  (
+                    i18nT('Success', 'Success')
+                  )
+                }
+                {
+                  !this.props.alertRequestActive &&
+                  this.props.alertRequestType === 'acknowledge' &&
+                  this.props.alertRequestStatus === false &&
+                  (
+                    i18nT('Failed', 'Failed')
+                  )
+                }
+                {
+                  this.props.alertRequestType !== 'acknowledge' &&
+                  (
+                    i18nT('Acknowledge', 'Acknowledge')
+                  )
+                }
+                {
+                  this.props.alertRequestActive &&
+                  this.props.alertRequestType === 'acknowledge' &&
+                  (
+                    <Loader />
+                  )
+                }
               </Button>
             </ButtonGroup>
           }
@@ -256,6 +555,38 @@ class AlertInfoModal extends React.Component {
             >
               <StackingLayout>
                 <ContainerLayout backgroundColor="white">
+                  {
+                    !this.props.alertRequestActive &&
+                    this.props.alertRequestType !== '' &&
+                    this.props.alertRequestStatus === true &&
+                    (
+                      <Alert
+                        type={ Alert.TYPE.SUCCESS }
+                        closable={ false }
+                        message={
+                          this.props.alertRequestType === 'resolve'
+                            ? i18nT('AlertResolved', 'Alert Resolved')
+                            : i18nT('AlertAcknowledged', 'Alert Acknowledged')
+                        }
+                      />
+                    )
+                  }
+                  {
+                    !this.props.alertRequestActive &&
+                    this.props.alertRequestType !== '' &&
+                    this.props.alertRequestStatus === false &&
+                    (
+                      <Alert
+                        type={ Alert.TYPE.ERROR }
+                        closable={ false }
+                        message={
+                          this.props.alertRequestType === 'resolve'
+                            ? i18nT('AlertResolvingFailed', 'Alert Resolving Failed')
+                            : i18nT('AlertAcknowledgingFailed', 'Alert Acknowledging Failed')
+                        }
+                      />
+                    )
+                  }
                   <HeaderFooterLayout
                     itemSpacing="0px"
                     header={
@@ -274,9 +605,7 @@ class AlertInfoModal extends React.Component {
                           }
                         }>
                         <StackingLayout padding="10px">
-                          <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                            Possible cause text
-                          </TextLabel>
+                          { alertData.possibleCauses }
                         </StackingLayout>
                         <Divider />
                         <StackingLayout padding="10px" itemSpacing="0px">
@@ -285,7 +614,7 @@ class AlertInfoModal extends React.Component {
                           </Title>
                           <StackingLayout padding="10px">
                             <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                              { i18nT('ContactNutanixSupport', 'Contact Nutanix Support') }
+                              { alertData.resolutions }
                             </TextLabel>
                           </StackingLayout>
                         </StackingLayout>
@@ -301,11 +630,55 @@ class AlertInfoModal extends React.Component {
     );
   }
 
+  componentWillMount() {
+    if (!this.props.alertInfo) {
+      this.props.fetchAlertModalInfo(this.props.alert.entityId);
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.alert && prevProps.alert) {
+      if (this.props.alert.entityId !== prevProps.alert.entityId) {
+        this.props.fetchAlertModalInfo(this.props.alert.entityId);
+      }
+    } else if (!prevProps.alert.entityId && this.props.alert.entityId) {
+      this.props.fetchAlertModalInfo(this.props.alert.entityId);
+    }
+    if (this.props.alertRequestActive !== prevProps.alertRequestActive) {
+      if (this.props.alertRequestActive === false) {
+        setTimeout(() => {
+          this.props.setAlertRequestType('');
+          this.props.setAlertRequestStatus(true);
+        }, 3000);
+      }
+    }
+  }
+
 }
 
-AlertInfoModal.propTypes = {
-  alert: PropTypes.object,
-  visible: PropTypes.bool
+
+const mapStateToProps = state => {
+  return {
+    alertModalLoading: state.groupsapi.alertModalLoading,
+    alertRequestActive: state.groupsapi.alertRequestActive,
+    alertRequestStatus: state.groupsapi.alertRequestStatus,
+    alertRequestType: state.groupsapi.alertRequestType,
+    alertInfo: state.groupsapi.alertInfo
+  };
 };
 
-export default AlertInfoModal;
+const mapDispatchToProps = dispatch => {
+  return {
+    fetchAlertModalInfo: (entityId) => dispatch(fetchAlertModalInfo(entityId)),
+    setAlertRequestStatus: (value) => dispatch(setAlertRequestStatus(value)),
+    setAlertRequestType: (value) => dispatch(setAlertRequestType(value)),
+    resolveAlert: (entityId) => dispatch(resolveAlert([entityId])),
+    acknowledgeAlert: (entityId) => dispatch(acknowledgeAlert([entityId]))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(AlertInfoModal);
+

@@ -39,7 +39,8 @@ const pConfig = {
 
 // List of end points to proxy
 proxy = {
-  '/api/nutanix/v3' : pConfig
+  '/api/nutanix/v3' : pConfig,
+  '/PrismGateway/services/rest/v1': pConfig
 };
 https = (proxyServer.indexOf('https') === 0);
 

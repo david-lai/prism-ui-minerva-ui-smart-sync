@@ -15,6 +15,15 @@ export const {
   FETCH_FS,
   HIGHLIGHTED_WIDGET_BUSY,
   FETCH_ALERTS,
+
+  ALERT_MODAL_LOADING,
+  FETCH_ALERT_MODAL_INFO,
+  RESOLVE_ALERT,
+  ACKNOWLEDGE_ALERT,
+  ALERT_REQUEST_ACTIVE,
+  ALERT_REQUEST_TYPE,
+  ALERT_REQUEST_STATUS,
+
   FETCH_SUMMARY_ALERTS,
   SUMMARY_ALERTS_BUSY,
   FETCH_SERVER_ALERTS,
@@ -68,6 +77,160 @@ export const fetchAlerts = (entityIds = []) => {
       });
   };
 };
+
+/**
+ * Fetches alert info from the API
+ *
+ * @param  {String}   entityId     IDs of file servers to fetch alerts for (optional)
+ *
+ * @return {Function}               Dispatcher method
+ */
+export const fetchAlertModalInfo = (entityId) => {
+  return (dispatch) => {
+    dispatch({
+      type: FETCH_ALERT_MODAL_INFO,
+      payload: false
+    });
+    dispatch({
+      type: ALERT_MODAL_LOADING,
+      payload: true
+    });
+    const url = `${AppConstants.APIS.ALERTS_API}/${entityId}`;
+    // Load alert info
+    axios.get(url)
+      .then((resp) => {
+        let payload = false;
+        if (resp && resp.status && resp.status === 200 && resp.data) {
+          payload = {
+            entity: {
+              ...resp.data.status.resources,
+              entityId
+            }
+          };
+        }
+        dispatch({
+          type: FETCH_ALERT_MODAL_INFO,
+          payload
+        });
+      })
+      .catch((ex) => {
+        dispatch({
+          type: FETCH_ALERT_MODAL_INFO,
+          payload: false
+        });
+      });
+  };
+};
+
+/**
+ * Sets alert request type
+ *
+ * @param  {String}   value       Boolean type
+ *
+ * @return {Function}               Dispatcher method
+ */
+export const setAlertRequestType = (value) => {
+  return (dispatch) => {
+    dispatch({
+      type: ALERT_REQUEST_TYPE,
+      payload: value
+    });
+  };
+};
+
+/**
+ * Sets alert request status
+ *
+ * @param  {Boolean}   value       Boolean status
+ *
+ * @return {Function}               Dispatcher method
+ */
+export const setAlertRequestStatus = (value) => {
+  return (dispatch) => {
+    dispatch({
+      type: ALERT_REQUEST_STATUS,
+      payload: value
+    });
+  };
+};
+
+/**
+ * Resolves alerts
+ *
+ * @param  {Array}   entityIds      IDs of file servers to fetch alerts for (optional)
+ *
+ * @return {Function}               Dispatcher method
+ */
+export const resolveAlert = (entityIds = []) => {
+  return (dispatch) => {
+    dispatch({
+      type: ALERT_REQUEST_ACTIVE,
+      payload: true
+    });
+    dispatch({
+      type: ALERT_REQUEST_TYPE,
+      payload: 'resolve'
+    });
+    const query = entityIds;
+    axios.post(`${AppConstants.APIS.PRISM_GATEWAY}/alerts/resolve_list`, query)
+      .then((resp) => {
+        let payload = false;
+        if (resp && resp.data && Array.isArray(resp.data)) {
+          payload = true;
+        }
+        dispatch({
+          type: RESOLVE_ALERT,
+          payload
+        });
+      })
+      .catch((ex) => {
+        dispatch({
+          type: RESOLVE_ALERT,
+          payload: false
+        });
+      });
+  };
+};
+
+
+/**
+ * Resolves alerts
+ *
+ * @param  {Array}   entityIds      IDs of file servers to fetch alerts for (optional)
+ *
+ * @return {Function}               Dispatcher method
+ */
+export const acknowledgeAlert = (entityIds = []) => {
+  return (dispatch) => {
+    dispatch({
+      type: ALERT_REQUEST_ACTIVE,
+      payload: true
+    });
+    dispatch({
+      type: ALERT_REQUEST_TYPE,
+      payload: 'acknowledge'
+    });
+    const query = entityIds;
+    axios.post(`${AppConstants.APIS.PRISM_GATEWAY}/alerts/acknowledge_list`, query)
+      .then((resp) => {
+        let payload = false;
+        if (resp && resp.data && Array.isArray(resp.data)) {
+          payload = true;
+        }
+        dispatch({
+          type: ACKNOWLEDGE_ALERT,
+          payload
+        });
+      })
+      .catch((ex) => {
+        dispatch({
+          type: ACKNOWLEDGE_ALERT,
+          payload: false
+        });
+      });
+  };
+};
+
 
 /**
  * Fetches alerts data from the API

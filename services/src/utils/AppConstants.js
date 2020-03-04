@@ -5,7 +5,9 @@
 //
 const AppConstants = {
   APIS: {
-    GROUPS_API : '/api/nutanix/v3/groups'
+    PRISM_GATEWAY : '/PrismGateway/services/rest/v1',
+    GROUPS_API : '/api/nutanix/v3/groups',
+    ALERTS_API : '/api/nutanix/v3/alerts'
   },
 
   // State for when an action is enabled
@@ -79,6 +81,15 @@ const AppConstants = {
     FETCH_FS: 'fetch_fs',
     HIGHLIGHTED_WIDGET_BUSY: 'highlighted_widget_busy',
     FETCH_ALERTS: 'fetch_alerts',
+
+    ALERT_MODAL_LOADING: 'alert_modal_loading',
+    FETCH_ALERT_MODAL_INFO: 'fetch_alert_modal_info',
+    RESOLVE_ALERT: 'resolve_alert',
+    ACKNOWLEDGE_ALERT: 'acknowledge_alert',
+    ALERT_REQUEST_ACTIVE: 'alert_request_active',
+    ALERT_REQUEST_TYPE: 'alert_request_type',
+    ALERT_REQUEST_STATUS: 'alert_request_status',
+
     SUMMARY_ALERTS_BUSY: 'summary_alerts_busy',
     FETCH_SUMMARY_ALERTS: 'fetch_summary_alerts',
     FETCH_SERVER_ALERTS: 'fetch_server_alerts',
