@@ -289,11 +289,7 @@ class FileServers extends React.Component {
             () => {
               return (
                 <StackingLayout
-                  style={
-                    {
-                      background: '#f2f4f6'
-                    }
-                  }
+                  className="fs-list-root"
                   padding="0px"
                 >
                   <div
@@ -326,12 +322,8 @@ class FileServers extends React.Component {
                       }
                     >
                       <TextLabel
+                        className="fs-tooltip-label"
                         type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }
-                        style={
-                          {
-                            color: '#22a5f7'
-                          }
-                        }
                       >
                         { i18nT('NotSeeingAllFileServers', 'Not seeing all File Servers?') }
                       </TextLabel>
