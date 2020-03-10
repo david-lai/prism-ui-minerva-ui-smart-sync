@@ -309,7 +309,10 @@ class FileServers extends React.Component {
                             }
                           }
                         >
-                          { i18nT('NotSeeingAllFileServersTooltip', 'NotSeeingAllFileServersTooltip') }
+                          { i18nT(
+                            'NotSeeingAllFileServersTooltip',
+                            'NotSeeingAllFileServersTooltip')
+                          }
                         </div>
                       }
                     >
