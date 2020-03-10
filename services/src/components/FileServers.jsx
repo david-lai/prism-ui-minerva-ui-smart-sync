@@ -309,15 +309,7 @@ class FileServers extends React.Component {
                             }
                           }
                         >
-                          {
-                            i18nT(
-                              'NotSeeingAllFileServersTooltip',
-                              'To manage a file server through Prism Central, the AOS' +
-                              ' version on the cluster running the file server' +
-                              ' should be 5.17 or above. Upgrade the cluster AOS to the' +
-                              ' latest version (5.17 or above) for file servers to be displayed.'
-                            )
-                          }
+                          { i18nT('NotSeeingAllFileServersTooltip', 'NotSeeingAllFileServersTooltip') }
                         </div>
                       }
                     >
