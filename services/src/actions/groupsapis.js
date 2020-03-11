@@ -13,12 +13,15 @@ import AppConstants from './../utils/AppConstants';
 // ------------
 export const {
   FETCH_FS,
+  FETCH_FS_DETAILS,
   HIGHLIGHTED_WIDGET_BUSY,
   FETCH_ALERTS,
   FETCH_SUMMARY_ALERTS,
   SUMMARY_ALERTS_BUSY,
   FETCH_SERVER_ALERTS,
-  SET_ALERTS_WIDGET_RANGE
+  SET_ALERTS_WIDGET_RANGE,
+
+  FETCH_CLUSTER_DETAILS
 } = AppConstants.ACTIONS;
 
 /**
@@ -210,6 +213,132 @@ export const fetchFsData = () => {
         dispatch({
           type: FETCH_FS,
           payload: false
+        });
+      });
+  };
+};
+
+/**
+ * Fetches detailed data for given file server
+ *
+ * @param  {String} entityId File server entity id
+ * @return {[type]}          [description]
+ */
+export const fetchFsDetails = (entityId) => {
+  return (dispatch) => {
+    const query = {
+      entity_type: 'file_server_service',
+      entity_ids: [entityId],
+      group_member_sort_attribute: 'name',
+      group_member_sort_order: 'ASCENDING',
+      group_member_offset: 0,
+      group_member_attributes: [
+        {
+          attribute: 'name'
+        },
+        {
+          attribute: 'cluster'
+        },
+        {
+          attribute: 'nvm_uuid_list'
+        },
+        {
+          attribute: 'afs_version'
+        },
+        {
+          attribute: 'cluster_uuid'
+        },
+        {
+          attribute: 'last_used_size_bytes'
+        },
+        {
+          attribute: 'ipv4_address'
+        }
+      ]
+    };
+    axios.post(AppConstants.APIS.GROUPS_API, query)
+      .then((resp) => {
+        dispatch({
+          type: FETCH_FS_DETAILS,
+          payload: {
+            entityId,
+            details: resp.data
+          }
+        });
+      })
+      .catch((ex) => {
+        dispatch({
+          type: FETCH_FS_DETAILS,
+          payload: {
+            entityId,
+            details: false
+          }
+        });
+      });
+  };
+};
+
+/**
+ * Fetches detailed data for given file server
+ *
+ * @param  {Array}     entityIds   Cluster ids
+ * @return {undefined}
+ */
+export const fetchClusterDetails = (entityIds) => {
+  if (!Array.isArray(entityIds)) {
+    entityIds = [entityIds];
+  }
+  return (dispatch) => {
+    const query = {
+      entity_type: 'cluster',
+      entity_ids: entityIds,
+      group_member_attributes: [
+        {
+          attribute: 'cluster_name'
+        },
+        {
+          attribute: 'check.overall_score'
+        },
+        {
+          attribute: 'capacity.runway'
+        },
+        {
+          attribute: 'version'
+        },
+        {
+          attribute: 'cluster_upgrade_status'
+        },
+        {
+          attribute: 'hypervisor_types'
+        },
+        {
+          attribute: 'num_vms'
+        },
+        {
+          attribute: 'num_nodes'
+        },
+        {
+          attribute: 'external_ip_address'
+        }
+      ]
+    };
+    axios.post(AppConstants.APIS.GROUPS_API, query)
+      .then((resp) => {
+        dispatch({
+          type: FETCH_CLUSTER_DETAILS,
+          payload: {
+            entityIds,
+            details: resp.data
+          }
+        });
+      })
+      .catch((ex) => {
+        dispatch({
+          type: FETCH_CLUSTER_DETAILS,
+          payload: {
+            entityIds,
+            details: false
+          }
         });
       });
   };

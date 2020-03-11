@@ -7,20 +7,27 @@
 // Actions
 import {
   FETCH_FS,
+  FETCH_FS_DETAILS,
   HIGHLIGHTED_WIDGET_BUSY,
   FETCH_ALERTS,
   FETCH_SERVER_ALERTS,
   FETCH_SUMMARY_ALERTS,
   SUMMARY_ALERTS_BUSY,
-  SET_ALERTS_WIDGET_RANGE
+  SET_ALERTS_WIDGET_RANGE,
+
+  FETCH_CLUSTER_DETAILS
 } from '../actions/groupsapis';
+
+import AppUtil from '../utils/AppUtil';
 
 // default state
 const initialState = {
   alertsWidgetRange: 'day',
   alertsWidgetBusy: false,
   highlightedWidgetBusy: false,
-  serverAlerts: {}
+  fsDetails: {},
+  serverAlerts: {},
+  clusterDetails: {}
 };
 
 
@@ -73,6 +80,47 @@ function groupsapis(state = initialState, action) {
         ...state,
         alertsWidgetRange: payload
       };
+    case FETCH_FS_DETAILS:
+      const details = AppUtil.extractGroupResults(payload.details);
+      if (details && Array.isArray(details) && details.length) {
+        return {
+          ...state,
+          fsDetails: {
+            ...state.fsDetails,
+            [payload.entityId]: details[0]
+          }
+        };
+      }
+      return {
+        ...state,
+        fsDetails: {
+          ...state.fsDetails,
+          [payload.entityId]: false
+        }
+      };
+    case FETCH_CLUSTER_DETAILS:
+      const clusters = AppUtil.extractGroupResults(payload.details);
+      if (clusters && Array.isArray(clusters) && clusters.length) {
+        return {
+          ...state,
+          clusterDetails: {
+            ...clusters.reduce((acc, val) => {
+              acc[val.id] = val;
+              return acc;
+            },
+            state.clusterDetails
+            )
+          }
+        };
+      }
+      return {
+        ...state,
+        clusterDetails: {
+          ...state.clusterDetails,
+          [payload.entityId]: false
+        }
+      };
+
     default:
       return state;
   }
