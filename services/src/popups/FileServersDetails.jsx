@@ -27,22 +27,45 @@ class FileServersDetails extends React.Component {
 
   render() {
     const details = this.props.details;
-    let entity = {
+
+    const entity = {
       name: '',
       afs_version: '',
       nvm_uuid_list: '',
-      ipv4_address: ''
-    };
-    if (this.props.fsDetails[details.entityId]) {
-      entity = this.props.fsDetails[details.entityId];
-    }
-
-    let cluster = {
+      ipv4_address: '',
+      last_used_size_bytes: '',
       cluster_name: ''
     };
-    if (this.props.clusterDetails[details.cluster_uuid]) {
-      cluster = this.props.clusterDetails[details.cluster_uuid];
+    if (details) {
+      if (details.name) {
+        entity.name = details.name;
+      }
+      if (details.afs_version) {
+        entity.afs_version = details.afs_version;
+      }
+      if (details.nvm_uuid_list) {
+        entity.nvm_uuid_list = details.nvm_uuid_list;
+      }
     }
+    if (this.props.fsDetails[details.entityId]) {
+      const fsd = this.props.fsDetails[details.entityId];
+      if (fsd.ipv4_address) {
+        entity.ipv4_address = fsd.ipv4_address;
+      }
+      if (fsd.last_used_size_bytes) {
+        entity.last_used_size_bytes = fsd.last_used_size_bytes;
+      }
+    }
+
+    if (this.props.clusterDetails[details.cluster_uuid]) {
+      entity.cluster_name = this.props.clusterDetails[details.cluster_uuid].cluster_name;
+    }
+
+    const loadingError = !(
+      typeof this.props.fsDetails[details.entityId] !== 'boolean' &&
+      typeof this.props.clusterDetails[details.cluster_uuid] !== 'boolean'
+    );
+
     const loading = !(
       this.props.fsDetails[details.entityId] &&
       this.props.clusterDetails[details.cluster_uuid]
@@ -59,13 +82,13 @@ class FileServersDetails extends React.Component {
     const data = [
       {
         key: 'name',
-        title: i18nT('fs_name', 'File Server Name'),
+        title: i18nT('name', 'File Server Name'),
         data: entity.name
       },
       {
         key: 'cluster',
         title: i18nT('cluster_name', 'Cluster'),
-        data: cluster.cluster_name
+        data: entity.cluster_name
       },
       {
         key: 'version',
@@ -88,7 +111,7 @@ class FileServersDetails extends React.Component {
         <Modal
           visible={ this.props.visible }
           title={ i18nT('file_server_details', 'File Server Details') }
-          primaryButtonLabel="Done"
+          primaryButtonLabel={ i18nT('done', 'Done') }
           primaryButtonClick={ this.props.onClose }
           onCancel={ this.props.onClose }
         >
@@ -99,6 +122,7 @@ class FileServersDetails extends React.Component {
                   hideHeader:true
                 }
               }
+              loadingError={ loadingError }
               loading={ loading }
               oldTable={ false }
               dataSource={ data }

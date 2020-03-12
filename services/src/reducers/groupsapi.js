@@ -99,7 +99,10 @@ function groupsapis(state = initialState, action) {
         }
       };
     case FETCH_CLUSTER_DETAILS:
-      const clusters = AppUtil.extractGroupResults(payload.details);
+      let clusters = [];
+      if (payload.details) {
+        clusters = AppUtil.extractGroupResults(payload.details);
+      }
       if (clusters && Array.isArray(clusters) && clusters.length) {
         return {
           ...state,
@@ -116,8 +119,12 @@ function groupsapis(state = initialState, action) {
       return {
         ...state,
         clusterDetails: {
-          ...state.clusterDetails,
-          [payload.entityId]: false
+          ...payload.entityIds.reduce((acc, val) => {
+            acc[val] = false;
+            return acc;
+          },
+          state.clusterDetails
+          )
         }
       };
 

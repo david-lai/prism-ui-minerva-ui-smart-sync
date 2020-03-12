@@ -229,25 +229,7 @@ export const fetchFsDetails = (entityId) => {
     const query = {
       entity_type: 'file_server_service',
       entity_ids: [entityId],
-      group_member_sort_attribute: 'name',
-      group_member_sort_order: 'ASCENDING',
-      group_member_offset: 0,
       group_member_attributes: [
-        {
-          attribute: 'name'
-        },
-        {
-          attribute: 'cluster'
-        },
-        {
-          attribute: 'nvm_uuid_list'
-        },
-        {
-          attribute: 'afs_version'
-        },
-        {
-          attribute: 'cluster_uuid'
-        },
         {
           attribute: 'last_used_size_bytes'
         },
@@ -295,30 +277,6 @@ export const fetchClusterDetails = (entityIds) => {
       group_member_attributes: [
         {
           attribute: 'cluster_name'
-        },
-        {
-          attribute: 'check.overall_score'
-        },
-        {
-          attribute: 'capacity.runway'
-        },
-        {
-          attribute: 'version'
-        },
-        {
-          attribute: 'cluster_upgrade_status'
-        },
-        {
-          attribute: 'hypervisor_types'
-        },
-        {
-          attribute: 'num_vms'
-        },
-        {
-          attribute: 'num_nodes'
-        },
-        {
-          attribute: 'external_ip_address'
         }
       ]
     };
