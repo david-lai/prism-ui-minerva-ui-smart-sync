@@ -23,7 +23,8 @@ import {
   MenuItem,
   StackingLayout,
   TextLabel,
-  Title
+  Title,
+  Tooltip
 } from 'prism-reactjs';
 import { WindowsMessageUtil } from 'prism-utils-common';
 import EntityConfigs from '../config/entity_configs.js';
@@ -284,7 +285,50 @@ class FileServers extends React.Component {
         <Route exact={ true } path="/summary"
           component={ () => <Summary onMenuChange={ this.onMenuChange } /> } />
         <Route exact={ true } path="/file_servers"
-          component={ () => <EntityBrowser { ...this.state.fsEbConfiguration } /> }
+          component={
+            () => {
+              return (
+                <StackingLayout
+                  className="fs-list-root"
+                  padding="0px"
+                >
+                  <div
+                    style={
+                      {
+                        padding: '5px 20px'
+                      }
+                    }
+                  >
+                    <Tooltip
+                      placement="rightTop"
+                      title={
+                        <div
+                          style={
+                            {
+                              maxWidth: '300px'
+                            }
+                          }
+                        >
+                          { i18nT(
+                            'NotSeeingAllFileServersTooltip',
+                            'NotSeeingAllFileServersTooltip')
+                          }
+                        </div>
+                      }
+                    >
+                      <TextLabel
+                        className="fs-tooltip-label"
+                        type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }
+                      >
+                        { i18nT('NotSeeingAllFileServers', 'Not seeing all File Servers?') }
+                      </TextLabel>
+                    </Tooltip>
+                  </div>
+                  <EntityBrowser { ...this.state.fsEbConfiguration } />
+                </StackingLayout>
+              );
+            }
+          }
         />
         <Route exact={ true } path="/alerts"
           component={ () => <EntityBrowser { ...this.state.alertEbConfiguration } /> }
@@ -366,6 +410,7 @@ class FileServers extends React.Component {
     clearInterval(this.dataPolling);
     this.removeEventListener(AppConstants.FS_PC_URL_LISTENER);
   }
+
 }
 
 const mapStateToProps = state => {
