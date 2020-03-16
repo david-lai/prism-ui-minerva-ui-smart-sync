@@ -543,15 +543,10 @@ class AlertInfoModal extends React.Component {
             </FlexLayout>
 
             <FlexLayout
+              className="alert-modal-body"
               itemFlexBasis="100pc"
               padding="20px"
               flexGrow="1"
-              style={
-                {
-                  height: 'inherit',
-                  backgroundColor: '#F2F4F6'
-                }
-              }
             >
               <StackingLayout>
                 <ContainerLayout backgroundColor="white">
