@@ -5,10 +5,12 @@
 //
 
 import AppConstants from './../utils/AppConstants';
+import AppUtil from '../utils/AppUtil';
 
 // Actions
 const {
   FETCH_FS,
+  FETCH_FS_DETAILS,
   HIGHLIGHTED_WIDGET_BUSY,
   FETCH_ALERTS,
 
@@ -23,8 +25,10 @@ const {
   FETCH_SERVER_ALERTS,
   FETCH_SUMMARY_ALERTS,
   SUMMARY_ALERTS_BUSY,
-  SET_ALERTS_WIDGET_RANGE
+  SET_ALERTS_WIDGET_RANGE,
+  FETCH_CLUSTER_DETAILS
 } = AppConstants.ACTIONS;
+
 
 // default state
 const initialState = {
@@ -37,8 +41,10 @@ const initialState = {
   alertRequestStatus: true,
 
   highlightedWidgetBusy: false,
+  alertInfo: false,
+  fsDetails: {},
   serverAlerts: {},
-  alertInfo: false
+  clusterDetails: {}
 };
 
 
@@ -133,6 +139,54 @@ function groupsapis(state = initialState, action) {
         ...state,
         alertsWidgetRange: payload
       };
+    case FETCH_FS_DETAILS:
+      const details = AppUtil.extractGroupResults(payload.details);
+      if (details && Array.isArray(details) && details.length) {
+        return {
+          ...state,
+          fsDetails: {
+            ...state.fsDetails,
+            [payload.entityId]: details[0]
+          }
+        };
+      }
+      return {
+        ...state,
+        fsDetails: {
+          ...state.fsDetails,
+          [payload.entityId]: false
+        }
+      };
+    case FETCH_CLUSTER_DETAILS:
+      let clusters = [];
+      if (payload.details) {
+        clusters = AppUtil.extractGroupResults(payload.details);
+      }
+      if (clusters && Array.isArray(clusters) && clusters.length) {
+        return {
+          ...state,
+          clusterDetails: {
+            ...clusters.reduce((acc, val) => {
+              acc[val.id] = val;
+              return acc;
+            },
+            state.clusterDetails
+            )
+          }
+        };
+      }
+      return {
+        ...state,
+        clusterDetails: {
+          ...payload.entityIds.reduce((acc, val) => {
+            acc[val] = false;
+            return acc;
+          },
+          state.clusterDetails
+          )
+        }
+      };
+
     default:
       return state;
   }

@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { MODAL_TYPE } from '../utils/AppConstants';
 
 class FileServersName extends React.Component {
+
   constructor(props) {
     super(props);
 
@@ -30,14 +31,14 @@ class FileServersName extends React.Component {
       </Link>
     );
   }
+
 }
 
 FileServersName.propTypes = {
-  entity: PropTypes.object,
   options: PropTypes.object,
   name: PropTypes.string,
+
   openModal: PropTypes.func
 };
 
 export default FileServersName;
-
