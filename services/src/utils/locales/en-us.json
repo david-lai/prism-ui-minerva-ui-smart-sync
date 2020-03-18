@@ -109,5 +109,37 @@
     "fileServerAlertWarning": "Warning",
     "fileServerAlertInfo": "Info",
     "NoHighligtedFileServers": "No Highlighted File Servers"
+  },
+
+  "AlertInfoModal": {
+    "Acknowledge": "Acknowledge",
+    "Acknowledged": "Acknowledged",
+    "AcknowledgedBy": "Acknowledged By",
+    "AlertResolved": "Alert Resolved",
+    "AlertResolvingFailed": "Alert Resolving Failed",
+    "AlertAcknowledged": "Alert Acknowledged",
+    "AlertAcknowledgingFailed": "Alert Acknowledging Failed",
+    "AlertTitle": "Alert Title",
+    "AutoResolved": "Auto Resolved",
+    "ContactNutanixSupport": "Contact Nutanix Support",
+    "CreatedTime": "Created Time",
+    "Description": "Description",
+    "Failed": "Failed",
+    "ImpactType": "Impact Type",
+    "LastOccurred": "Last Occured",
+    "N/A": "N/A",
+    "Policy": "Policy",
+    "PossibleCause": "Possible Cause",
+    "Recommendations": "Recommendations",
+    "Resolve": "Resolve",
+    "Resolved": "Resolved",
+    "ResolvedBy": "Resolved By",
+    "Severity": "Severity",
+    "SourceEntity": "Source Entity",
+    "Status": "Status",
+    "Success": "Success",
+    "alertSeverityCritical": "Critical",
+    "alertSeverityInfo": "Info",
+    "alertSeverityWarning": "Warning"
   }
 }

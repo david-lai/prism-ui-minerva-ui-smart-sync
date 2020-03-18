@@ -4,27 +4,44 @@
 // Groups API Reducer
 //
 
+import AppConstants from './../utils/AppConstants';
+import AppUtil from '../utils/AppUtil';
+
 // Actions
-import {
+const {
   FETCH_FS,
   FETCH_FS_DETAILS,
   HIGHLIGHTED_WIDGET_BUSY,
   FETCH_ALERTS,
+
+  FETCH_ALERT_MODAL_INFO,
+  ALERT_MODAL_LOADING,
+  RESOLVE_ALERT,
+  ACKNOWLEDGE_ALERT,
+  ALERT_REQUEST_ACTIVE,
+  ALERT_REQUEST_TYPE,
+  ALERT_REQUEST_STATUS,
+
   FETCH_SERVER_ALERTS,
   FETCH_SUMMARY_ALERTS,
   SUMMARY_ALERTS_BUSY,
   SET_ALERTS_WIDGET_RANGE,
-
   FETCH_CLUSTER_DETAILS
-} from '../actions/groupsapis';
+} = AppConstants.ACTIONS;
 
-import AppUtil from '../utils/AppUtil';
 
 // default state
 const initialState = {
   alertsWidgetRange: 'day',
   alertsWidgetBusy: false,
+
+  alertModalLoading: false,
+  alertRequestActive: false,
+  alertRequestType: '',
+  alertRequestStatus: true,
+
   highlightedWidgetBusy: false,
+  alertInfo: false,
   fsDetails: {},
   serverAlerts: {},
   clusterDetails: {}
@@ -56,6 +73,48 @@ function groupsapis(state = initialState, action) {
         ...state,
         alertsData: payload
       };
+
+    case FETCH_ALERT_MODAL_INFO:
+      return {
+        ...state,
+        alertModalLoading: false,
+        alertInfo: payload
+      };
+    case ALERT_MODAL_LOADING:
+      return {
+        ...state,
+        alertModalLoading: payload
+      };
+
+    case ALERT_REQUEST_ACTIVE:
+      return {
+        ...state,
+        alertRequestActive: payload
+      };
+    case ALERT_REQUEST_TYPE:
+      return {
+        ...state,
+        alertRequestType: payload
+      };
+    case ALERT_REQUEST_STATUS:
+      return {
+        ...state,
+        alertRequestStatus: payload
+      };
+    case RESOLVE_ALERT:
+      return {
+        ...state,
+        alertRequestActive: false,
+        alertRequestStatus: payload
+      };
+
+    case ACKNOWLEDGE_ALERT:
+      return {
+        ...state,
+        alertRequestActive: false,
+        alertRequestStatus: payload
+      };
+
     case SUMMARY_ALERTS_BUSY:
       return {
         ...state,

@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { closeModal } from '../actions';
 import FileServersDetails from '../popups/FileServersDetails.jsx';
+import AlertInfoModal from '../popups/AlertInfoModal.jsx';
 
 // Constants
 import { MODAL_TYPE } from '../utils/AppConstants';
@@ -56,10 +57,19 @@ class ModalContainer extends React.Component {
           openPe={ openPe }
         />
       );
+    } else if (type === MODAL_TYPE.ALERT_INFO) {
+      return (
+        <AlertInfoModal
+          closeModalAction={ close }
+          visible={ visible }
+          onClose={ options.onClose || close }
+          alert={ options.entity }
+        />
+      );
     }
-
     return null;
   }
+
 }
 
 const mapStateToProps = state => {

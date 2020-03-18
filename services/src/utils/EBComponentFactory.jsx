@@ -12,6 +12,7 @@ import { OpenInNewWindowIcon, TextLabel, Link, FlexLayout } from 'prism-reactjs'
 
 // Popups
 import FileServersName from '../components/FileServersName.jsx';
+import AlertInfoCell from '../components/AlertInfoCell.jsx';
 
 // Local includes
 import AppConstants from './AppConstants';
@@ -33,7 +34,9 @@ const COMPONENTS = {
   JOIN_STRING_ARRAY: 'join_string_array',
   JOIN_PASCAL_CASE_ARRAY: 'join_pascal_case_array',
   PICK_LIST_ITEM: 'pick_list_item',
-  PICK_NAMED_LIST_ITEM: 'pick_named_list_item'
+  PICK_NAMED_LIST_ITEM: 'pick_named_list_item',
+
+  ALERT_TITLE: 'alert_title'
 };
 
 // Components
@@ -128,6 +131,14 @@ class EBComponentFactory {
       case COMPONENTS.PICK_NAMED_LIST_ITEM:
         const namedListItemValue = FormatterUtil.pickNamedListItem(options.text, options.options);
         return (<span>{ namedListItemValue }</span>);
+      case COMPONENTS.ALERT_TITLE:
+        return (
+          <AlertInfoCell
+            options={ options.options }
+            openModal={ this.openModal }
+          />
+        );
+
       default:
         return this.defaultFactory.getComponent(componentId, options);
     }
