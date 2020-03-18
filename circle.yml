@@ -69,7 +69,7 @@ test:
 deployment:
   canaveral:
     branch: /.*/
-    tag: /(v[0-9]\.[0-9]\.[0-9])/
+    # tag: /(v[0-9]\.[0-9]\.[0-9])/
     commands:
       - canaveral/core/scripts/archive-artifacts.sh
       - canaveral/core/scripts/update-dependencies.sh
