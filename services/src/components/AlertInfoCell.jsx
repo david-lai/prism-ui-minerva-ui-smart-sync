@@ -1,7 +1,7 @@
 //
 // Copyright (c) 2020 Nutanix Inc. All rights reserved.
 //
-// The file servers name component
+// Alert name cell component
 //
 import React from 'react';
 import { Link } from 'prism-reactjs';
