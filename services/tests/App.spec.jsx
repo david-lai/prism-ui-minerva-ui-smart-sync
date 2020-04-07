@@ -14,8 +14,15 @@ describe('App', () => {
   const middlewares = [thunk];
   const mockStore = configureStore(middlewares);
 
-  it('Mounts main App', () => {
-  	const store = mockStore(initStore);
+  it('Mounts main App with empty store', () => {
+  	const store = mockStore(initStore.empty);
+    const cbp = mount(<Provider store={ store }>
+      <App /></Provider>).instance();
+    expect(cbp).toBeTruthy();
+  });
+
+  it('Mounts main App with empty store', () => {
+  	const store = mockStore(initStore.full);
     const cbp = mount(<Provider store={ store }>
       <App /></Provider>).instance();
     expect(cbp).toBeTruthy();

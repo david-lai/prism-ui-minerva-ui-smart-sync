@@ -5,7 +5,8 @@ import thunk from 'redux-thunk'
 import { mount } from 'enzyme';
 import AlertInfoModal from '../src/popups/AlertInfoModal.jsx';
 
-import initStore from '../mockStore';
+import stores from '../mockStore';
+const initStore = stores.full;
 jest.mock('../src/reducers/groupsapi');
 
 describe('AlertInfoModal', () => {

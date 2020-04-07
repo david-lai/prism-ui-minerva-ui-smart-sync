@@ -18,12 +18,13 @@ import {
   FlexLayout,
   FullPageModal,
   HeaderFooterLayout,
+  CloseIcon,
   Loader,
   Paragraph,
   TextLabel,
   Title,
   StackingLayout
-} from 'prism-reactjs';
+} from '@nutanix-ui/prism-reactjs';
 
 // Local includes
 import FormatterUtil from '../utils/FormatterUtil';
@@ -49,6 +50,7 @@ class AlertInfoModal extends React.Component {
   static propTypes = {
     alert: PropTypes.object,
     visible: PropTypes.bool,
+    closeModalAction: PropTypes.func,
     alertModalLoading: PropTypes.bool,
     alertRequestActive: PropTypes.bool,
     alertRequestStatus: PropTypes.bool,
@@ -60,6 +62,13 @@ class AlertInfoModal extends React.Component {
     resolveAlert: PropTypes.func,
     acknowledgeAlert: PropTypes.func
   };
+
+  handleCloseClick = (e) => {
+    e.preventDefault();
+    if (this.props.closeModalAction && typeof this.props.closeModalAction === 'function') {
+      this.props.closeModalAction(e);
+    }
+  }
 
   handleResolveClick = (e) => {
     e.preventDefault();
@@ -440,97 +449,105 @@ class AlertInfoModal extends React.Component {
           visible={ this.props.visible }
           title={ this.props.alert.title }
           footer={ footer }
-          extraIcons={
-            <ButtonGroup>
-              <Button
-                type="secondary"
-                style={
-                  {
-                    width: '150px'
+          headerActions={
+            <FlexLayout>
+              <ButtonGroup>
+                <Button
+                  type="secondary"
+                  style={
+                    {
+                      width: '150px'
+                    }
                   }
-                }
-                onClick={ this.handleResolveClick }
-                disabled={
-                  this.props.alertModalLoading ||
-                  this.props.alertRequestActive ||
-                  this.props.alertRequestType !== ''
-                }
-              >
-                {
-                  !this.props.alertRequestActive &&
-                  this.props.alertRequestType === 'resolve' &&
-                  this.props.alertRequestStatus === true &&
-                  (
-                    i18nT('Success', 'Success')
-                  )
-                }
-                {
-                  !this.props.alertRequestActive &&
-                  this.props.alertRequestType === 'resolve' &&
-                  this.props.alertRequestStatus === false &&
-                  (
-                    i18nT('Failed', 'Failed')
-                  )
-                }
-                {
-                  this.props.alertRequestType !== 'resolve' &&
-                  (
-                    i18nT('Resolve', 'Resolve')
-                  )
-                }
-                {
-                  this.props.alertRequestActive &&
-                  this.props.alertRequestType === 'resolve' &&
-                  (
-                    <Loader />
-                  )
-                }
-              </Button>
-              <Button
-                type="secondary"
-                style={
-                  {
-                    width: '150px'
+                  onClick={ this.handleResolveClick }
+                  disabled={
+                    this.props.alertModalLoading ||
+                    this.props.alertRequestActive ||
+                    this.props.alertRequestType !== ''
                   }
-                }
-                onClick={ this.handleAcknowledgeClick }
-                disabled={
-                  this.props.alertModalLoading ||
-                  this.props.alertRequestActive ||
-                  this.props.alertRequestType !== ''
-                }
+                >
+                  {
+                    !this.props.alertRequestActive &&
+                    this.props.alertRequestType === 'resolve' &&
+                    this.props.alertRequestStatus === true &&
+                    (
+                      i18nT('Success', 'Success')
+                    )
+                  }
+                  {
+                    !this.props.alertRequestActive &&
+                    this.props.alertRequestType === 'resolve' &&
+                    this.props.alertRequestStatus === false &&
+                    (
+                      i18nT('Failed', 'Failed')
+                    )
+                  }
+                  {
+                    this.props.alertRequestType !== 'resolve' &&
+                    (
+                      i18nT('Resolve', 'Resolve')
+                    )
+                  }
+                  {
+                    this.props.alertRequestActive &&
+                    this.props.alertRequestType === 'resolve' &&
+                    (
+                      <Loader />
+                    )
+                  }
+                </Button>
+                <Button
+                  type="secondary"
+                  style={
+                    {
+                      width: '150px'
+                    }
+                  }
+                  onClick={ this.handleAcknowledgeClick }
+                  disabled={
+                    this.props.alertModalLoading ||
+                    this.props.alertRequestActive ||
+                    this.props.alertRequestType !== ''
+                  }
+                >
+                  {
+                    !this.props.alertRequestActive &&
+                    this.props.alertRequestType === 'acknowledge' &&
+                    this.props.alertRequestStatus === true &&
+                    (
+                      i18nT('Success', 'Success')
+                    )
+                  }
+                  {
+                    !this.props.alertRequestActive &&
+                    this.props.alertRequestType === 'acknowledge' &&
+                    this.props.alertRequestStatus === false &&
+                    (
+                      i18nT('Failed', 'Failed')
+                    )
+                  }
+                  {
+                    this.props.alertRequestType !== 'acknowledge' &&
+                    (
+                      i18nT('Acknowledge', 'Acknowledge')
+                    )
+                  }
+                  {
+                    this.props.alertRequestActive &&
+                    this.props.alertRequestType === 'acknowledge' &&
+                    (
+                      <Loader />
+                    )
+                  }
+                </Button>
+              </ButtonGroup>
+              <Button
+                type="borderless"
+                onClick={ this.handleCloseClick }
               >
-                {
-                  !this.props.alertRequestActive &&
-                  this.props.alertRequestType === 'acknowledge' &&
-                  this.props.alertRequestStatus === true &&
-                  (
-                    i18nT('Success', 'Success')
-                  )
-                }
-                {
-                  !this.props.alertRequestActive &&
-                  this.props.alertRequestType === 'acknowledge' &&
-                  this.props.alertRequestStatus === false &&
-                  (
-                    i18nT('Failed', 'Failed')
-                  )
-                }
-                {
-                  this.props.alertRequestType !== 'acknowledge' &&
-                  (
-                    i18nT('Acknowledge', 'Acknowledge')
-                  )
-                }
-                {
-                  this.props.alertRequestActive &&
-                  this.props.alertRequestType === 'acknowledge' &&
-                  (
-                    <Loader />
-                  )
-                }
+                <CloseIcon />
               </Button>
-            </ButtonGroup>
+            </FlexLayout>
           }
         >
           <FlexLayout itemSpacing="0px">
@@ -557,7 +574,7 @@ class AlertInfoModal extends React.Component {
                     (
                       <Alert
                         type={ Alert.TYPE.SUCCESS }
-                        closable={ false }
+                        showCloseIcon={ false }
                         message={
                           this.props.alertRequestType === 'resolve'
                             ? i18nT('AlertResolved', 'Alert Resolved')
@@ -573,7 +590,7 @@ class AlertInfoModal extends React.Component {
                     (
                       <Alert
                         type={ Alert.TYPE.ERROR }
-                        closable={ false }
+                        showCloseIcon={ false }
                         message={
                           this.props.alertRequestType === 'resolve'
                             ? i18nT('AlertResolvingFailed', 'Alert Resolving Failed')
@@ -625,7 +642,7 @@ class AlertInfoModal extends React.Component {
     );
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (!this.props.alertInfo) {
       this.props.fetchAlertModalInfo(this.props.alert.entityId);
     }

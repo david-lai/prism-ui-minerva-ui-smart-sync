@@ -9,7 +9,7 @@ import {
   Modal,
   Table,
   StackingLayout
-} from 'prism-reactjs';
+} from '@nutanix-ui/prism-reactjs';
 import PropTypes from 'prop-types';
 import i18n from '../utils/i18n';
 
@@ -24,6 +24,49 @@ const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
   'FileServersDetails', key, defaultValue, replacedValue);
 
 class FileServersDetails extends React.Component {
+
+  static propTypes = {
+    details: PropTypes.object,
+    onClose: PropTypes.func,
+    visible: PropTypes.bool,
+
+    fsDetails: PropTypes.object,
+    fetchFsDetails: PropTypes.func,
+    clusterDetails: PropTypes.object,
+    fetchClusterDetails: PropTypes.func
+  };
+
+
+  static getDerivedStateFromProps(props, state) {
+    let changed = false;
+    const changes = {};
+    if (
+      state.details &&
+      props.details.entityId &&
+      props.details.entityId !== state.details.entityId &&
+      !props.fsDetails[props.details.entityId]
+    ) {
+      changed = true;
+      changes.details = null;
+    }
+    if (
+      state.details &&
+      props.details.cluster_uuid &&
+      props.details.cluster_uuid !== state.details.cluster_uuid &&
+      !props.clusterDetails[props.details.cluster_uuid]
+    ) {
+      changed = true;
+      changes.clusterDetails = null;
+    }
+    if (changed) {
+      return changes;
+    }
+    return null;
+  }
+
+  state = {
+
+  };
 
   render() {
     const details = this.props.details;
@@ -112,7 +155,7 @@ class FileServersDetails extends React.Component {
           visible={ this.props.visible }
           title={ i18nT('file_server_details', 'File Server Details') }
           primaryButtonLabel={ i18nT('done', 'Done') }
-          primaryButtonClick={ this.props.onClose }
+          primaryButtonOnClick={ this.props.onClose }
           onCancel={ this.props.onClose }
         >
           <StackingLayout padding="20px">
@@ -131,23 +174,6 @@ class FileServersDetails extends React.Component {
         </Modal>
       </div>
     );
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.details.entityId &&
-      nextProps.details.entityId !== this.props.details.entityId &&
-      !nextProps.fsDetails[nextProps.details.entityId]
-    ) {
-      this.props.fetchFsDetails(nextProps.details.entityId);
-    }
-    if (
-      nextProps.details.cluster_uuid &&
-      nextProps.details.cluster_uuid !== this.props.details.cluster_uuid &&
-      !nextProps.clusterDetails[nextProps.details.cluster_uuid]
-    ) {
-      this.props.fetchClusterDetails(nextProps.details.cluster_uuid);
-    }
   }
 
   componentDidMount() {
@@ -175,19 +201,6 @@ const mapDispatchToProps = dispatch => {
     fetchFsDetails: (entityId) => dispatch(fetchFsDetails(entityId))
   };
 };
-
-
-FileServersDetails.propTypes = {
-  details: PropTypes.object,
-  onClose: PropTypes.func,
-  visible: PropTypes.bool,
-
-  fsDetails: PropTypes.object,
-  fetchFsDetails: PropTypes.func,
-  clusterDetails: PropTypes.object,
-  fetchClusterDetails: PropTypes.func
-};
-
 
 export default connect(
   mapStateToProps,

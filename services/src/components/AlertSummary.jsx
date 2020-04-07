@@ -8,14 +8,15 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  BarChart,
   ContainerLayout,
   FlexItem,
   FlexLayout,
   Loader,
   TextLabel,
   ThemeManager
-} from 'prism-reactjs';
+} from '@nutanix-ui/prism-reactjs';
+
+import { BarChart } from '@nutanix-ui/ntnx-react-charts';
 
 import AppUtil from '../utils/AppUtil';
 import i18n from '../utils/i18n';
@@ -31,6 +32,11 @@ const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
  * @class
  */
 class AlertSummary extends React.Component {
+
+  static propTypes = {
+    summaryAlerts: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+    alertsWidgetBusy: PropTypes.bool
+  };
 
   /**
    * Repacks alert summary data (from self.prepareSummaryAlertData) in order
@@ -243,18 +249,11 @@ class AlertSummary extends React.Component {
 
 }
 
-
 const mapStateToProps = state => {
   return {
     summaryAlerts: state.groupsapi.summaryAlerts,
     alertsWidgetBusy: state.groupsapi.alertsWidgetBusy
   };
-};
-
-
-AlertSummary.propTypes = {
-  summaryAlerts: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-  alertsWidgetBusy: PropTypes.bool
 };
 
 export default connect(

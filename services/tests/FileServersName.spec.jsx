@@ -14,7 +14,7 @@ describe('FileServersName', () => {
   const middlewares = [thunk];
   const mockStore = configureStore(middlewares);
 
-  const fsEntity = AppUtil.extractGroupResults(initStore.groupsapi.fsData)[0];
+  const fsEntity = AppUtil.extractGroupResults(initStore.full.groupsapi.fsData)[0];
   const options = {
     entity: fsEntity,
     name: fsEntity.name
@@ -22,7 +22,7 @@ describe('FileServersName', () => {
   const openModalFn = jest.fn(openModal);
 
   it('Mounts FileServersName with info alert', () => {
-    const store = mockStore(initStore);
+    const store = mockStore(initStore.full);
     const testComponent = mount(
       <Provider store={ store }><FileServersName options={ options } openModal={ openModalFn }/></Provider>
     ).instance();

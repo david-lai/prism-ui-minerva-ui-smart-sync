@@ -7,9 +7,12 @@ import React from 'react';
 import {
   HashRouter as Router
 } from 'react-router-dom';
-import FileServers from './components/FileServers';
+
 // Containers
-import { ModalContainer } from './containers';
+import {
+  Files,
+  ModalContainer
+} from './containers';
 
 // App Level CSS
 import './App.less';
@@ -22,7 +25,7 @@ class App extends React.Component {
       <div className="file-server-app">
         <ModalContainer />
         <Router>
-          <FileServers />
+          <Files />
         </Router>
       </div>
     );

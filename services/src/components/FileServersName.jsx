@@ -4,7 +4,7 @@
 // The file servers name component
 //
 import React from 'react';
-import { Link } from 'prism-reactjs';
+import { Link } from '@nutanix-ui/prism-reactjs';
 import PropTypes from 'prop-types';
 
 // Utils
@@ -12,8 +12,16 @@ import { MODAL_TYPE } from '../utils/AppConstants';
 
 class FileServersName extends React.Component {
 
-  constructor(props) {
-    super(props);
+  /**
+   * Constructor method
+   *
+   * @param  {Object} props   Component props
+   * @param  {Object} context Component conntext
+   *
+   * @return {undefined}
+   */
+  constructor(props, context) {
+    super(props, context);
 
     this.handleShowFsDetailsModal = this.handleShowFsDetailsModal.bind(this);
   }
