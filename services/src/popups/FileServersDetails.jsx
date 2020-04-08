@@ -37,36 +37,53 @@ class FileServersDetails extends React.Component {
   };
 
 
+  /**
+   * Get derived state from props lifecycle method
+   *
+   * This method checks for 'visible' prop change and fetches
+   * the data if it is set to 'true'.
+   *
+   * @param  {Object} props Current props
+   * @param  {Object} state Current state
+   * @return {Object}       Derived state
+   */
   static getDerivedStateFromProps(props, state) {
     let changed = false;
     const changes = {};
-    if (
-      state.details &&
-      props.details.entityId &&
-      props.details.entityId !== state.details.entityId &&
-      !props.fsDetails[props.details.entityId]
-    ) {
+    if (props.visible !== state.currentlyVisible) {
       changed = true;
-      changes.details = null;
-    }
-    if (
-      state.details &&
-      props.details.cluster_uuid &&
-      props.details.cluster_uuid !== state.details.cluster_uuid &&
-      !props.clusterDetails[props.details.cluster_uuid]
-    ) {
-      changed = true;
-      changes.clusterDetails = null;
+      changes.currentlyVisible = props.visible;
     }
     if (changed) {
+      const details = props.details;
+      if (details.entityId && !props.fsDetails[details.entityId]) {
+        props.fetchFsDetails(details.entityId);
+      }
+      if (details.cluster_uuid && !props.clusterDetails[details.cluster_uuid]) {
+        props.fetchClusterDetails(details.cluster_uuid);
+      }
       return changes;
     }
     return null;
   }
 
   state = {
-
+    currentlyVisible: false
   };
+
+  handleModalClick = (e) => {
+    if (e && e.target && e.target.dataset && e.target.dataset.appearance) {
+      if (e.target.dataset.appearance === 'overlay') {
+        this.props.onClose();
+      }
+    }
+  }
+
+  handleKeydown = (e) => {
+    if (this.props.visible && e.keyCode === 27) {
+      this.props.onClose();
+    }
+  }
 
   render() {
     const details = this.props.details;
@@ -152,11 +169,12 @@ class FileServersDetails extends React.Component {
     return (
       <div>
         <Modal
+          onClick={ this.handleModalClick }
           visible={ this.props.visible }
           title={ i18nT('file_server_details', 'File Server Details') }
           primaryButtonLabel={ i18nT('done', 'Done') }
           primaryButtonOnClick={ this.props.onClose }
-          onCancel={ this.props.onClose }
+          onClose={ this.props.onClose }
         >
           <StackingLayout padding="20px">
             <Table
@@ -177,13 +195,11 @@ class FileServersDetails extends React.Component {
   }
 
   componentDidMount() {
-    const details = this.props.details;
-    if (details.entityId && !this.props.fsDetails[details.entityId]) {
-      this.props.fetchFsDetails(details.entityId);
-    }
-    if (details.cluster_uuid && !this.props.clusterDetails[details.cluster_uuid]) {
-      this.props.fetchClusterDetails(details.cluster_uuid);
-    }
+    window.addEventListener('keydown', this.handleKeydown, { passive: true });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeydown);
   }
 
 }

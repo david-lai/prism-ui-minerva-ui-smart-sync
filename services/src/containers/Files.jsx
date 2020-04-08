@@ -1,7 +1,7 @@
 //
 // Copyright (c) 2020 Nutanix Inc. All rights reserved.
 //
-// The file servers main view
+// The files app main view
 //
 import React from 'react';
 import { connect } from 'react-redux';
@@ -52,6 +52,14 @@ class Files extends React.Component {
   static getDerivedStateFromProps(props, state) {
     let changed = false;
     const changes = {};
+
+    const severities = [
+      'info',
+      'warning',
+      'critical'
+    ];
+    let maxSeverity = -1;
+
     if (props.fsData && props.alertsData) {
       if (!state.initialized) {
         changed = true;
@@ -69,13 +77,7 @@ class Files extends React.Component {
         changed = true;
         changes.alertCount = props.alertsData.filtered_entity_count;
       }
-      const severities = [
-        'info',
-        'warning',
-        'critical'
-      ];
       if (props.alertsData.filtered_entity_count) {
-        let maxSeverity = -1;
         AppUtil.extractGroupResults(props.alertsData).forEach((alert) => {
           const asIndex = severities.indexOf(alert.severity);
           if (maxSeverity < asIndex) {
@@ -87,6 +89,17 @@ class Files extends React.Component {
           changes.maxSeverity = maxSeverity;
         }
       }
+    }
+
+    let alertBadgeColor = Badge.BADGE_COLOR_TYPES.GRAY;
+    if (maxSeverity === 1) {
+      alertBadgeColor = Badge.BADGE_COLOR_TYPES.YELLOW;
+    } else if (maxSeverity === 2) {
+      alertBadgeColor = Badge.BADGE_COLOR_TYPES.RED;
+    }
+    if (alertBadgeColor !== state.alertBadgeColor) {
+      changed = true;
+      changes.alertBadgeColor = alertBadgeColor;
     }
 
     let panelKey = AppConstants.SUMMARY_TAB_KEY;
@@ -127,7 +140,8 @@ class Files extends React.Component {
 
     alertCount: -1,
     serverCount: -1,
-    maxSeverity: -1
+    maxSeverity: -1,
+    alertBadgeColor: Badge.BADGE_COLOR_TYPES.GRAY
   };
 
   /**
@@ -206,6 +220,39 @@ class Files extends React.Component {
     };
   }
 
+  // Event handler for left panel tab click
+  onMenuChange = (e) => {
+    const key = (typeof e === 'object') ? e.key : e;
+    if (key && this.state.currentPanelKey !== key) {
+      this.setState({
+        currentPanelKey: key
+      });
+      const newPath = `/${key}`;
+      this.props.history.push(newPath);
+      this.changePcUrl(key);
+    }
+  }
+
+  // Change PC URL
+  changePcUrl(url) {
+    WindowsMessageUtil.postMessage({
+      service: AppConstants.SERVICE_NAME.PRISM_UI,
+      target: AppConstants.IFRAME_EVENT_CHANGE_PC_URL,
+      state: AppConstants.FS_CHANGE_PC_URL,
+      serviceTargets: url
+    }, '*', window.parent);
+  }
+
+  // Request to get PC URL
+  requestPcUrl() {
+    WindowsMessageUtil.postMessage({
+      service: AppConstants.SERVICE_NAME.PRISM_UI,
+      target: AppConstants.IFRAME_EVENT_REQUEST_PC_URL,
+      state: AppConstants.FS_REQUEST_PC_URL,
+      SERVICETARGETS: ''
+    }, '*', window.parent);
+  }
+
   /**
    * Data polling method
    *
@@ -217,13 +264,7 @@ class Files extends React.Component {
   }
 
   getLeftPanel() {
-    let alertBadgeColor = Badge.BADGE_COLOR_TYPES.GRAY;
-    if (this.state.maxSeverity === 1) {
-      alertBadgeColor = Badge.BADGE_COLOR_TYPES.YELLOW;
-    } else if (this.state.maxSeverity === 2) {
-      alertBadgeColor = Badge.BADGE_COLOR_TYPES.RED;
-    }
-
+    const fileServerCount = this.renderFileServersCount(this.state.serverCount);
     return (
       <Menu
         itemSpacing="10px"
@@ -232,8 +273,14 @@ class Files extends React.Component {
         onClick={ this.onMenuChange } style={ { width: '240px' } } >
 
         <StackingLayout padding="0px-20px" itemSpacing="10px">
-          <Title>{ i18nT('files', 'Files') }</Title>
-          <div><TextLabel>{ this.state.serverCount }</TextLabel></div>
+          <Title>
+            { i18nT('files', 'Files') }
+          </Title>
+          <div>
+            <TextLabel>
+              { fileServerCount }
+            </TextLabel>
+          </div>
           <Divider type="short" />
         </StackingLayout>
 
@@ -258,7 +305,7 @@ class Files extends React.Component {
                 { this.state.alertCount > 0 &&
                   (
                     <Badge
-                      color={ alertBadgeColor }
+                      color={ this.state.alertBadgeColor }
                       count={ AppUtil.rawNumericFormat(this.state.alertCount) }
                     />
                   )
@@ -281,7 +328,7 @@ class Files extends React.Component {
     }
     switch (count) {
       case -1:
-        return <Loader tip={ i18nT('files', 'Files') } />;
+        return <Loader tip={ i18nT('fileServers', 'File Servers') } />;
       case 0:
         return i18nT('noFileServer', 'No File Servers');
       case 1:
@@ -290,38 +337,6 @@ class Files extends React.Component {
         return i18nT('numOfFileServers', '{num} File Servers',
           { num: AppUtil.rawNumericFormat(count) });
     }
-  }
-
-  // Event handler for left panel tab click
-  onMenuChange = (e) => {
-    const key = (typeof e === 'object') ? e.key : e;
-    if (key && this.state.currentPanelKey !== key) {
-      this.setState({
-        currentPanelKey: key
-      });
-      this.props.history.push(`/${key}`);
-      this.changePcUrl(key);
-    }
-  }
-
-  // Change PC URL
-  changePcUrl(url) {
-    WindowsMessageUtil.postMessage({
-      service: AppConstants.SERVICE_NAME.PRISM_UI,
-      target: AppConstants.IFRAME_EVENT_CHANGE_PC_URL,
-      state: AppConstants.FS_CHANGE_PC_URL,
-      serviceTargets: url
-    }, '*', window.parent);
-  }
-
-  // Request to get PC URL
-  requestPcUrl() {
-    WindowsMessageUtil.postMessage({
-      service: AppConstants.SERVICE_NAME.PRISM_UI,
-      target: AppConstants.IFRAME_EVENT_REQUEST_PC_URL,
-      state: AppConstants.FS_REQUEST_PC_URL,
-      SERVICETARGETS: ''
-    }, '*', window.parent);
   }
 
   // Set the correspoding componets for each files route

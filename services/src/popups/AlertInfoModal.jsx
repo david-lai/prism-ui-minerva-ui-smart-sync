@@ -63,11 +63,15 @@ class AlertInfoModal extends React.Component {
     acknowledgeAlert: PropTypes.func
   };
 
+  handleKeydown = (e) => {
+    if (this.props.visible && e.keyCode === 27) {
+      this.closeModal(e);
+    }
+  }
+
   handleCloseClick = (e) => {
     e.preventDefault();
-    if (this.props.closeModalAction && typeof this.props.closeModalAction === 'function') {
-      this.props.closeModalAction(e);
-    }
+    this.closeModal(e);
   }
 
   handleResolveClick = (e) => {
@@ -77,6 +81,12 @@ class AlertInfoModal extends React.Component {
 
   handleAcknowledgeClick = (e) => {
     this.props.acknowledgeAlert(this.props.alert.entityId);
+  }
+
+  closeModal(e) {
+    if (this.props.closeModalAction && typeof this.props.closeModalAction === 'function') {
+      this.props.closeModalAction(e);
+    }
   }
 
   prepareAlertData() {
@@ -643,6 +653,7 @@ class AlertInfoModal extends React.Component {
   }
 
   componentDidMount() {
+    window.addEventListener('keydown', this.handleKeydown, { passive: true });
     if (!this.props.alertInfo) {
       this.props.fetchAlertModalInfo(this.props.alert.entityId);
     }
@@ -664,6 +675,10 @@ class AlertInfoModal extends React.Component {
         }, 3000);
       }
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeydown);
   }
 
 }
