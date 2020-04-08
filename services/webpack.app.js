@@ -73,10 +73,6 @@ module.exports = {
   },
   // Enable importing JS files without specifying their's extension
   resolve: {
-    alias: {
-      // NOTE: This is temp, until EB is published as a lib
-      ebr: path.resolve(__dirname, 'node_modules', 'ebr')
-    },
     extensions: ['.js', '.jsx']
   }
 };

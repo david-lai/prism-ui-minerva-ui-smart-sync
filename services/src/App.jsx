@@ -8,6 +8,10 @@ import {
   HashRouter as Router
 } from 'react-router-dom';
 
+// Absolute css
+import '@nutanix-ui/prism-reactjs/dist/index.css';
+import '@nutanix-ui/ntnx-react-charts/dist/index.css';
+
 // Containers
 import {
   Files,

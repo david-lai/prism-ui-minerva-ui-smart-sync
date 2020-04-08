@@ -10,7 +10,7 @@ import {
   withRouter
 } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { EntityBrowser } from 'ebr-ui';
+import { EntityBrowser } from '@nutanix-ui/ebr-ui';
 import {
   Badge,
   Divider,

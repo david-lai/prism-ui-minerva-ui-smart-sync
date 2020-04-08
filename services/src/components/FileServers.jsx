@@ -5,7 +5,7 @@
 //
 import React from 'react';
 import PropTypes from 'prop-types';
-import { EntityBrowser } from 'ebr-ui';
+import { EntityBrowser } from '@nutanix-ui/ebr-ui';
 import {
   StackingLayout,
   TextLabel,

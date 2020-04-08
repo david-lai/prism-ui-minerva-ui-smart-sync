@@ -58,7 +58,7 @@
     "ntnx-i18n": "0.0.4",
     "prism-jest": "^2.1.1",
     "prism-subapps-react-common": "0.0.1-master.68",
-    "prism-utils-common": "1.0.4",
+    "prism-utils-common": "1.0.10",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dev-utils": "^5.0.0",
@@ -82,7 +82,9 @@
   },
   "proxy": "http://localhost:5000/",
   "dependencies": {
-    "@nutanix-ui/ntnx-react-charts": "^1.0.0",
-    "@nutanix-ui/prism-reactjs": "^2.1.1"
+    "@nutanix-ui/ebr-ui": "2.5.0-React16.546",
+    "@nutanix-ui/ntnx-react-charts": "2.0.0-master.57",
+    "@nutanix-ui/prism-reactjs": "^2.1.1",
+    "universal-qdc": "3.0.0-master.422"
   }
 }
