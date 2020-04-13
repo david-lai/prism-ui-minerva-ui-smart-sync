@@ -7,6 +7,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   Modal,
+  Button,
   Table,
   StackingLayout
 } from 'prism-reactjs';
@@ -24,6 +25,17 @@ const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
   'FileServersDetails', key, defaultValue, replacedValue);
 
 class FileServersDetails extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.onOpenPeClick = this.onOpenPeClick.bind(this);
+  }
+
+  // Event handler for manage button to open PE
+  onOpenPeClick() {
+    const clusterUuid = this.props.details.cluster_uuid;
+    this.props.openPe(clusterUuid);
+  }
 
   render() {
     const details = this.props.details;
@@ -106,14 +118,27 @@ class FileServersDetails extends React.Component {
         data: entity.ipv4_address
       }
     ];
+
+    const footer = (
+      <div>
+        <Button
+          onClick={ this.props.onClose }
+          type="secondary">
+          {i18nT('done', 'Done')}
+        </Button>
+        <Button
+          type="primary"
+          onClick={ this.onOpenPeClick }>
+          {i18nT('manage', 'Manage')}
+        </Button>
+      </div>);
+
     return (
       <div>
         <Modal
           visible={ this.props.visible }
           title={ i18nT('file_server_details', 'File Server Details') }
-          primaryButtonLabel={ i18nT('done', 'Done') }
-          primaryButtonClick={ this.props.onClose }
-          onCancel={ this.props.onClose }
+          footer={ footer }
         >
           <StackingLayout padding="20px">
             <Table
@@ -181,7 +206,7 @@ FileServersDetails.propTypes = {
   details: PropTypes.object,
   onClose: PropTypes.func,
   visible: PropTypes.bool,
-
+  openPe: PropTypes.func,
   fsDetails: PropTypes.object,
   fetchFsDetails: PropTypes.func,
   clusterDetails: PropTypes.object,
