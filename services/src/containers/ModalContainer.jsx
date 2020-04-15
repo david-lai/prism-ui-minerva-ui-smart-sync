@@ -64,6 +64,7 @@ class ModalContainer extends React.Component {
           visible={ visible }
           onClose={ options.onClose || close }
           alert={ options.entity }
+          alertList={ this.props.alertList }
         />
       );
     }
@@ -74,7 +75,8 @@ class ModalContainer extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    modals: state.modals
+    modals: state.modals,
+    alertList: state.groupsapi.alertList
   };
 };
 
@@ -89,7 +91,12 @@ ModalContainer.propTypes = {
   visible: PropTypes.bool,
   type: PropTypes.string,
   modals: PropTypes.object,
+  alertList: PropTypes.array,
   closeModal: PropTypes.func
+};
+
+ModalContainer.defaultProps = {
+  alertList: []
 };
 
 

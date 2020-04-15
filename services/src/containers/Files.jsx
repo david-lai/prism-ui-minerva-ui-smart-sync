@@ -40,6 +40,7 @@ import FileServers from '../components/FileServers.jsx';
 import {
   openModal,
   fetchFsData,
+  fetchAlertList,
   fetchAlerts
 } from '../actions';
 
@@ -121,9 +122,12 @@ class Files extends React.Component {
     openModal: PropTypes.func,
     fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     alertsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+    alertList: PropTypes.array,
+    alertListLoading: PropTypes.bool,
     filtered_entity_count: PropTypes.string,
     fetchFsData: PropTypes.func,
     fetchAlerts: PropTypes.func,
+    fetchAlertList: PropTypes.func,
     location: PropTypes.object,
     history : PropTypes.object
   };
@@ -154,6 +158,8 @@ class Files extends React.Component {
    */
   constructor(props, context) {
     super(props, context);
+
+    window.files = this;
 
     this.state.fsEbConfiguration =
       this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER);
@@ -216,7 +222,9 @@ class Files extends React.Component {
       filterBarPlaceholder: i18nT('typeName', 'Type name to filter'),
       filtersPanelCollapsed: true,
       queryConfig,
-      ebComponentFactory: EBComponentFactory.getInstance({ openModal: this.props.openModal })
+      ebComponentFactory: EBComponentFactory.getInstance({
+        openModal: this.props.openModal
+      })
     };
   }
 
@@ -261,6 +269,7 @@ class Files extends React.Component {
   refreshData() {
     this.props.fetchFsData();
     this.props.fetchAlerts();
+    this.props.fetchAlertList();
   }
 
   getLeftPanel() {
@@ -463,7 +472,9 @@ class Files extends React.Component {
 const mapStateToProps = state => {
   return {
     fsData: state.groupsapi.fsData,
-    alertsData: state.groupsapi.alertsData
+    alertsData: state.groupsapi.alertsData,
+    alertList: state.groupsapi.alertList,
+    alertListLoading: state.groupsapi.alertListLoading
   };
 };
 
@@ -471,7 +482,8 @@ const mapDispatchToProps = dispatch => {
   return {
     openModal: (type, options) => dispatch(openModal(type, options)),
     fetchFsData: () => dispatch(fetchFsData()),
-    fetchAlerts: () => dispatch(fetchAlerts())
+    fetchAlerts: () => dispatch(fetchAlerts()),
+    fetchAlertList: () => dispatch(fetchAlertList())
   };
 };
 

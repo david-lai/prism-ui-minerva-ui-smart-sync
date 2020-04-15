@@ -63,6 +63,62 @@ class AlertInfoModal extends React.Component {
     acknowledgeAlert: PropTypes.func
   };
 
+  static getDerivedStateFromProps(props, state) {
+    let changed = false;
+    const stateChanges = {};
+
+    if (
+      props.alert &&
+      props.alert.entityId &&
+      (
+        props.alert.entityId !== state.alertId ||
+        !state.alertId
+      )
+    ) {
+      changed = true;
+      stateChanges.alertId = props.alert.entityId;
+      stateChanges.alertObject = props.alert;
+      stateChanges.alertInfo = null;
+      props.fetchAlertModalInfo(props.alert.entityId);
+    } else if (state.alertId && props.alert.entityId !== state.alertId) {
+      props.fetchAlertModalInfo(props.alert.entityId);
+      changed = true;
+      stateChanges.alertId = props.alert.entityId;
+      stateChanges.alertObject = null;
+      stateChanges.alertInfo = null;
+    }
+    if (props.alertInfo !== state.alertInfo) {
+      changed = true;
+      stateChanges.alertInfo = props.alertInfo;
+    }
+
+    // if (!state.alertObject && props.alert) {
+    //   changed = true;
+    //   stateChanges.alertObject = props.alert;
+    // }
+
+
+    // if (!state.alertId && props.alert.entityId) {
+    //   changed = true;
+    //   stateChanges.alertId = props.alert.entityId;
+    // }
+    if (changed) {
+      return stateChanges;
+    }
+    return null;
+  }
+
+  state = {
+    alertId: 0,
+    alertObject: {},
+    alertInfo: null
+  }
+
+  constructor(props, context) {
+    super(props, context);
+    window.am = this;
+  }
+
   handleKeydown = (e) => {
     if (this.props.visible && e.keyCode === 27) {
       this.closeModal(e);
@@ -76,11 +132,11 @@ class AlertInfoModal extends React.Component {
 
   handleResolveClick = (e) => {
     e.preventDefault();
-    this.props.resolveAlert(this.props.alert.entityId);
+    this.props.resolveAlert(this.state.alertId);
   }
 
   handleAcknowledgeClick = (e) => {
-    this.props.acknowledgeAlert(this.props.alert.entityId);
+    this.props.acknowledgeAlert(this.state.alertId);
   }
 
   closeModal(e) {
@@ -118,9 +174,9 @@ class AlertInfoModal extends React.Component {
       ]
     };
 
-    if (!this.props.alertModalLoading && this.props.alertInfo && this.props.alertInfo.entity) {
-      const alert = this.props.alert;
-      const alertInfo = this.props.alertInfo.entity;
+    if (!this.props.alertModalLoading && this.state.alertInfo && this.state.alertInfo.entity) {
+      const alert = this.state.alertObject;
+      const alertInfo = this.state.alertInfo.entity;
 
       alertData.description = this.populateDefaultMessage(
         alertInfo.default_message,
@@ -199,12 +255,12 @@ class AlertInfoModal extends React.Component {
   getPossibleCauses() {
     let possibleCauses;
     const possibleCauseList = [];
-    if (this.props.alertInfo) {
+    if (this.state.alertInfo) {
       if (
-        this.props.alertInfo.entity.possible_cause_list &&
-        this.props.alertInfo.entity.possible_cause_list.length
+        this.state.alertInfo.entity.possible_cause_list &&
+        this.state.alertInfo.entity.possible_cause_list.length
       ) {
-        const lists = this.props.alertInfo.entity.possible_cause_list;
+        const lists = this.state.alertInfo.entity.possible_cause_list;
         possibleCauseList.push(
           ...lists.reduce((acc, val) => {
             if (val && val.cause_list && val.cause_list.length) {
@@ -246,12 +302,12 @@ class AlertInfoModal extends React.Component {
   getResolutionList() {
     let resolutions;
     const resolutionList = [];
-    if (this.props.alertInfo) {
+    if (this.state.alertInfo) {
       if (
-        this.props.alertInfo.entity.possible_cause_list &&
-        this.props.alertInfo.entity.possible_cause_list.length
+        this.state.alertInfo.entity.possible_cause_list &&
+        this.state.alertInfo.entity.possible_cause_list.length
       ) {
-        const lists = this.props.alertInfo.entity.possible_cause_list;
+        const lists = this.state.alertInfo.entity.possible_cause_list;
         resolutionList.push(
           ...lists.reduce((acc, val) => {
             if (val && val.cause_list && val.resolution_list.length) {
@@ -290,13 +346,127 @@ class AlertInfoModal extends React.Component {
     return resolutions;
   }
 
+  renderHeaderActions() {
+    return (
+      <FlexLayout
+        itemFlexBasis="100pc"
+        itemSpacing="0px"
+        alignItems="center"
+      >
+        <FlexItem>
+          <div>
+            asd
+          </div>
+        </FlexItem>
+        <FlexItem alignSelf="flex-end">
+          <ButtonGroup>
+            <Button
+              type="secondary"
+              style={
+                {
+                  width: '150px'
+                }
+              }
+              onClick={ this.handleResolveClick }
+              disabled={
+                this.props.alertModalLoading ||
+                this.props.alertRequestActive ||
+                this.props.alertRequestType !== ''
+              }
+            >
+              {
+                !this.props.alertRequestActive &&
+                this.props.alertRequestType === 'resolve' &&
+                this.props.alertRequestStatus === true &&
+                (
+                  i18nT('Success', 'Success')
+                )
+              }
+              {
+                !this.props.alertRequestActive &&
+                this.props.alertRequestType === 'resolve' &&
+                this.props.alertRequestStatus === false &&
+                (
+                  i18nT('Failed', 'Failed')
+                )
+              }
+              {
+                this.props.alertRequestType !== 'resolve' &&
+                (
+                  i18nT('Resolve', 'Resolve')
+                )
+              }
+              {
+                this.props.alertRequestActive &&
+                this.props.alertRequestType === 'resolve' &&
+                (
+                  <Loader />
+                )
+              }
+            </Button>
+            <Button
+              type="secondary"
+              style={
+                {
+                  width: '150px'
+                }
+              }
+              onClick={ this.handleAcknowledgeClick }
+              disabled={
+                this.props.alertModalLoading ||
+                this.props.alertRequestActive ||
+                this.props.alertRequestType !== ''
+              }
+            >
+              {
+                !this.props.alertRequestActive &&
+                this.props.alertRequestType === 'acknowledge' &&
+                this.props.alertRequestStatus === true &&
+                (
+                  i18nT('Success', 'Success')
+                )
+              }
+              {
+                !this.props.alertRequestActive &&
+                this.props.alertRequestType === 'acknowledge' &&
+                this.props.alertRequestStatus === false &&
+                (
+                  i18nT('Failed', 'Failed')
+                )
+              }
+              {
+                this.props.alertRequestType !== 'acknowledge' &&
+                (
+                  i18nT('Acknowledge', 'Acknowledge')
+                )
+              }
+              {
+                this.props.alertRequestActive &&
+                this.props.alertRequestType === 'acknowledge' &&
+                (
+                  <Loader />
+                )
+              }
+            </Button>
+          </ButtonGroup>
+          <Button
+            type="borderless"
+            onClick={ this.handleCloseClick }
+          >
+            <CloseIcon />
+          </Button>
+        </FlexItem>
+      </FlexLayout>
+    );
+  }
+
   render() {
     const alertData = this.prepareAlertData();
     const leftPanel = (
       <StackingLayout itemSpacing="20px">
         <StackingLayout itemSpacing="10px">
           <Title size="h2">
-            { this.props.alert.title }
+            { this.state.alertObject.title }
           </Title>
           <TextLabel>
             { i18nT('AlertTitle', 'Alert Title') }
@@ -312,7 +482,11 @@ class AlertInfoModal extends React.Component {
             </FlexItem>
             <FlexItem>
               <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                { FormatterUtil.pickListItem(this.props.alert.param_value_list, { index: 1 }) }
+                {
+                  FormatterUtil.pickListItem(
+                    this.state.alertObject.param_value_list, { index: 1 }
+                  )
+                }
               </TextLabel>
             </FlexItem>
           </FlexLayout>
@@ -457,107 +631,11 @@ class AlertInfoModal extends React.Component {
 
         <FullPageModal
           visible={ this.props.visible }
-          title={ this.props.alert.title }
+          _title={ this.state.alertObject.title }
+          className="alert-info-modal"
           footer={ footer }
           headerActions={
-            <FlexLayout>
-              <ButtonGroup>
-                <Button
-                  type="secondary"
-                  style={
-                    {
-                      width: '150px'
-                    }
-                  }
-                  onClick={ this.handleResolveClick }
-                  disabled={
-                    this.props.alertModalLoading ||
-                    this.props.alertRequestActive ||
-                    this.props.alertRequestType !== ''
-                  }
-                >
-                  {
-                    !this.props.alertRequestActive &&
-                    this.props.alertRequestType === 'resolve' &&
-                    this.props.alertRequestStatus === true &&
-                    (
-                      i18nT('Success', 'Success')
-                    )
-                  }
-                  {
-                    !this.props.alertRequestActive &&
-                    this.props.alertRequestType === 'resolve' &&
-                    this.props.alertRequestStatus === false &&
-                    (
-                      i18nT('Failed', 'Failed')
-                    )
-                  }
-                  {
-                    this.props.alertRequestType !== 'resolve' &&
-                    (
-                      i18nT('Resolve', 'Resolve')
-                    )
-                  }
-                  {
-                    this.props.alertRequestActive &&
-                    this.props.alertRequestType === 'resolve' &&
-                    (
-                      <Loader />
-                    )
-                  }
-                </Button>
-                <Button
-                  type="secondary"
-                  style={
-                    {
-                      width: '150px'
-                    }
-                  }
-                  onClick={ this.handleAcknowledgeClick }
-                  disabled={
-                    this.props.alertModalLoading ||
-                    this.props.alertRequestActive ||
-                    this.props.alertRequestType !== ''
-                  }
-                >
-                  {
-                    !this.props.alertRequestActive &&
-                    this.props.alertRequestType === 'acknowledge' &&
-                    this.props.alertRequestStatus === true &&
-                    (
-                      i18nT('Success', 'Success')
-                    )
-                  }
-                  {
-                    !this.props.alertRequestActive &&
-                    this.props.alertRequestType === 'acknowledge' &&
-                    this.props.alertRequestStatus === false &&
-                    (
-                      i18nT('Failed', 'Failed')
-                    )
-                  }
-                  {
-                    this.props.alertRequestType !== 'acknowledge' &&
-                    (
-                      i18nT('Acknowledge', 'Acknowledge')
-                    )
-                  }
-                  {
-                    this.props.alertRequestActive &&
-                    this.props.alertRequestType === 'acknowledge' &&
-                    (
-                      <Loader />
-                    )
-                  }
-                </Button>
-              </ButtonGroup>
-              <Button
-                type="borderless"
-                onClick={ this.handleCloseClick }
-              >
-                <CloseIcon />
-              </Button>
-            </FlexLayout>
+            this.renderHeaderActions()
           }
         >
           <FlexLayout itemSpacing="0px">
@@ -654,19 +732,19 @@ class AlertInfoModal extends React.Component {
 
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeydown, { passive: true });
-    if (!this.props.alertInfo) {
+    if (!this.state.alertInfo) {
       this.props.fetchAlertModalInfo(this.props.alert.entityId);
     }
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.alert && prevProps.alert) {
-      if (this.props.alert.entityId !== prevProps.alert.entityId) {
-        this.props.fetchAlertModalInfo(this.props.alert.entityId);
-      }
-    } else if (!prevProps.alert.entityId && this.props.alert.entityId) {
-      this.props.fetchAlertModalInfo(this.props.alert.entityId);
-    }
+    // if (this.props.alert && prevProps.alert) {
+    //   if (this.props.alert.entityId !== prevProps.alert.entityId) {
+    //     this.props.fetchAlertModalInfo(this.props.alert.entityId);
+    //   }
+    // } else if (!prevProps.alert.entityId && this.props.alert.entityId) {
+    //   this.props.fetchAlertModalInfo(this.props.alert.entityId);
+    // }
     if (this.props.alertRequestActive !== prevProps.alertRequestActive) {
       if (this.props.alertRequestActive === false) {
         setTimeout(() => {
