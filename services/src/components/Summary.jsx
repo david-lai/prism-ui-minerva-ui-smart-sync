@@ -17,7 +17,7 @@ import {
   Loader,
   Select,
   Title
-} from 'prism-reactjs';
+} from '@nutanix-ui/prism-reactjs';
 
 import AppConstants from '../utils/AppConstants';
 import AppUtil from '../utils/AppUtil';
@@ -28,6 +28,7 @@ import AlertSummary from './AlertSummary.jsx';
 // Actions
 import {
   fetchSummaryAlerts,
+  fetchServerAlerts,
   setAlertsWidgetRange
 } from '../actions';
 
@@ -38,8 +39,29 @@ const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
 
 class Summary extends React.Component {
 
-  constructor(props) {
-    super(props);
+  static propTypes = {
+    setAlertsWidgetRange: PropTypes.func,
+    onMenuChange: PropTypes.func,
+    fetchSummaryAlerts: PropTypes.func,
+    fetchServerAlerts: PropTypes.func,
+    alertsWidgetRange: PropTypes.string,
+    alertsWidgetBusy: PropTypes.bool,
+    fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+    highlightedWidgetBusy: PropTypes.bool,
+    summaryAlerts: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+  };
+
+
+  /**
+   * Constructor method
+   *
+   * @param  {Object} props   Component props
+   * @param  {Object} context Component conntext
+   *
+   * @return {undefined}
+   */
+  constructor(props, context) {
+    super(props, context);
 
     this.showAllServers = this.showAllServers.bind(this);
   }
@@ -60,13 +82,27 @@ class Summary extends React.Component {
   /**
    * Handles <Select> alert range change
    *
-   * @param  {String} value New alert range
+   * @param  {Object} row Selected row
    *
    * @return {undefined}
    */
-  handleAlertRangeChange = (value) => {
-    this.props.setAlertsWidgetRange(value);
-    this.props.fetchSummaryAlerts(value);
+  handleAlertRangeChange = (row) => {
+    this.props.setAlertsWidgetRange(row.key);
+    this.props.fetchSummaryAlerts(row.key);
+  }
+
+  /**
+   * Fetches and populates server alert data if not present
+   *
+   * @return {undefined}
+   */
+  populateServerAlerts() {
+    if (this.props.fsData && this.props.fsData.filtered_entity_count) {
+      const fsIds = AppUtil.extractGroupResults(this.props.fsData).map(fsItem => fsItem.entity_id);
+      if (fsIds && Array.isArray(fsIds) && fsIds.length) {
+        fsIds.forEach(this.props.fetchServerAlerts);
+      }
+    }
   }
 
   /**
@@ -91,6 +127,11 @@ class Summary extends React.Component {
         });
     }
     return totals;
+  }
+
+  refreshData() {
+    this.props.fetchSummaryAlerts(this.props.alertsWidgetRange);
+    this.populateServerAlerts();
   }
 
   /**
@@ -259,24 +300,32 @@ class Summary extends React.Component {
                     }
                     <FlexItem flexGrow="0" alignSelf="flex-end">
                       <Select
-                        showSearch={ false }
+                        searchable={ false }
                         disabled={ !this.props.summaryAlerts || this.props.alertsWidgetBusy }
-                        onChange={ this.handleAlertRangeChange }
-                        selectOptions={
+                        onSelectedChange={ this.handleAlertRangeChange }
+                        rowsData={
                           [
                             {
                               key: 'day',
-                              value: 'day',
-                              title: i18nT('last24Hours', 'Last 24 Hours')
+                              label: i18nT('last24Hours', 'Last 24 Hours')
                             },
                             {
                               key: 'week',
-                              value: 'week',
-                              title: i18nT('lastWeek', 'Last Week')
+                              label: i18nT('lastWeek', 'Last Week')
                             }
                           ]
                         }
-                        value={ this.props.alertsWidgetRange }
+                        selectedRow={
+                          this.props.alertsWidgetRange === 'day'
+                            ? {
+                              key: 'day',
+                              label: i18nT('last24Hours', 'Last 24 Hours')
+                            }
+                            : {
+                              key: 'week',
+                              label: i18nT('lastWeek', 'Last Week')
+                            }
+                        }
                         style={
                           {
                             minWidth: '100px'
@@ -303,11 +352,11 @@ class Summary extends React.Component {
   }
 
   // Start Polling alerts data
-  componentWillMount() {
-    this.props.fetchSummaryAlerts(this.props.alertsWidgetRange);
+  componentDidMount() {
+    this.refreshData();
     this.dataPolling = setInterval(
       () => {
-        this.props.fetchSummaryAlerts(this.props.alertsWidgetRange);
+        this.refreshData();
       }, AppConstants.POLLING_FREQ_SECS * 1000);
   }
 
@@ -337,21 +386,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     setAlertsWidgetRange: (value) => dispatch(setAlertsWidgetRange(value)),
+    fetchServerAlerts: (entityId) => dispatch(fetchServerAlerts(entityId)),
     fetchSummaryAlerts: (value) => dispatch(fetchSummaryAlerts(value))
   };
 };
-
-Summary.propTypes = {
-  setAlertsWidgetRange: PropTypes.func,
-  onMenuChange: PropTypes.func,
-  fetchSummaryAlerts: PropTypes.func,
-  alertsWidgetRange: PropTypes.string,
-  alertsWidgetBusy: PropTypes.bool,
-  fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
-  highlightedWidgetBusy: PropTypes.bool,
-  summaryAlerts: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
-};
-
 
 export default connect(
   mapStateToProps,

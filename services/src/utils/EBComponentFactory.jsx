@@ -8,7 +8,7 @@
 // Libraries
 import React from 'react';
 import { AphroditeApi, WindowsMessageUtil } from 'prism-utils-common';
-import { OpenInNewWindowIcon, TextLabel, Link, FlexLayout } from 'prism-reactjs';
+import { OpenInNewWindowIcon, TextLabel, Link, FlexLayout } from '@nutanix-ui/prism-reactjs';
 
 // Popups
 import FileServersName from '../components/FileServersName.jsx';

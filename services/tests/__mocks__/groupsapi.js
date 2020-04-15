@@ -43,7 +43,7 @@ export const fetchAlerts = (entityIds = []) => {
   return (dispatch) => {
     dispatch({
       type: FETCH_ALERTS,
-      payload: mockStore.groupsapi.alertsData
+      payload: mockStore.full.groupsapi.alertsData
     });
   };
 };
@@ -59,7 +59,7 @@ export const fetchAlertModalInfo = (entityId) => {
   return (dispatch) => {
     dispatch({
       type: FETCH_ALERT_MODAL_INFO,
-      payload: mockStore.groupsapi.alertInfo
+      payload: mockStore.full.groupsapi.alertInfo
     });
   };
 };

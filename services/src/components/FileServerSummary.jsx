@@ -15,7 +15,7 @@ import {
   Loader,
   Table,
   TextLabel
-} from 'prism-reactjs';
+} from '@nutanix-ui/prism-reactjs';
 
 import i18n from '../utils/i18n';
 import AppUtil from '../utils/AppUtil';
@@ -31,12 +31,13 @@ class FileServerSummary extends React.Component {
   /**
    * Constructor method
    *
-   * @param  {Object} props Component props
+   * @param  {Object} props   Component props
+   * @param  {Object} context Component conntext
    *
    * @return {undefined}
    */
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
 
     this.state = {
       tableStructure: {
