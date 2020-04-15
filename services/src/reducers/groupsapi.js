@@ -40,7 +40,7 @@ const initialState = {
   alertRequestType: '',
   alertRequestStatus: true,
 
-  highlightedWidgetBusy: false,
+  highlightedWidgetBusy: true,
   alertInfo: false,
   fsDetails: {},
   serverAlerts: {},
@@ -60,7 +60,6 @@ function groupsapis(state = initialState, action) {
     case FETCH_FS:
       return {
         ...state,
-        highlightedWidgetBusy: false,
         fsData: payload
       };
     case HIGHLIGHTED_WIDGET_BUSY:
@@ -129,6 +128,7 @@ function groupsapis(state = initialState, action) {
     case FETCH_SERVER_ALERTS:
       return {
         ...state,
+        highlightedWidgetBusy: false,
         serverAlerts: {
           ...state.serverAlerts,
           [payload.entityId]: payload.alertsData
