@@ -300,6 +300,8 @@ class Summary extends React.Component {
                     }
                     <FlexItem flexGrow="0" alignSelf="flex-end">
                       <Select
+                        autoSize={ true }
+                        type="mini"
                         searchable={ false }
                         disabled={ !this.props.summaryAlerts || this.props.alertsWidgetBusy }
                         onSelectedChange={ this.handleAlertRangeChange }
