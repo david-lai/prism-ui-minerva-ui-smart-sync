@@ -1,0 +1,309 @@
+{
+  "entityId": "019e3e92-195f-4315-b30b-dd6c80f497d7",
+  "entityResponse": {
+    "entity_type": "file_server_service",
+    "filtered_entity_count": 5,
+    "filtered_group_count": 1,
+    "group_results": [
+      {
+        "entity_results": [
+          {
+            "data": [
+              {
+                "data_type": "string",
+                "name": "name",
+                "values": [
+                  {
+                    "time": 1585351809982952,
+                    "values": [
+                      "dvd"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string_list",
+                "name": "cluster",
+                "values": []
+              },
+              {
+                "data_type": "string",
+                "name": "nvm_uuid_list",
+                "values": [
+                  {
+                    "time": 1585351809982952,
+                    "values": [
+                      "02e0a3e8-bb37-444f-83d3-992ba4bcb76b"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string",
+                "name": "afs_version",
+                "values": [
+                  {
+                    "time": 1585351809982952,
+                    "values": [
+                      "3.6.2-89b52751dd2c3feef475664dac94866365f5ca39"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string",
+                "name": "cluster_uuid",
+                "values": [
+                  {
+                    "time": 1585351809982952,
+                    "values": [
+                      "0005a1db-677c-6758-0000-000000024e1b"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "entity_id": "019e3e92-195f-4315-b30b-dd6c80f497d7"
+          },
+          {
+            "data": [
+              {
+                "data_type": "string",
+                "name": "name",
+                "values": [
+                  {
+                    "time": 1586883713926361,
+                    "values": [
+                      "dvd"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string_list",
+                "name": "cluster",
+                "values": []
+              },
+              {
+                "data_type": "string",
+                "name": "nvm_uuid_list",
+                "values": [
+                  {
+                    "time": 1586883713926361,
+                    "values": [
+                      "58aa7236-d85c-4581-b105-bf13945543fb"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string",
+                "name": "afs_version",
+                "values": [
+                  {
+                    "time": 1586883713926361,
+                    "values": [
+                      "3.6.2-89b52751dd2c3feef475664dac94866365f5ca39"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string",
+                "name": "cluster_uuid",
+                "values": [
+                  {
+                    "time": 1586883713926361,
+                    "values": [
+                      "0005a336-51de-deaf-0000-000000024e1b"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "entity_id": "c973f14b-db02-460f-b6fe-757526881856"
+          },
+          {
+            "data": [
+              {
+                "data_type": "string",
+                "name": "name",
+                "values": [
+                  {
+                    "time": 1586635025981176,
+                    "values": [
+                      "idf-sync-fs1"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string_list",
+                "name": "cluster",
+                "values": []
+              },
+              {
+                "data_type": "string",
+                "name": "nvm_uuid_list",
+                "values": [
+                  {
+                    "time": 1586635025981176,
+                    "values": [
+                      "a8ad9b42-2b31-4a5f-8e1a-9cb8cd6671d5"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string",
+                "name": "afs_version",
+                "values": [
+                  {
+                    "time": 1586635025981176,
+                    "values": [
+                      "3.7.0-e2f51e9dc9fc8e9629540422b03cb6b096c93ccb"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string",
+                "name": "cluster_uuid",
+                "values": [
+                  {
+                    "time": 1586635025981176,
+                    "values": [
+                      "00059913-3013-f6ba-0000-000000013862"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "entity_id": "d4159ddf-34fd-43c6-8846-cb676640226a"
+          },
+          {
+            "data": [
+              {
+                "data_type": "string",
+                "name": "name",
+                "values": [
+                  {
+                    "time": 1586713685399637,
+                    "values": [
+                      "ids-sync-fs-c1"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string_list",
+                "name": "cluster",
+                "values": []
+              },
+              {
+                "data_type": "string",
+                "name": "nvm_uuid_list",
+                "values": [
+                  {
+                    "time": 1586713685399637,
+                    "values": [
+                      "38827a86-105c-42b0-a572-18f79b6609d8"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string",
+                "name": "afs_version",
+                "values": [
+                  {
+                    "time": 1586713685399637,
+                    "values": [
+                      "3.7.0-e2f51e9dc9fc8e9629540422b03cb6b096c93ccb\n"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string",
+                "name": "cluster_uuid",
+                "values": [
+                  {
+                    "time": 1586713685399637,
+                    "values": [
+                      "00059913-3013-f6ba-0000-000000013862"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "entity_id": "4b1ee6fb-2487-4bf9-94bf-1942a63b2a0a"
+          },
+          {
+            "data": [
+              {
+                "data_type": "string",
+                "name": "name",
+                "values": [
+                  {
+                    "time": 1583801912125339,
+                    "values": [
+                      "retry-add-3"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string_list",
+                "name": "cluster",
+                "values": []
+              },
+              {
+                "data_type": "string",
+                "name": "nvm_uuid_list",
+                "values": [
+                  {
+                    "time": 1583801912125339,
+                    "values": [
+                      "66022dae-1929-4764-9e98-ce84368e70ef"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string",
+                "name": "afs_version",
+                "values": [
+                  {
+                    "time": 1583801912125339,
+                    "values": [
+                      "master-ff03ae39881c8e3758415efb2d63f028d71dddaf"
+                    ]
+                  }
+                ]
+              },
+              {
+                "data_type": "string",
+                "name": "cluster_uuid",
+                "values": [
+                  {
+                    "time": 1583801912125339,
+                    "values": [
+                      "00059f83-b394-e44e-0000-0000000148b4"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "entity_id": "2c6f041d-c475-4c74-9d59-21ddc429d505"
+          }
+        ],
+        "group_by_column_value": "",
+        "group_summaries": {},
+        "total_entity_count": 5
+      }
+    ],
+    "total_entity_count": 5,
+    "total_group_count": 1
+  }
+}

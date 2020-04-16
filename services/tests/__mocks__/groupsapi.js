@@ -130,164 +130,62 @@ export const acknowledgeAlert = (entityIds = []) => {
 };
 
 
+/**
+ * Fetches detailed data for given file server
+ *
+ * @param  {String} entityId File server entity id
+ * @return {[type]}          [description]
+ */
+export const fetchFsDetails = (entityId) => {
+  return (dispatch) => {
+    dispatch({
+      type: FETCH_FS_DETAILS,
+      payload: {
+        entityId,
+        details: [
+          {
+            'id': 'fs_id',
+            'entity_id': 'fs_id',
+            'name': 'El-Captain',
+            'cluster': null,
+            'nvm_uuid_list': 'c4e1eefd-1154-4840-8629-fa6c052410af',
+            'afs_version': '3.7.0-c62b24a28626a156b2287edfbd91a649cc7b930e',
+            'cluster_uuid': 'cluster_uuid',
+            'last_used_size_bytes': null,
+            'ipv4_address': '10.51.17.184'
+          }
+        ]
+      }
+    });
+  };
+};
+
 // /**
-//  * Fetches alerts data from the API
+//  * Fetches detailed data for given file server
 //  *
-//  * @param  {String}  dateRange      Value to filter by date range (can be 'week', or 'day')
-//  *
-//  * @return {Function}               Dispatcher method
+//  * @param  {Array}     entityIds   Cluster ids
+//  * @return {undefined}
 //  */
-// export const fetchSummaryAlerts = (dateRange = 'day') => {
+// export const fetchClusterDetails = (entityIds) => {
 //   return (dispatch) => {
 //     dispatch({
-//       type: SUMMARY_ALERTS_BUSY,
-//       payload: true
-//     });
-//     let timestamp;
-
-//     if (dateRange === 'week') {
-//       timestamp = (moment().subtract('1', 'weeks')).valueOf();
-//     } else if (dateRange === 'day') {
-//       timestamp = (moment().subtract('1', 'days')).valueOf();
-//     }
-//     const filter_criteria = `_created_timestamp_usecs_=ge=${timestamp}000;resolved==false`;
-//     const query = {
-//       entity_type: 'alert',
-//       group_member_count: 1,
-//       group_member_attributes: [
-//         {
-//           attribute: 'title'
-//         },
-//         {
-//           attribute: 'severity'
-//         },
-//         {
-//           attribute: '_created_timestamp_usecs_'
-//         }
-//       ],
-//       filter_criteria
-//     };
-//     axios.post(AppConstants.APIS.GROUPS_API, query)
-//       .then((resp) => {
-//         dispatch({
-//           type: FETCH_SUMMARY_ALERTS,
-//           payload: resp.data
-//         });
-//       })
-//       .catch((ex) => {
-//         dispatch({
-//           type: FETCH_SUMMARY_ALERTS,
-//           payload: false
-//         });
-//       });
-//   };
-// };
-
-
-// /**
-//  * Fetches alerts data from the API for single file server
-//  *
-//  * @param  {String}  entityId       ID of file server to fetch alerts for
-//  *
-//  * @return {Function}               Dispatcher method
-//  */
-// export const fetchServerAlerts = (entityId) => {
-//   return (dispatch) => {
-//     const filter_criteria = `file_server=in=${entityId};resolved==false`;
-//     const query = {
-//       entity_type: 'alert',
-//       group_member_offset: 0,
-//       group_member_sort_attribute: '_created_timestamp_usecs_',
-//       group_member_sort_order: 'DESCENDING',
-//       group_member_attributes: [
-//         {
-//           attribute: 'title'
-//         },
-//         {
-//           attribute: 'severity'
-//         },
-//         {
-//           attribute: '_created_timestamp_usecs_'
-//         }
-//       ],
-//       filter_criteria
-//     };
-//     axios.post(AppConstants.APIS.GROUPS_API, query)
-//       .then((resp) => {
-//         dispatch({
-//           type: FETCH_SERVER_ALERTS,
-//           payload: {
-//             entityId,
-//             alertsData: resp.data
+//       type: FETCH_CLUSTER_DETAILS,
+//       payload: {
+//         entityId,
+//         details: [
+//           {
+//             'id': 'fs_id',
+//             'entity_id': 'fs_id',
+//             'name': 'El-Captain',
+//             'cluster': null,
+//             'nvm_uuid_list': 'c4e1eefd-1154-4840-8629-fa6c052410af',
+//             'afs_version': '3.7.0-c62b24a28626a156b2287edfbd91a649cc7b930e',
+//             'cluster_uuid': 'cluster_uuid',
+//             'last_used_size_bytes': null,
+//             'ipv4_address': '10.51.17.184'
 //           }
-//         });
-//       })
-//       .catch((ex) => {
-//         dispatch({
-//           type: FETCH_SERVER_ALERTS,
-//           payload: false
-//         });
-//       });
-//   };
-// };
-
-// export const fetchFsData = () => {
-//   return (dispatch) => {
-//     dispatch({
-//       type: HIGHLIGHTED_WIDGET_BUSY,
-//       payload: true
-//     });
-//     const query = {
-//       entity_type: 'file_server_service',
-//       group_member_sort_attribute: 'name',
-//       group_member_sort_order: 'ASCENDING',
-//       group_member_offset: 0,
-//       group_member_attributes: [
-//         {
-//           attribute: 'name'
-//         },
-//         {
-//           attribute: 'cluster'
-//         },
-//         {
-//           attribute: 'nvm_uuid_list'
-//         },
-//         {
-//           attribute: 'afs_version'
-//         },
-//         {
-//           attribute: 'cluster_uuid'
-//         }
-//       ]
-//     };
-//     axios.post(AppConstants.APIS.GROUPS_API, query)
-//       .then((resp) => {
-//         dispatch({
-//           type: FETCH_FS,
-//           payload: resp.data
-//         });
-//       })
-//       .catch((ex) => {
-//         dispatch({
-//           type: FETCH_FS,
-//           payload: false
-//         });
-//       });
-//   };
-// };
-
-// /**
-//  * Sets alert witget range to 'day' or 'week
-//  * '
-//  * @param  {String} value Alert widget date range
-//  *
-//  * @return {Function} Dispatcher method
-//  */
-// export const setAlertsWidgetRange = (value) => {
-//   return (dispatch) => {
-//     dispatch({
-//       type: SET_ALERTS_WIDGET_RANGE,
-//       payload: value
+//         ]
+//       }
 //     });
 //   };
 // };
