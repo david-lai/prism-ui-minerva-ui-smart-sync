@@ -30,14 +30,9 @@ class FileServers extends React.Component {
       <StackingLayout
         className="fs-list-root"
         padding="0px"
+        itemSpacing="0px"
       >
-        <div
-          style={
-            {
-              padding: '5px 20px'
-            }
-          }
-        >
+        <div className="fs-tooltip-wrapper" >
           <Tooltip
             placement="rightTop"
             content={

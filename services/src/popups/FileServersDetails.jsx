@@ -192,7 +192,7 @@ class FileServersDetails extends React.Component {
             {i18nT('done', 'Done')}
           </Button>
         </span>
-        <Button 
+        <Button
           style={
             {
               marigin: '0 10px'

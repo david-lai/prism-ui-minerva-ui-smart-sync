@@ -11,10 +11,15 @@
   width: 100%;
   height: 100vh;
 
+  .left-panel {
+    padding-top: 10px;
+    background: @white;
+  }
+
   .app-main {
     background: @light-gray-3;
     height: 100%;
-
+    padding-top: 20px;
   }
 
   .ntnx-left-nav-layout {
@@ -38,12 +43,34 @@
     height: 100%;
   }
 
+  .fs-tooltip-wrapper {
+    height: 0px;
+    overflow: visible;
+    display: inline-flex;
+    position: relative;
+    padding-top: 5px;
+    z-index: 1;
+  }
+
   .ntnx.ntnx-text-label[data-theme=light][data-type=primary].fs-tooltip-label {
+    padding: 10px;
     color: @blue-1;
   }
 
+  .ntnx-left-nav-layout {
+    .left-panel {
+      align-self: stretch;
+    }
+  }
+
   .entity-browser {
+    margin-top: -23px;
+
     .main-content {
+
+      > .ntnx-stacking-layout {
+        padding-top: 0;
+      }
 
       >.ntnx-flex-layout {
         margin-bottom: 40px;
@@ -58,6 +85,12 @@
         color: deepskyblue ;
         .nsg-example-icon-text {
           color: deepskyblue ;
+        }
+      }
+
+      .entity-counts {
+        .ntnx-text-label {
+          font-weight: bold;
         }
       }
     }
