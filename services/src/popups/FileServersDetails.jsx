@@ -181,12 +181,23 @@ class FileServersDetails extends React.Component {
 
     const footer = (
       <div>
+        <span style={
+          {
+            margin: '0 10px'
+          }
+        }>
         <Button
           onClick={ this.props.onClose }
           type="secondary">
           {i18nT('done', 'Done')}
         </Button>
-        <Button
+        </span>
+        <Button           
+          style={
+            {
+              marigin: '0 10px'
+            }
+          }
           type="primary"
           onClick={ this.onOpenPeClick }>
           {i18nT('manage', 'Manage')}
