@@ -48,9 +48,67 @@ class Summary extends React.Component {
     alertsWidgetBusy: PropTypes.bool,
     fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     highlightedWidgetBusy: PropTypes.bool,
-    summaryAlerts: PropTypes.oneOfType([PropTypes.object, PropTypes.bool])
+    summaryAlerts: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+    serverAlerts: PropTypes.object
   };
 
+
+  static getDerivedStateFromProps(props, state) {
+    if (
+      !(
+        props.fsData &&
+        props.serverAlerts &&
+        typeof props.serverAlerts === 'object' &&
+        Object.keys(props.serverAlerts).length
+      )
+    ) {
+      return null;
+    }
+
+    let changed = false;
+    const stateChanges = {};
+
+    const summaryData = {
+      total: 0,
+      items: []
+    };
+
+    if (props.fsData.filtered_entity_count) {
+      summaryData.items = AppUtil.extractGroupResults(props.fsData).map((er) => {
+        const fsResult = {
+          entity_id: er.entity_id,
+          title: er.name,
+          info: null,
+          warning: null,
+          critical: null
+        };
+        if (props.serverAlerts && props.serverAlerts[er.entity_id]) {
+          const fsAlerts = AppUtil.extractGroupResults(props.serverAlerts[er.entity_id]);
+          fsResult.info = fsAlerts.filter(alert => alert.severity === 'info').length;
+          fsResult.warning = fsAlerts.filter(alert => alert.severity === 'warning').length;
+          fsResult.critical = fsAlerts.filter(alert => alert.severity === 'critical').length;
+        }
+
+        return fsResult;
+      }).filter(item => item.info + item.warning + item.critical > 0);
+      summaryData.total = summaryData.items.length;
+    }
+    if (state.fileServerSummary !== summaryData) {
+      stateChanges.fileServerSummary = summaryData;
+      changed = true;
+    }
+    if (changed) {
+      return stateChanges;
+    }
+    return null;
+  }
+
+  state = {
+    fileServerSummary: {
+      total: 0,
+      items: []
+    }
+  }
 
   /**
    * Constructor method
@@ -106,6 +164,44 @@ class Summary extends React.Component {
   }
 
   /**
+   * Prepares summary FS data, calculating total and preparing table dataSource
+   *
+   * @return {Object}   Prepared FS data
+   */
+  prepareSummaryFSData() {
+    if (!(this.props.fsData && Object.keys(this.props.serverAlerts).length)) {
+      return false;
+    }
+
+    const summaryData = {
+      total: 0,
+      items: []
+    };
+
+    if (this.props.fsData.filtered_entity_count) {
+      summaryData.total = this.props.fsData.filtered_entity_count;
+      summaryData.items = AppUtil.extractGroupResults(this.props.fsData).map((er) => {
+        const fsResult = {
+          entity_id: er.entity_id,
+          title: er.name,
+          info: null,
+          warning: null,
+          critical: null
+        };
+        if (this.props.serverAlerts && this.props.serverAlerts[er.entity_id]) {
+          const fsAlerts = AppUtil.extractGroupResults(this.props.serverAlerts[er.entity_id]);
+          fsResult.info = fsAlerts.filter(alert => alert.severity === 'info').length;
+          fsResult.warning = fsAlerts.filter(alert => alert.severity === 'warning').length;
+          fsResult.critical = fsAlerts.filter(alert => alert.severity === 'critical').length;
+        }
+
+        return fsResult;
+      }).filter(item => item.info + item.warning + item.critical > 0);
+    }
+    return summaryData;
+  }
+
+  /**
    * Calculates and returns alert counts by severity
    *
    * @return {Object} Object with alert counts
@@ -141,9 +237,12 @@ class Summary extends React.Component {
    */
   render() {
     const alertCounts = this.getAlertCounts();
-    const fileServers_num = (this.props.fsData && this.props.fsData.filtered_entity_count)
-      ? AppUtil.rawNumericFormat(+this.props.fsData.filtered_entity_count)
+    const fileServers_num = (this.state.fileServerSummary && this.state.fileServerSummary.total)
+      ? AppUtil.rawNumericFormat(+this.state.fileServerSummary.total)
       : 0;
+    // const fileServers_num = (this.props.fsData && this.props.fsData.filtered_entity_count)
+    //   ? AppUtil.rawNumericFormat(+this.props.fsData.filtered_entity_count)
+    //   : 0;
 
     const alertsWidgetFooter = (this.props.alertsWidgetBusy ||
       !(
@@ -235,7 +334,7 @@ class Summary extends React.Component {
                 </Link>
               </div>
             }
-            bodyContent={ (<FileServerSummary />) }
+            bodyContent={ (<FileServerSummary serverSummary={ this.state.fileServerSummary } />) }
             bodyContentProps={
               {
                 flexDirection: 'column',
@@ -381,7 +480,8 @@ const mapStateToProps = state => {
     highlightedWidgetBusy: state.groupsapi.highlightedWidgetBusy,
     alertsWidgetRange: state.groupsapi.alertsWidgetRange,
     alertsWidgetBusy: state.groupsapi.alertsWidgetBusy,
-    summaryAlerts: state.groupsapi.summaryAlerts
+    summaryAlerts: state.groupsapi.summaryAlerts,
+    serverAlerts: state.groupsapi.serverAlerts
   };
 };
 
