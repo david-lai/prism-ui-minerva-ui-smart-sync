@@ -186,13 +186,13 @@ class FileServersDetails extends React.Component {
             margin: '0 10px'
           }
         }>
-        <Button
-          onClick={ this.props.onClose }
-          type="secondary">
-          {i18nT('done', 'Done')}
-        </Button>
+          <Button
+            onClick={ this.props.onClose }
+            type="secondary">
+            {i18nT('done', 'Done')}
+          </Button>
         </span>
-        <Button           
+        <Button 
           style={
             {
               marigin: '0 10px'
