@@ -21,9 +21,9 @@ const entity_configs = {
         },
         nvm_uuid_list: {
           type: 'string',
-          displayName: i18nT('schema.file_server.file_server_vms', 'File Server Vms')
+          displayName: i18nT('schema.file_server.file_server_vms', 'File Server VMs')
         },
-        cluster: {
+        cluster_name: {
           type: 'string',
           displayName: i18nT('schema.file_server.cluster', 'Cluster')
         },
@@ -75,7 +75,9 @@ const entity_configs = {
             'network_function_categories'
           ],
           filterByAttributes: [
-            'name'
+            'name',
+            'cluster_name',
+            'afs_version'
           ]
         },
         visualizations: [
@@ -92,7 +94,7 @@ const entity_configs = {
           primaryAttribute: 'name',
           displayAttributes: [
             'name',
-            'cluster',
+            'cluster_name',
             'nvm_uuid_list',
             'afs_version',
             'cluster_uuid'

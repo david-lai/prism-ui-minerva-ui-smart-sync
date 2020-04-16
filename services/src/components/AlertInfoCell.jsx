@@ -4,7 +4,7 @@
 // Alert name cell component
 //
 import React from 'react';
-import { Link } from 'prism-reactjs';
+import { Link } from '@nutanix-ui/prism-reactjs';
 import PropTypes from 'prop-types';
 
 // Utils
@@ -12,8 +12,22 @@ import { MODAL_TYPE } from '../utils/AppConstants';
 
 class AlertInfoCell extends React.Component {
 
-  constructor(props) {
-    super(props);
+  static propTypes = {
+    entity: PropTypes.object,
+    options: PropTypes.object,
+    openModal: PropTypes.func
+  };
+
+  /**
+   * Constructor method
+   *
+   * @param  {Object} props   Component props
+   * @param  {Object} context Component conntext
+   *
+   * @return {undefined}
+   */
+  constructor(props, context) {
+    super(props, context);
     this.handleShowAlertModal = this.handleShowAlertModal.bind(this);
   }
 
@@ -32,11 +46,5 @@ class AlertInfoCell extends React.Component {
   }
 
 }
-
-AlertInfoCell.propTypes = {
-  entity: PropTypes.object,
-  options: PropTypes.object,
-  openModal: PropTypes.func
-};
 
 export default AlertInfoCell;

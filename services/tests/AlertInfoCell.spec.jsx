@@ -14,7 +14,7 @@ describe('AlertInfoCell', () => {
   const middlewares = [thunk];
   const mockStore = configureStore(middlewares);
 
-  const alertEntity = AppUtil.extractGroupResults(initStore.groupsapi.alertsData)[0];
+  const alertEntity = AppUtil.extractGroupResults(initStore.full.groupsapi.alertsData)[0];
   const options = {
     entity: alertEntity,
     text: alertEntity.title
@@ -22,7 +22,7 @@ describe('AlertInfoCell', () => {
   const openModalFn = jest.fn(openModal);
 
   it('Mounts AlertInfoCell with info alert', () => {
-    const store = mockStore(initStore);
+    const store = mockStore(initStore.full);
     const testComponent = mount(
       <Provider store={ store }><AlertInfoCell options={ options } openModal={ openModalFn }/></Provider>
     ).instance();

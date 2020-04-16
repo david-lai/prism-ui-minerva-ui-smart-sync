@@ -9,7 +9,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 
 import './index.css';
-import '../node_modules/prism-reactjs/dist/index.css';
+import '../node_modules/@nutanix-ui/prism-reactjs/dist/index.css';
 // App Level CSS
 import './App.less';
 

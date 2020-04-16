@@ -1,17 +1,41 @@
 //
 // Copyright (c) 2019 Nutanix Inc. All rights reserved.
 //
-@import (reference) '~prism-reactjs/src/styles/v2/Colors.less';
-@import (reference) '~prism-reactjs/src/styles/v2/Variables.less';
-@import (reference) '~prism-reactjs/src/styles/v2/ChartCategorialColors.less';
+@import (reference) '~@nutanix-ui/prism-reactjs/src/styles/v2/Colors.less';
+@import (reference) '~@nutanix-ui/prism-reactjs/src/styles/v2/Variables.less';
+@import (reference) '~@nutanix-ui/prism-reactjs/src/styles/v2/ChartCategorialColors.less';
+
 
 // The app
 .file-server-app {
   width: 100%;
-  height: 100%;
+  height: 100vh;
+
+  .app-main {
+    background: @light-gray-3;
+    height: 100%;
+
+  }
+
+  .ntnx-left-nav-layout {
+    height: 100%;
+  }
+  
+  .right-panel {
+    height: 100%;
+  }
+
+  .app-main-loader {
+    height: 100vh;
+
+      .ntnx-loader>.overlay-loader {
+        background: none;
+      }
+  }
 
   .fs-list-root {
-    background: @light-gray-3;
+    // background: @light-gray-3;
+    height: 100%;
   }
 
   .ntnx.ntnx-text-label[data-theme=light][data-type=primary].fs-tooltip-label {
@@ -20,7 +44,6 @@
 
   .entity-browser {
     .main-content {
-      background: @light-gray-3;
 
       >.ntnx-flex-layout {
         margin-bottom: 40px;

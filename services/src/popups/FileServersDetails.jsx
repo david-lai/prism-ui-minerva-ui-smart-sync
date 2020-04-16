@@ -10,7 +10,7 @@ import {
   Button,
   Table,
   StackingLayout
-} from 'prism-reactjs';
+} from '@nutanix-ui/prism-reactjs';
 import PropTypes from 'prop-types';
 import i18n from '../utils/i18n';
 
@@ -26,6 +26,48 @@ const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
 
 class FileServersDetails extends React.Component {
 
+  static propTypes = {
+    details: PropTypes.object,
+    onClose: PropTypes.func,
+    visible: PropTypes.bool,
+    openPe: PropTypes.func,
+    fsDetails: PropTypes.object,
+    fetchFsDetails: PropTypes.func,
+    clusterDetails: PropTypes.object,
+    fetchClusterDetails: PropTypes.func
+  };
+
+
+  /**
+   * Get derived state from props lifecycle method
+   *
+   * This method checks for 'visible' prop change and fetches
+   * the data if it is set to 'true'.
+   *
+   * @param  {Object} props Current props
+   * @param  {Object} state Current state
+   * @return {Object}       Derived state
+   */
+  static getDerivedStateFromProps(props, state) {
+    let changed = false;
+    const changes = {};
+    if (props.visible !== state.currentlyVisible) {
+      changed = true;
+      changes.currentlyVisible = props.visible;
+    }
+    if (changed) {
+      const details = props.details;
+      if (details.entityId && !props.fsDetails[details.entityId]) {
+        props.fetchFsDetails(details.entityId);
+      }
+      if (details.cluster_uuid && !props.clusterDetails[details.cluster_uuid]) {
+        props.fetchClusterDetails(details.cluster_uuid);
+      }
+      return changes;
+    }
+    return null;
+  }
+
   constructor(props) {
     super(props);
     this.onOpenPeClick = this.onOpenPeClick.bind(this);
@@ -35,6 +77,24 @@ class FileServersDetails extends React.Component {
   onOpenPeClick() {
     const clusterUuid = this.props.details.cluster_uuid;
     this.props.openPe(clusterUuid);
+  }
+
+  state = {
+    currentlyVisible: false
+  };
+
+  handleModalClick = (e) => {
+    if (e && e.target && e.target.dataset && e.target.dataset.appearance) {
+      if (e.target.dataset.appearance === 'overlay') {
+        this.props.onClose();
+      }
+    }
+  }
+
+  handleKeydown = (e) => {
+    if (this.props.visible && e.keyCode === 27) {
+      this.props.onClose();
+    }
   }
 
   render() {
@@ -136,9 +196,13 @@ class FileServersDetails extends React.Component {
     return (
       <div>
         <Modal
+          onClick={ this.handleModalClick }
           visible={ this.props.visible }
           title={ i18nT('file_server_details', 'File Server Details') }
           footer={ footer }
+          primaryButtonLabel={ i18nT('done', 'Done') }
+          primaryButtonOnClick={ this.props.onClose }
+          onClose={ this.props.onClose }
         >
           <StackingLayout padding="20px">
             <Table
@@ -158,31 +222,12 @@ class FileServersDetails extends React.Component {
     );
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.details.entityId &&
-      nextProps.details.entityId !== this.props.details.entityId &&
-      !nextProps.fsDetails[nextProps.details.entityId]
-    ) {
-      this.props.fetchFsDetails(nextProps.details.entityId);
-    }
-    if (
-      nextProps.details.cluster_uuid &&
-      nextProps.details.cluster_uuid !== this.props.details.cluster_uuid &&
-      !nextProps.clusterDetails[nextProps.details.cluster_uuid]
-    ) {
-      this.props.fetchClusterDetails(nextProps.details.cluster_uuid);
-    }
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleKeydown, { passive: true });
   }
 
-  componentDidMount() {
-    const details = this.props.details;
-    if (details.entityId && !this.props.fsDetails[details.entityId]) {
-      this.props.fetchFsDetails(details.entityId);
-    }
-    if (details.cluster_uuid && !this.props.clusterDetails[details.cluster_uuid]) {
-      this.props.fetchClusterDetails(details.cluster_uuid);
-    }
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeydown);
   }
 
 }
@@ -200,19 +245,6 @@ const mapDispatchToProps = dispatch => {
     fetchFsDetails: (entityId) => dispatch(fetchFsDetails(entityId))
   };
 };
-
-
-FileServersDetails.propTypes = {
-  details: PropTypes.object,
-  onClose: PropTypes.func,
-  visible: PropTypes.bool,
-  openPe: PropTypes.func,
-  fsDetails: PropTypes.object,
-  fetchFsDetails: PropTypes.func,
-  clusterDetails: PropTypes.object,
-  fetchClusterDetails: PropTypes.func
-};
-
 
 export default connect(
   mapStateToProps,
