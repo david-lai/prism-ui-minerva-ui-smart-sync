@@ -18,7 +18,6 @@ import {
 } from '@nutanix-ui/prism-reactjs';
 
 import i18n from '../utils/i18n';
-import AppUtil from '../utils/AppUtil';
 
 import noServersIcon from '../assets/images/no-servers.svg';
 
@@ -97,50 +96,12 @@ class FileServerSummary extends React.Component {
   }
 
   /**
-   * Prepares summary FS data, calculating total and preparing table dataSource
-   *
-   * @return {Object}   Prepared FS data
-   */
-  prepareSummaryFSData() {
-    if (!this.props.fsData) {
-      return false;
-    }
-
-    const summaryData = {
-      total: 0,
-      items: []
-    };
-
-    if (this.props.fsData.filtered_entity_count) {
-      summaryData.total = this.props.fsData.filtered_entity_count;
-      summaryData.items = AppUtil.extractGroupResults(this.props.fsData).map((er) => {
-        const fsResult = {
-          entity_id: er.entity_id,
-          title: er.name,
-          info: null,
-          warning: null,
-          critical: null
-        };
-        if (this.props.serverAlerts && this.props.serverAlerts[er.entity_id]) {
-          const fsAlerts = AppUtil.extractGroupResults(this.props.serverAlerts[er.entity_id]);
-          fsResult.info = fsAlerts.filter(alert => alert.severity === 'info').length;
-          fsResult.warning = fsAlerts.filter(alert => alert.severity === 'warning').length;
-          fsResult.critical = fsAlerts.filter(alert => alert.severity === 'critical').length;
-        }
-
-        return fsResult;
-      });
-    }
-    return summaryData;
-  }
-
-  /**
    * Renders the component
    *
    * @return {node} Component contents
    */
   render() {
-    const summaryData = this.prepareSummaryFSData();
+    const summaryData = this.props.serverSummary;
     const dataSource = summaryData && summaryData.items ? summaryData.items : [];
     return (
       <ContainerLayout padding="15px">
@@ -225,7 +186,7 @@ const mapStateToProps = state => {
 };
 
 FileServerSummary.propTypes = {
-  serverAlerts: PropTypes.object,
+  serverSummary: PropTypes.object,
   fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
   highlightedWidgetBusy: PropTypes.bool
 };
