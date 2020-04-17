@@ -10,7 +10,7 @@
         "name": "Name",
         "versions": "Versions",
         "cluster": "Cluster",
-        "file_server_vms": "File Server Vms",
+        "file_server_vms": "File Server VMs",
         "actions": "Actions",
         "type": {
           "tap": "Tap",
