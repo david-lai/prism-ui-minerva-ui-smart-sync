@@ -125,7 +125,7 @@ const entity_configs = {
       idAttribute: 'entity_id',
       nameAttribute: 'title',
       attributes: {
-        title: {
+        default_message: {
           type: 'string',
           select: true,
           displayName: i18nT('schema.event.description', 'Description')
@@ -162,7 +162,8 @@ const entity_configs = {
           idAttribute: 'entity_id',
           primaryAttribute: '_created_timestamp_usecs_',
           customRenders: {
-            title : {
+            default_message : {
+              formatter: 'event_description',
               columnWidth: '30%'
             },
             param_value_list: {
@@ -212,7 +213,7 @@ const entity_configs = {
           idAttribute: 'entity_id',
           primaryAttribute: '_created_timestamp_usecs_',
           displayAttributes: [
-            'title',
+            'default_message',
             'param_value_list',
             'classification',
             'cluster_name',

@@ -35,7 +35,7 @@ const COMPONENTS = {
   JOIN_PASCAL_CASE_ARRAY: 'join_pascal_case_array',
   PICK_LIST_ITEM: 'pick_list_item',
   PICK_NAMED_LIST_ITEM: 'pick_named_list_item',
-
+  EVENT_DESCRIPTION: 'event_description',
   ALERT_TITLE: 'alert_title'
 };
 
@@ -49,7 +49,7 @@ class EBComponentFactory {
     // this.popupElement = React.createRef();
     this.popup = {};
     this.openModal = options.openModal;
-
+    this.fsData = options.fsData;
     this.onOpenPeClick = this.onOpenPeClick.bind(this);
   }
 
@@ -117,6 +117,17 @@ class EBComponentFactory {
           joinedStringArray = FormatterUtil.joinStringArray(options.text, options.options);
         }
         return (<span>{ joinedStringArray }</span>);
+      case COMPONENTS.EVENT_DESCRIPTION:
+        let { default_message, param_value_list } = options.options.entity;
+        let start, end;
+        for (let i = 0; i < default_message.split('{').length; i++) {
+          start = default_message.indexOf('{');
+          end = default_message.indexOf('}');
+          default_message = `${default_message.slice(0, start)}
+            ${param_value_list[param_value_list.length - 1 - i]}
+            ${default_message.slice(end + 1)}`;
+        }
+        return default_message;
       case COMPONENTS.JOIN_PASCAL_CASE_ARRAY:
         let joinedPascalCaseArray = '';
         if (options && options.text) {
