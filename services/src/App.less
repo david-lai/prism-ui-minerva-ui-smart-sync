@@ -85,8 +85,42 @@
           background: transparent;
         }
       }
-      .tr:hover > td .manage-link:not(.disabled) {
-        color: deepskyblue;
+
+
+      /* https://jira.nutanix.com/browse/ENG-302270
+         these styles might seem redundant, but this seems to be
+         the only way to cover all types of cells that EB renders */
+      tr {
+        > td {
+          > span {
+            white-space: nowrap;
+            word-break: keep-all;
+            display: block;
+            width: inherit;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow-x: hidden;
+            overflow-y: visible;
+            word-break: keep-all;
+            line-height: 1em;
+
+
+            * {
+              display: block;
+              width: inherit;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow-x: hidden;
+              overflow-y: visible;
+              word-break: keep-all;
+              line-height: 1em;
+            }
+
+            .ntnx-flex-layout {
+              display: flex;
+            }
+          }
+        }
       }
 
       .entity-counts {

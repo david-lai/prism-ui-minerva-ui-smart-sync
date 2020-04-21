@@ -8,11 +8,12 @@
 // Libraries
 import React from 'react';
 import { AphroditeApi, WindowsMessageUtil } from 'prism-utils-common';
-import { OpenInNewWindowIcon, TextLabel, Link, FlexLayout } from '@nutanix-ui/prism-reactjs';
+import { OpenInNewWindowIcon, Link, FlexLayout } from '@nutanix-ui/prism-reactjs';
 
 // Popups
 import FileServersName from '../components/FileServersName.jsx';
 import AlertInfoCell from '../components/AlertInfoCell.jsx';
+import AlertSeverityCell from '../components/AlertSeverityCell.jsx';
 
 // Local includes
 import AppConstants from './AppConstants';
@@ -35,7 +36,8 @@ const COMPONENTS = {
   JOIN_PASCAL_CASE_ARRAY: 'join_pascal_case_array',
   PICK_NAMED_LIST_ITEM: 'pick_named_list_item',
   EVENT_DESCRIPTION: 'event_description',
-  ALERT_TITLE: 'alert_title'
+  ALERT_TITLE: 'alert_title',
+  ALERT_SEVERITY: 'alert_severity'
 };
 
 // Components
@@ -84,8 +86,11 @@ class EBComponentFactory {
         );
       case COMPONENTS.ACTIONS:
         return (
-          <Link className="manage-link" data-name={ options.options.entity.cluster_uuid }
-            onClick={ this.onOpenPeClick }>
+          <Link
+            className="manage-link eb-actions-link"
+            data-name={ options.options.entity.cluster_uuid }
+            onClick={ this.onOpenPeClick }
+          >
             <FlexLayout alignItems="center" itemSpacing="5px">
               <span className="nsg-example-icon-text">{i18nT('manage', 'Manage')}</span>
               <OpenInNewWindowIcon />
@@ -133,6 +138,12 @@ class EBComponentFactory {
           <AlertInfoCell
             options={ options.options }
             openModal={ this.openModal }
+          />
+        );
+      case COMPONENTS.ALERT_SEVERITY:
+        return (
+          <AlertSeverityCell
+            options={ options.options }
           />
         );
 

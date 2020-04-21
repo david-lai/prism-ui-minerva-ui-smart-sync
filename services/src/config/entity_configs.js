@@ -319,7 +319,7 @@ const entity_configs = {
               columnWidth: '15%'
             },
             severity: {
-              formatter: 'capitalize_sentence',
+              formatter: 'alert_severity',
               columnWidth: '10%'
             },
             _created_timestamp_usecs_: {
