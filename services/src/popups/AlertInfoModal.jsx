@@ -528,7 +528,7 @@ class AlertInfoModal extends React.Component {
               type="secondary"
               style={
                 {
-                  width: '150px'
+                  width: '80px'
                 }
               }
               onClick={ this.handleResolveClick }
@@ -572,7 +572,7 @@ class AlertInfoModal extends React.Component {
               type="secondary"
               style={
                 {
-                  width: '150px'
+                  width: '115px'
                 }
               }
               onClick={ this.handleAcknowledgeClick }
