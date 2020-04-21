@@ -21,9 +21,9 @@ const entity_configs = {
         },
         nvm_uuid_list: {
           type: 'string',
-          displayName: i18nT('schema.file_server.file_server_vms', 'File Server Vms')
+          displayName: i18nT('schema.file_server.file_server_vms', 'File Server VMs')
         },
-        cluster: {
+        cluster_name: {
           type: 'string',
           displayName: i18nT('schema.file_server.cluster', 'Cluster')
         },
@@ -64,9 +64,7 @@ const entity_configs = {
               formatter: 'actions'
             }
           },
-          groupByAttributes: [
-            'name', 'afs_version'
-          ],
+          groupByAttributes: [],
           helperAttributes: [
             'nvm_uuid_list'
           ],
@@ -75,7 +73,9 @@ const entity_configs = {
             'network_function_categories'
           ],
           filterByAttributes: [
-            'name'
+            'name',
+            'cluster_name',
+            'afs_version'
           ]
         },
         visualizations: [
@@ -92,7 +92,7 @@ const entity_configs = {
           primaryAttribute: 'name',
           displayAttributes: [
             'name',
-            'cluster',
+            'cluster_name',
             'nvm_uuid_list',
             'afs_version',
             'cluster_uuid'
@@ -100,7 +100,10 @@ const entity_configs = {
           sortByAttributes: [
             'name'
           ],
-          groupByAttributes: [],
+          groupByAttributes: [
+            'cluster_name',
+            'afs_version'
+          ],
           colorByAttributes: [],
           helperAttributes: [],
           summaries: {}
@@ -123,7 +126,7 @@ const entity_configs = {
       idAttribute: 'entity_id',
       nameAttribute: 'title',
       attributes: {
-        title: {
+        default_message: {
           type: 'string',
           select: true,
           displayName: i18nT('schema.event.description', 'Description')
@@ -160,7 +163,8 @@ const entity_configs = {
           idAttribute: 'entity_id',
           primaryAttribute: '_created_timestamp_usecs_',
           customRenders: {
-            title : {
+            default_message : {
+              formatter: 'event_description',
               columnWidth: '30%'
             },
             param_value_list: {
@@ -189,7 +193,6 @@ const entity_configs = {
           groupByAttributes: [
           ],
           helperAttributes: [
-            'param_name_list'
           ],
           virtualAttributes: [
           ],
@@ -210,7 +213,7 @@ const entity_configs = {
           idAttribute: 'entity_id',
           primaryAttribute: '_created_timestamp_usecs_',
           displayAttributes: [
-            'title',
+            'default_message',
             'param_value_list',
             'classification',
             'cluster_name',
@@ -220,10 +223,12 @@ const entity_configs = {
             '_created_timestamp_usecs_'
           ],
           groupByAttributes: [
-
+            'classification'
           ],
           colorByAttributes: [],
-          helperAttributes: [],
+          helperAttributes: [
+            'param_name_list'
+          ],
           summaries: {}
         }
       }
@@ -256,6 +261,10 @@ const entity_configs = {
           type: 'string',
           isList: true,
           displayName: i18nT('schema.alert.sourceEntity', 'Source Entity')
+        },
+        param_name_list: {
+          type: 'string',
+          isList: true
         },
         impact_type: {
           type: 'string',
@@ -299,9 +308,10 @@ const entity_configs = {
             },
             param_value_list: {
               columnWidth: '15%',
-              formatter: 'pick_list_item',
+              formatter: 'pick_named_list_item',
               formatterOptions: {
-                index: 1
+                nameListProp: 'param_name_list',
+                valueName: 'file_server_name'
               }
             },
             impact_type: {
@@ -327,9 +337,6 @@ const entity_configs = {
           virtualAttributes: [
           ],
           filterByAttributes: [
-            'cluster',
-            'severity',
-            'resolved'
           ],
           defaultSortingAttribute: '_created_timestamp_usecs_'
         },
@@ -357,9 +364,14 @@ const entity_configs = {
             '_created_timestamp_usecs_'
           ],
           sortByOrder: 'DESCENDING',
-          groupByAttributes: ['title'],
+          groupByAttributes: [
+            'title',
+            'severity'
+          ],
           colorByAttributes: [],
-          helperAttributes: [],
+          helperAttributes: [
+            'param_name_list'
+          ],
           summaries: {}
         }
       }

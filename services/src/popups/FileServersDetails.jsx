@@ -7,6 +7,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   Modal,
+  Button,
   Table,
   StackingLayout
 } from '@nutanix-ui/prism-reactjs';
@@ -29,7 +30,7 @@ class FileServersDetails extends React.Component {
     details: PropTypes.object,
     onClose: PropTypes.func,
     visible: PropTypes.bool,
-
+    openPe: PropTypes.func,
     fsDetails: PropTypes.object,
     fetchFsDetails: PropTypes.func,
     clusterDetails: PropTypes.object,
@@ -65,6 +66,17 @@ class FileServersDetails extends React.Component {
       return changes;
     }
     return null;
+  }
+
+  constructor(props) {
+    super(props);
+    this.onOpenPeClick = this.onOpenPeClick.bind(this);
+  }
+
+  // Event handler for manage button to open PE
+  onOpenPeClick() {
+    const clusterUuid = this.props.details.cluster_uuid;
+    this.props.openPe(clusterUuid);
   }
 
   state = {
@@ -166,12 +178,39 @@ class FileServersDetails extends React.Component {
         data: entity.ipv4_address
       }
     ];
+
+    const footer = (
+      <div>
+        <span style={
+          {
+            margin: '0 10px'
+          }
+        }>
+          <Button
+            onClick={ this.props.onClose }
+            type="secondary">
+            {i18nT('done', 'Done')}
+          </Button>
+        </span>
+        <Button
+          style={
+            {
+              marigin: '0 10px'
+            }
+          }
+          type="primary"
+          onClick={ this.onOpenPeClick }>
+          {i18nT('manage', 'Manage')}
+        </Button>
+      </div>);
+
     return (
       <div>
         <Modal
           onClick={ this.handleModalClick }
           visible={ this.props.visible }
           title={ i18nT('file_server_details', 'File Server Details') }
+          footer={ footer }
           primaryButtonLabel={ i18nT('done', 'Done') }
           primaryButtonOnClick={ this.props.onClose }
           onClose={ this.props.onClose }

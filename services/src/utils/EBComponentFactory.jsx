@@ -33,9 +33,8 @@ const COMPONENTS = {
   CAPITALIZE_SENTENCE: 'capitalize_sentence',
   JOIN_STRING_ARRAY: 'join_string_array',
   JOIN_PASCAL_CASE_ARRAY: 'join_pascal_case_array',
-  PICK_LIST_ITEM: 'pick_list_item',
   PICK_NAMED_LIST_ITEM: 'pick_named_list_item',
-
+  EVENT_DESCRIPTION: 'event_description',
   ALERT_TITLE: 'alert_title'
 };
 
@@ -49,7 +48,6 @@ class EBComponentFactory {
     // this.popupElement = React.createRef();
     this.popup = {};
     this.openModal = options.openModal;
-
     this.onOpenPeClick = this.onOpenPeClick.bind(this);
   }
 
@@ -94,10 +92,10 @@ class EBComponentFactory {
             </FlexLayout>
           </Link>);
       case COMPONENTS.VERSION:
-        const version = options.options.entity.afs_version.split('-')[0];
+        const version = options.text.split('-')[0];
         return (<span>{ version }</span>);
       case COMPONENTS.NUMBER_OF_VMS:
-        const numberOfVms = options.options.entity.nvm_uuid_list.split(',').length || 0;
+        const numberOfVms = options.text.split(',').length || 0;
         return (<span>{ numberOfVms }</span>);
       case COMPONENTS.SEPARATE_PASCAL_CASE:
         let separatedPascalCase = '';
@@ -117,6 +115,8 @@ class EBComponentFactory {
           joinedStringArray = FormatterUtil.joinStringArray(options.text, options.options);
         }
         return (<span>{ joinedStringArray }</span>);
+      case COMPONENTS.EVENT_DESCRIPTION:
+        return this.getDescriptionText(options.options.entity);
       case COMPONENTS.JOIN_PASCAL_CASE_ARRAY:
         let joinedPascalCaseArray = '';
         if (options && options.text) {
@@ -125,9 +125,6 @@ class EBComponentFactory {
           );
         }
         return (<span>{ joinedPascalCaseArray }</span>);
-      case COMPONENTS.PICK_LIST_ITEM:
-        const listItemValue = FormatterUtil.pickListItem(options.text, options.options);
-        return (<span>{ listItemValue }</span>);
       case COMPONENTS.PICK_NAMED_LIST_ITEM:
         const namedListItemValue = FormatterUtil.pickNamedListItem(options.text, options.options);
         return (<span>{ namedListItemValue }</span>);
@@ -142,6 +139,25 @@ class EBComponentFactory {
       default:
         return this.defaultFactory.getComponent(componentId, options);
     }
+  }
+
+  // Replace the fs/share in the message with real fs/share name
+  getDescriptionText(entity) {
+    let { default_message: defaultMessage } = entity;
+    const {
+      param_value_list,
+      param_name_list
+    } = entity;
+    let start, end;
+    const numberOfReplacement = defaultMessage.split('{').length;
+    for (let i = 0; i < numberOfReplacement && numberOfReplacement > 1; i++) {
+      start = defaultMessage.indexOf('{');
+      end = defaultMessage.indexOf('}');
+      defaultMessage = `${defaultMessage.slice(0, start)}
+        ${param_value_list[param_name_list.indexOf(defaultMessage.slice(start + 1, end))]}
+        ${defaultMessage.slice(end + 1)}`;
+    }
+    return defaultMessage;
   }
 
   // Pluck a nested network_function_list argument - Single value

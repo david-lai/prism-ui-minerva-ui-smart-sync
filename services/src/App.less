@@ -9,7 +9,7 @@
 // The app
 .file-server-app {
   width: 100%;
-  height: 100%;
+  height: 100vh;
 
   .left-panel {
     padding-top: 10px;
@@ -18,8 +18,21 @@
 
   .app-main {
     background: @light-gray-3;
-    min-height: 100vh;
+    height: 100%;
     padding-top: 20px;
+
+    /*un-comment it out when filter and Gruop by are supported*/
+    .filters-button, .query-options {
+      visibility: hidden;
+    }
+  }
+
+  .ntnx-left-nav-layout {
+    height: 100%;
+  }
+  
+  .right-panel {
+    height: 100%;
   }
 
   .app-main-loader {
@@ -28,6 +41,10 @@
       .ntnx-loader>.overlay-loader {
         background: none;
       }
+  }
+
+  .fs-list-root {
+    height: 100%;
   }
 
   .fs-tooltip-wrapper {
