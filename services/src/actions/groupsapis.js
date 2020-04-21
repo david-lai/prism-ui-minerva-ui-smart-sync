@@ -16,8 +16,6 @@ export const {
   FETCH_FS_DETAILS,
   HIGHLIGHTED_WIDGET_BUSY,
   FETCH_ALERTS,
-  FETCH_ALERT_LIST,
-  SET_ALERT_LIST_LOADING,
 
   ALERT_MODAL_LOADING,
   FETCH_ALERT_MODAL_INFO,
@@ -77,41 +75,6 @@ export const fetchAlerts = (entityIds = []) => {
       .catch((ex) => {
         dispatch({
           type: FETCH_ALERTS,
-          payload: false
-        });
-      });
-  };
-};
-
-/**
- * Fetches alerts data from the API
- *
- * @param  {Array}   entityIds      IDs of file servers to fetch alerts for (optional)
- *
- * @return {Function}               Dispatcher method
- */
-export const fetchAlertList = () => {
-  return (dispatch) => {
-    const query = {
-      entity_type: 'alert',
-      group_member_sort_attribute: '_created_timestamp_usecs_',
-      group_member_sort_order: 'DESCENDING',
-      group_member_attributes: [
-        {
-          attribute: 'title'
-        }
-      ]
-    };
-    axios.post(AppConstants.APIS.GROUPS_API, query)
-      .then((resp) => {
-        dispatch({
-          type: FETCH_ALERT_LIST,
-          payload: resp.data
-        });
-      })
-      .catch((ex) => {
-        dispatch({
-          type: FETCH_ALERT_LIST,
           payload: false
         });
       });
@@ -513,22 +476,6 @@ export const setAlertsWidgetRange = (value) => {
   return (dispatch) => {
     dispatch({
       type: SET_ALERTS_WIDGET_RANGE,
-      payload: value
-    });
-  };
-};
-
-/**
- * Sets alert list loading flag
- *
- * @param  {Boolean}   value   Loading flag value
- *
- * @return {Function}          Dispatcher method
- */
-export const setAlertListLoading = (value) => {
-  return (dispatch) => {
-    dispatch({
-      type: SET_ALERT_LIST_LOADING,
       payload: value
     });
   };

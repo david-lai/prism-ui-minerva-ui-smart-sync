@@ -49,7 +49,6 @@ const i18nT = (key, defaultValue, replacedValue) => i18n.getInstance().t(
 class AlertInfoModal extends React.Component {
 
   static propTypes = {
-    alert: PropTypes.object,
     visible: PropTypes.bool,
     closeModalAction: PropTypes.func,
     alertModalLoading: PropTypes.bool,
@@ -59,6 +58,7 @@ class AlertInfoModal extends React.Component {
     // eslint-disable-next-line react/no-unused-prop-types
     alertInfo: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     alertList: PropTypes.array,
+    // eslint-disable-next-line react/no-unused-prop-types
     fetchAlertModalInfo: PropTypes.func,
     setAlertRequestStatus: PropTypes.func,
     setAlertRequestType: PropTypes.func,
@@ -66,24 +66,29 @@ class AlertInfoModal extends React.Component {
     acknowledgeAlert: PropTypes.func
   };
 
+
   static getDerivedStateFromProps(props, state) {
     let changed = false;
     const stateChanges = {};
     const { inputProps } = state;
+
     if (!props.visible) {
+      // modal is benng closed, reset data
       changed = true;
       inputProps.value = '';
+      stateChanges.alertSearch = '';
       stateChanges.inputProps = inputProps;
       stateChanges.alertId = 0;
       stateChanges.alertObject = null;
       stateChanges.alertInfo = null;
       stateChanges.selectedRow = null;
-      stateChanges.alertSearch = '';
     } else {
       if (!state.alertObject) {
+        // no local data
         if (props.alert && props.alert.entityId) {
+          // first time opening - populate alertObject in state
           changed = true;
-          inputProps.value = props.alert.title;
+          inputProps.value = '';
           stateChanges.inputProps = inputProps;
           stateChanges.alertId = props.alert.entityId;
           stateChanges.alertObject = props.alert;
@@ -97,6 +102,7 @@ class AlertInfoModal extends React.Component {
           props.fetchAlertModalInfo(props.alert.entityId);
         }
       } else if (state.alertObject.entityId !== state.alertId) {
+        // Alert id has been changed, apply new data
         changed = true;
         inputProps.value = '';
         stateChanges.inputProps = inputProps;
@@ -116,30 +122,20 @@ class AlertInfoModal extends React.Component {
           state.alertInfo.entityId !== props.alertInfo.entity.entityId
         )
       ) {
+        // We have new data in props but old in state
         changed = true;
         stateChanges.alertInfo = props.alertInfo.entity;
+        inputProps.value = '';
         stateChanges.selectedRow = {
           id: props.alertInfo.entity.entityId,
           key: props.alertInfo.entity.entityId,
           label: props.alertInfo.entity.title
         };
+        stateChanges.inputProps = inputProps;
         stateChanges.alertSearch = '';
       }
-
-      if (state.alertSearch && state.inputProps.value !== state.alertSearch) {
-        changed = true;
-        inputProps.value = state.alertSearch;
-        stateChanges.inputProps = inputProps;
-      } else if (
-        state.alertInfo &&
-        state.alertInfo.title &&
-        state.inputProps.value !== state.alertInfo.title
-      ) {
-        changed = true;
-        inputProps.value = state.alertInfo.title;
-        stateChanges.inputProps = inputProps;
-      }
     }
+
     if (changed) {
       return stateChanges;
     }
@@ -159,6 +155,8 @@ class AlertInfoModal extends React.Component {
       onFocus: null
     }
   }
+
+  frame = null
 
   constructor(props, context) {
     super(props, context);
@@ -190,13 +188,23 @@ class AlertInfoModal extends React.Component {
   handleSelectSearchFocus = (e) => {
     if (e && e.target && e.target.select) {
       e.target.select();
+      if (
+        this.state.selectedRow &&
+        this.state.selectedRow.label &&
+        e.target.value === this.state.selectedRow.label
+      ) {
+        e.target.value = '';
+      }
     }
   }
 
   handleSelectSearchChange = (e) => {
     const { value } = e.currentTarget;
+    const { inputProps } = this.state;
+    inputProps.value = value;
     this.setState({
-      alertSearch: value
+      alertSearch: value,
+      inputProps
     });
   }
 
@@ -254,7 +262,6 @@ class AlertInfoModal extends React.Component {
     };
 
     if (!this.props.alertModalLoading && this.state.alertInfo) {
-      const alert = this.state.alertObject;
       const alertInfo = this.state.alertInfo;
 
       if (alertInfo) {
@@ -277,23 +284,24 @@ class AlertInfoModal extends React.Component {
         ) {
           alertData.sourceEntity = alertInfo.source_entity.entity.name;
         }
+
+        if (alertInfo.severity === 'info') {
+          alertData.severity.color = Badge.BADGE_COLOR_TYPES.GRAY;
+          alertData.severity.label = i18nT('alertSeverityInfo', 'Info');
+        } else if (alertInfo.severity === 'warning') {
+          alertData.severity.color = Badge.BADGE_COLOR_TYPES.YELLOW;
+          alertData.severity.label = i18nT('alertSeverityWarning', 'Warning');
+        } else if (alertInfo.severity === 'critical') {
+          alertData.severity.color = Badge.BADGE_COLOR_TYPES.RED;
+          alertData.severity.label = i18nT('alertSeverityCritical', 'Critical');
+        }
       }
 
-      const createdMoment = moment(parseInt((alert._created_timestamp_usecs_ / 1000), 10));
+      const createdMoment = moment(alertInfo.creation_time);
       const loMoment = moment(alertInfo.latest_occurrence_time);
       alertData.createdLabel = createdMoment.format('MM/DD/YY h:m:s A');
       alertData.lastOccuredLabel = loMoment.format('MM/DD/YY h:m:s A');
 
-      if (alert.severity === 'info') {
-        alertData.severity.color = Badge.BADGE_COLOR_TYPES.GRAY;
-        alertData.severity.label = i18nT('alertSeverityInfo', 'Info');
-      } else if (alert.severity === 'warning') {
-        alertData.severity.color = Badge.BADGE_COLOR_TYPES.YELLOW;
-        alertData.severity.label = i18nT('alertSeverityWarning', 'Warning');
-      } else if (alert.severity === 'critical') {
-        alertData.severity.color = Badge.BADGE_COLOR_TYPES.RED;
-        alertData.severity.label = i18nT('alertSeverityCritical', 'Critical');
-      }
 
       alertData.possibleCauses = this.getPossibleCauses();
       alertData.resolutions = this.getResolutionList();
@@ -448,7 +456,7 @@ class AlertInfoModal extends React.Component {
       data.push(this.state.selectedRow);
     }
 
-    if (this.props.alertList.length) {
+    if (this.props.alertList && this.props.alertList.length) {
       data = this.props.alertList.map((al, index) => {
         return {
           key: al.entity_id,
@@ -467,8 +475,23 @@ class AlertInfoModal extends React.Component {
   }
 
   renderAlertSelector() {
-    const data = this.getSelectRows();
-
+    let data = this.getSelectRows();
+    const inputProps = {
+      ...{},
+      ...this.state.inputProps
+    };
+    let selectedRow = this.state.selectedRow;
+    if (this.props.alertModalLoading || this.props.alertRequestActive) {
+      inputProps.disabled = true;
+      selectedRow = {
+        ...{},
+        ...this.state.selectedRow,
+        label: i18nT('Loading', 'Loading')
+      };
+      data = [
+        selectedRow
+      ];
+    }
     return (
       <div className="entity-selector-wrapper">
         <Select
@@ -477,11 +500,12 @@ class AlertInfoModal extends React.Component {
           searchable={ true }
           label={ i18nT('alerts', 'Alerts') }
           rowsData={ data }
-          inputProps={ this.state.inputProps }
+          inputProps={ inputProps }
           onSelectedChange={ this.handleOnSelectedChange }
-          selectedRow={ this.state.selectedRow }
-          loading={ this.props.alertModalLoading }
+          selectedRow={ selectedRow }
+          getPopupContainer={ () => document.querySelector('.entity-selector-list-wrapper') }
         />
+        <div className="entity-selector-list-wrapper" />
       </div>
     );
   }
@@ -489,14 +513,16 @@ class AlertInfoModal extends React.Component {
   renderHeaderActions() {
     return (
       <FlexLayout
-        itemFlexBasis="100pc"
         itemSpacing="0px"
         alignItems="center"
+        justifyContent="space-between"
       >
         <FlexItem>
           { this.renderAlertSelector() }
         </FlexItem>
-        <FlexItem alignSelf="flex-end">
+        <FlexItem
+          className="alert-modal-actions"
+        >
           <ButtonGroup>
             <Button
               type="secondary"
@@ -866,9 +892,6 @@ class AlertInfoModal extends React.Component {
 
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeydown, { passive: true });
-    if (!this.state.alertInfo) {
-      this.props.fetchAlertModalInfo(this.props.alert.entityId);
-    }
   }
 
   componentDidUpdate(prevProps) {

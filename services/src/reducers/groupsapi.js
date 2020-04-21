@@ -13,8 +13,6 @@ const {
   FETCH_FS_DETAILS,
   HIGHLIGHTED_WIDGET_BUSY,
   FETCH_ALERTS,
-  FETCH_ALERT_LIST,
-  SET_ALERT_LIST_LOADING,
 
   FETCH_ALERT_MODAL_INFO,
   ALERT_MODAL_LOADING,
@@ -45,7 +43,6 @@ const initialState = {
   highlightedWidgetBusy: true,
   alertInfo: false,
   alertList: [],
-  alertListLoading: false,
   fsDetails: {},
   serverAlerts: {},
   clusterDetails: {}
@@ -74,22 +71,15 @@ function groupsapis(state = initialState, action) {
     case FETCH_ALERTS:
       return {
         ...state,
-        alertsData: payload
-      };
-
-    case FETCH_ALERT_LIST:
-      return {
-        ...state,
-        alertListLoading: false,
+        alertsData: payload,
         alertList: payload && payload && payload.group_results
-          ? AppUtil.extractGroupResults(payload)
+          ? AppUtil.extractGroupResults(payload).map(gr => {
+            return {
+              entity_id: gr.entity_id,
+              title: gr.title
+            };
+          })
           : []
-      };
-
-    case SET_ALERT_LIST_LOADING:
-      return {
-        ...state,
-        alertListLoading: payload
       };
 
     case FETCH_ALERT_MODAL_INFO:

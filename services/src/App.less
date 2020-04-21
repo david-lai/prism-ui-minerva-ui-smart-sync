@@ -30,7 +30,7 @@
   .ntnx-left-nav-layout {
     height: 100%;
   }
-  
+
   .right-panel {
     height: 100%;
   }
@@ -123,6 +123,10 @@
     display: none;
   }
 
+  .modal-body {
+    position: relative;
+  }
+
   .actions-container {
     width: 100%;
 
@@ -135,6 +139,35 @@
         width: 100%;
       }
     }
+  }
+
+  .entity-selector-wrapper {
+    position: relative;
+
+    .entity-selector-field {
+      min-width: 30vw;
+    }
+
+    .entity-selector-list-wrapper {
+      position: relative;
+      bottom: 0;
+      height: 1px;
+      overflow: visible;
+    }
+  }
+
+  .alert-modal-actions {
+    display: flex;
+    align-items: center;
+  }
+
+  .modal-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    overflow: hidden;
   }
 }
 .alert-modal-body {
