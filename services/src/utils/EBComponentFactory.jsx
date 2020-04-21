@@ -87,7 +87,7 @@ class EBComponentFactory {
           <Link className="manage-link" data-name={ options.options.entity.cluster_uuid }
             onClick={ this.onOpenPeClick }>
             <FlexLayout alignItems="center" itemSpacing="5px">
-              <TextLabel className="nsg-example-icon-text">{i18nT('manage', 'Manage')}</TextLabel>
+              <span className="nsg-example-icon-text">{i18nT('manage', 'Manage')}</span>
               <OpenInNewWindowIcon />
             </FlexLayout>
           </Link>);
