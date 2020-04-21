@@ -190,11 +190,14 @@ const entity_configs = {
               columnWidth: '20%'
             }
           },
-          groupByAttributes: [],
+          groupByAttributes: [
+          ],
           helperAttributes: [
           ],
-          virtualAttributes: [],
-          filterByAttributes: [],
+          virtualAttributes: [
+          ],
+          filterByAttributes: [
+          ],
           defaultSortingAttribute: '_created_timestamp_usecs_'
         },
         visualizations: [
@@ -308,8 +311,7 @@ const entity_configs = {
               formatter: 'pick_named_list_item',
               formatterOptions: {
                 nameListProp: 'param_name_list',
-                valueName: 'file_server_name',
-                index: 1
+                valueName: 'file_server_name'
               }
             },
             impact_type: {
@@ -329,8 +331,6 @@ const entity_configs = {
             }
           },
           groupByAttributes: [
-            'cluster_name',
-            'afs_version'
           ],
           helperAttributes: [
           ],
