@@ -64,9 +64,7 @@ const entity_configs = {
               formatter: 'actions'
             }
           },
-          groupByAttributes: [
-            'name', 'afs_version'
-          ],
+          groupByAttributes: [],
           helperAttributes: [
             'nvm_uuid_list'
           ],
@@ -102,7 +100,10 @@ const entity_configs = {
           sortByAttributes: [
             'name'
           ],
-          groupByAttributes: [],
+          groupByAttributes: [
+            'cluster_name',
+            'afs_version'
+          ],
           colorByAttributes: [],
           helperAttributes: [],
           summaries: {}
@@ -192,7 +193,6 @@ const entity_configs = {
           groupByAttributes: [
           ],
           helperAttributes: [
-            'param_name_list'
           ],
           virtualAttributes: [
           ],
@@ -223,10 +223,12 @@ const entity_configs = {
             '_created_timestamp_usecs_'
           ],
           groupByAttributes: [
-
+            'classification'
           ],
           colorByAttributes: [],
-          helperAttributes: [],
+          helperAttributes: [
+            'param_name_list'
+          ],
           summaries: {}
         }
       }
@@ -259,6 +261,10 @@ const entity_configs = {
           type: 'string',
           isList: true,
           displayName: i18nT('schema.alert.sourceEntity', 'Source Entity')
+        },
+        param_name_list: {
+          type: 'string',
+          isList: true
         },
         impact_type: {
           type: 'string',
@@ -302,9 +308,10 @@ const entity_configs = {
             },
             param_value_list: {
               columnWidth: '15%',
-              formatter: 'pick_list_item',
+              formatter: 'pick_named_list_item',
               formatterOptions: {
-                index: 1
+                nameListProp: 'param_name_list',
+                valueName: 'file_server_name'
               }
             },
             impact_type: {
@@ -330,9 +337,6 @@ const entity_configs = {
           virtualAttributes: [
           ],
           filterByAttributes: [
-            'cluster',
-            'severity',
-            'resolved'
           ],
           defaultSortingAttribute: '_created_timestamp_usecs_'
         },
@@ -360,9 +364,14 @@ const entity_configs = {
             '_created_timestamp_usecs_'
           ],
           sortByOrder: 'DESCENDING',
-          groupByAttributes: ['title'],
+          groupByAttributes: [
+            'title',
+            'severity'
+          ],
           colorByAttributes: [],
-          helperAttributes: [],
+          helperAttributes: [
+            'param_name_list'
+          ],
           summaries: {}
         }
       }
