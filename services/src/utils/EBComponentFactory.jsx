@@ -149,7 +149,8 @@ class EBComponentFactory {
       param_name_list
     } = entity;
     let start, end;
-    for (let i = 0; i < defaultMessage.split('{').length; i++) {
+    const numberOfReplacement = defaultMessage.split('{').length;
+    for (let i = 0; i < numberOfReplacement && numberOfReplacement > 1 ; i++) {
       start = defaultMessage.indexOf('{');
       end = defaultMessage.indexOf('}');
       defaultMessage = `${defaultMessage.slice(0, start)}
