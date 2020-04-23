@@ -156,8 +156,6 @@ class Files extends React.Component {
   constructor(props, context) {
     super(props, context);
 
-    window.files = this;
-
     this.state.fsEbConfiguration =
       this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILE_SERVER);
     this.state.alertEbConfiguration =

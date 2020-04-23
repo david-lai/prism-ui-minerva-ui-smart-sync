@@ -22,7 +22,7 @@ describe('App', () => {
     expect(cbp).toBeTruthy();
   });
 
-  it('Mounts main App with empty store', () => {
+  it('Mounts main App with full store', () => {
   	const store = mockStore(initStore.full);
     const cbp = mount(<MemoryRouter initialEntries={ [ '/' ] }><Provider store={ store }>
       <App /></Provider></MemoryRouter>).instance();
