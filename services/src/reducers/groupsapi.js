@@ -46,6 +46,7 @@ const initialState = {
 
   highlightedWidgetBusy: true,
   alertInfo: false,
+  alertList: [],
   fsDetails: {},
   serverAlerts: {},
   clusterDetails: {},
@@ -78,7 +79,15 @@ function groupsapis(state = initialState, action) {
     case FETCH_ALERTS:
       return {
         ...state,
-        alertsData: payload
+        alertsData: payload,
+        alertList: payload && payload && payload.group_results
+          ? AppUtil.extractGroupResults(payload).map(gr => {
+            return {
+              entity_id: gr.entity_id,
+              title: gr.title
+            };
+          })
+          : []
       };
 
     case FETCH_ALERT_MODAL_INFO:

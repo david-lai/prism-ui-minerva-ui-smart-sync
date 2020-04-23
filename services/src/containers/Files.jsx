@@ -122,6 +122,7 @@ class Files extends React.Component {
     openModal: PropTypes.func,
     fsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
     alertsData: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+    alertList: PropTypes.array,
     filtered_entity_count: PropTypes.string,
     fetchFsData: PropTypes.func,
     fetchAlerts: PropTypes.func,
@@ -218,7 +219,9 @@ class Files extends React.Component {
       filterBarPlaceholder: i18nT('typeName', 'Type name to filter'),
       filtersPanelCollapsed: true,
       queryConfig,
-      ebComponentFactory: EBComponentFactory.getInstance({ openModal: this.props.openModal })
+      ebComponentFactory: EBComponentFactory.getInstance({
+        openModal: this.props.openModal
+      })
     };
   }
 
@@ -466,7 +469,8 @@ class Files extends React.Component {
 const mapStateToProps = state => {
   return {
     fsData: state.groupsapi.fsData,
-    alertsData: state.groupsapi.alertsData
+    alertsData: state.groupsapi.alertsData,
+    alertList: state.groupsapi.alertList
   };
 };
 

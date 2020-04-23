@@ -1,0 +1,305 @@
+{
+    "f03ddba5-d21a-4a24-aac4-eb226ce76234": {
+        "entity_type": "alert",
+        "filtered_entity_count": 7,
+        "filtered_group_count": 1,
+        "group_results": [
+            {
+                "entity_results": [
+                    {
+                        "data": [
+                            {
+                                "data_type": "string",
+                                "name": "title",
+                                "values": [
+                                    {
+                                        "time": 1587486295233697,
+                                        "values": [
+                                            "File server multiple VMs on single node check"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "string",
+                                "name": "severity",
+                                "values": [
+                                    {
+                                        "time": 1587486295233697,
+                                        "values": [
+                                            "critical"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "uint64",
+                                "name": "_created_timestamp_usecs_",
+                                "values": [
+                                    {
+                                        "time": 1587273895173944,
+                                        "values": [
+                                            "1587273895173944"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "entity_id": "7b542a6f-01d9-4fa8-9fe3-2cafcecc35fc"
+                    },
+                    {
+                        "data": [
+                            {
+                                "data_type": "string",
+                                "name": "title",
+                                "values": [
+                                    {
+                                        "time": 1587485446621155,
+                                        "values": [
+                                            "{file_server_smart_alert_title}"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "string",
+                                "name": "severity",
+                                "values": [
+                                    {
+                                        "time": 1587485446621155,
+                                        "values": [
+                                            "warning"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "uint64",
+                                "name": "_created_timestamp_usecs_",
+                                "values": [
+                                    {
+                                        "time": 1587273044624266,
+                                        "values": [
+                                            "1587273044624266"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "entity_id": "5dfec86f-5c44-4c03-b3ed-5fd5e0b74607"
+                    },
+                    {
+                        "data": [
+                            {
+                                "data_type": "string",
+                                "name": "title",
+                                "values": [
+                                    {
+                                        "time": 1587271388788449,
+                                        "values": [
+                                            "Failed to set VM-to-VM anti-affinity rule"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "string",
+                                "name": "severity",
+                                "values": [
+                                    {
+                                        "time": 1587271388788449,
+                                        "values": [
+                                            "warning"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "uint64",
+                                "name": "_created_timestamp_usecs_",
+                                "values": [
+                                    {
+                                        "time": 1587271388778187,
+                                        "values": [
+                                            "1587271388778187"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "entity_id": "542195f0-38e4-4a80-b3ac-60c34bdd7778"
+                    },
+                    {
+                        "data": [
+                            {
+                                "data_type": "string",
+                                "name": "title",
+                                "values": [
+                                    {
+                                        "time": 1587257296357040,
+                                        "values": [
+                                            "{file_server_smart_alert_title}"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "string",
+                                "name": "severity",
+                                "values": [
+                                    {
+                                        "time": 1587257296357040,
+                                        "values": [
+                                            "warning"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "uint64",
+                                "name": "_created_timestamp_usecs_",
+                                "values": [
+                                    {
+                                        "time": 1587197890831092,
+                                        "values": [
+                                            "1587197890831092"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "entity_id": "0ada6c28-e205-43cc-a470-80c3b8ee5e9d"
+                    },
+                    {
+                        "data": [
+                            {
+                                "data_type": "string",
+                                "name": "title",
+                                "values": [
+                                    {
+                                        "time": 1587257627970732,
+                                        "values": [
+                                            "File server multiple VMs on single node check"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "string",
+                                "name": "severity",
+                                "values": [
+                                    {
+                                        "time": 1587257627970732,
+                                        "values": [
+                                            "critical"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "uint64",
+                                "name": "_created_timestamp_usecs_",
+                                "values": [
+                                    {
+                                        "time": 1587196427619109,
+                                        "values": [
+                                            "1587196427619109"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "entity_id": "d3d499f8-9bbb-4003-a888-9b4b312e12cd"
+                    },
+                    {
+                        "data": [
+                            {
+                                "data_type": "string",
+                                "name": "title",
+                                "values": [
+                                    {
+                                        "time": 1587196210609467,
+                                        "values": [
+                                            "Failed to set VM-to-VM anti-affinity rule"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "string",
+                                "name": "severity",
+                                "values": [
+                                    {
+                                        "time": 1587196210609467,
+                                        "values": [
+                                            "warning"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "uint64",
+                                "name": "_created_timestamp_usecs_",
+                                "values": [
+                                    {
+                                        "time": 1587196210601052,
+                                        "values": [
+                                            "1587196210601052"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "entity_id": "9b0ab0d8-9935-44e9-8d55-8b231d2698ba"
+                    },
+                    {
+                        "data": [
+                            {
+                                "data_type": "string",
+                                "name": "title",
+                                "values": [
+                                    {
+                                        "time": 1587196196640587,
+                                        "values": [
+                                            "Appropriate Site Not Found in Active Directory"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "string",
+                                "name": "severity",
+                                "values": [
+                                    {
+                                        "time": 1587196196640587,
+                                        "values": [
+                                            "warning"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "data_type": "uint64",
+                                "name": "_created_timestamp_usecs_",
+                                "values": [
+                                    {
+                                        "time": 1587196196627218,
+                                        "values": [
+                                            "1587196196627218"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ],
+                        "entity_id": "3fe102f7-8208-45e2-ac4b-258081464d24"
+                    }
+                ],
+                "group_by_column_value": "",
+                "group_summaries": {},
+                "total_entity_count": 7
+            }
+        ],
+        "total_entity_count": 37,
+        "total_group_count": 1
+    }
+}
