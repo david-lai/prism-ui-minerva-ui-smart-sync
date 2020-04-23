@@ -15,6 +15,8 @@ import FileServersName from '../components/FileServersName.jsx';
 import AlertInfoCell from '../components/AlertInfoCell.jsx';
 import AlertSeverityCell from '../components/AlertSeverityCell.jsx';
 
+import EventTitleCell from '../components/EventTitleCell.jsx';
+
 // Local includes
 import AppConstants from './AppConstants';
 import FormatterUtil from './FormatterUtil';
@@ -121,7 +123,13 @@ class EBComponentFactory {
         }
         return (<span>{ joinedStringArray }</span>);
       case COMPONENTS.EVENT_DESCRIPTION:
-        return this.getDescriptionText(options.options.entity);
+        return (
+          <EventTitleCell
+            options={ options.options }
+            openModal={ this.openModal }
+            value={ this.getDescriptionText(options.options.entity) }
+          />
+        );
       case COMPONENTS.JOIN_PASCAL_CASE_ARRAY:
         let joinedPascalCaseArray = '';
         if (options && options.text) {

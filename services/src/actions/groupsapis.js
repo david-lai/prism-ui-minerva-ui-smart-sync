@@ -25,6 +25,10 @@ export const {
   ALERT_REQUEST_TYPE,
   ALERT_REQUEST_STATUS,
 
+  FETCH_EVENTS,
+  FETCH_EVENT_MODAL_INFO,
+  EVENT_MODAL_LOADING,
+
   FETCH_SUMMARY_ALERTS,
   SUMMARY_ALERTS_BUSY,
   FETCH_SERVER_ALERTS,
@@ -480,3 +484,95 @@ export const setAlertsWidgetRange = (value) => {
     });
   };
 };
+
+
+/**
+ * Fetches events data from the API
+ *
+ * @return {Function}               Dispatcher method
+ */
+export const fetchEvents = () => {
+  return (dispatch) => {
+    const query = {
+      entity_type: 'event',
+      group_member_offset: 0,
+      group_member_sort_attribute: '_created_timestamp_usecs_',
+      group_member_sort_order: 'DESCENDING',
+      group_member_attributes: [
+        {
+          attribute: 'default_message'
+        },
+        {
+          attribute: 'param_name_list'
+        },
+        {
+          attribute: 'param_value_list'
+        }
+      ],
+      filter_criteria: 'file_server!=[no_val]'
+    };
+    axios.post(AppConstants.APIS.GROUPS_API, query)
+      .then((resp) => {
+        console.log(resp);
+        let payload = false;
+        if (resp && resp.status && resp.status === 200 && resp.data) {
+          payload = resp.data;
+        }
+        dispatch({
+          type: FETCH_EVENTS,
+          payload
+        });
+      })
+      .catch((ex) => {
+        dispatch({
+          type: FETCH_EVENTS,
+          payload: false
+        });
+      });
+  };
+};
+
+
+/**
+ * Resolves alerts
+ *
+ * @param  {Strig}   entityId       ID of evet
+ *
+ * @return {Function}               Dispatcher method
+ */
+export const fetchEventModalInfo = (entityId) => {
+  return (dispatch) => {
+    dispatch({
+      type: EVENT_MODAL_LOADING,
+      payload: true
+    });
+    let url = `${AppConstants.APIS.PRISM_GATEWAY}/events`;
+    url += `?event_ids=${entityId}&detailed_info=true&__=${new Date().getTime()}`;
+    axios.get(url)
+      .then((resp) => {
+        let payload = false;
+        if (resp && resp.status && resp.status === 200 && resp.data) {
+          let entity;
+          if (resp.data && resp.data.entities && Array.isArray(resp.data.entities)) {
+            entity = resp.data.entities.find(re => re.id === entityId);
+          }
+          if (entity) {
+            console.log(entity);
+            entity.entityId = entityId;
+            payload = entity;
+          }
+        }
+        dispatch({
+          type: FETCH_EVENT_MODAL_INFO,
+          payload
+        });
+      })
+      .catch((ex) => {
+        dispatch({
+          type: FETCH_EVENT_MODAL_INFO,
+          payload: false
+        });
+      });
+  };
+};
+

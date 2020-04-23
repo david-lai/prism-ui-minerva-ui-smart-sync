@@ -40,7 +40,8 @@ import FileServers from '../components/FileServers.jsx';
 import {
   openModal,
   fetchFsData,
-  fetchAlerts
+  fetchAlerts,
+  fetchEvents
 } from '../actions';
 
 // Helper to translate strings from this module
@@ -124,6 +125,7 @@ class Files extends React.Component {
     filtered_entity_count: PropTypes.string,
     fetchFsData: PropTypes.func,
     fetchAlerts: PropTypes.func,
+    fetchEvents: PropTypes.func,
     location: PropTypes.object,
     history : PropTypes.object
   };
@@ -261,6 +263,7 @@ class Files extends React.Component {
   refreshData() {
     this.props.fetchFsData();
     this.props.fetchAlerts();
+    this.props.fetchEvents();
   }
 
   getLeftPanel() {
@@ -471,7 +474,8 @@ const mapDispatchToProps = dispatch => {
   return {
     openModal: (type, options) => dispatch(openModal(type, options)),
     fetchFsData: () => dispatch(fetchFsData()),
-    fetchAlerts: () => dispatch(fetchAlerts())
+    fetchAlerts: () => dispatch(fetchAlerts()),
+    fetchEvents: () => dispatch(fetchEvents())
   };
 };
 
