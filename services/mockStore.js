@@ -1,5 +1,6 @@
 import fsData from './mockserver/mock_data/groups_file_servers.json';
 import alertsData from './mockserver/mock_data/groups_alerts.json';
+import serverAlerts from './mockserver/mock_data/file_server_alerts.json';
 
 export default {
 	empty: {
@@ -42,6 +43,7 @@ export default {
 	      alertRequestActive: false,
 	      alertRequestType: '',
 	      alertRequestStatus: true,
+	      serverAlerts,
 	      alertInfo: {
 		    entity: {
 		      last_update_time: '2020-03-03T17:26:09Z',
