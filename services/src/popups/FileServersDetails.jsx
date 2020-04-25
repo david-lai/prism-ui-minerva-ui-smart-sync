@@ -34,8 +34,10 @@ class FileServersDetails extends React.Component {
     visible: PropTypes.bool,
     openPe: PropTypes.func,
     fsDetails: PropTypes.object,
+    // eslint-disable-next-line react/no-unused-prop-types
     fetchFsDetails: PropTypes.func,
     clusterDetails: PropTypes.object,
+    // eslint-disable-next-line react/no-unused-prop-types
     fetchClusterDetails: PropTypes.func
   };
 
