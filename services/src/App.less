@@ -5,6 +5,11 @@
 @import (reference) '~@nutanix-ui/prism-reactjs/src/styles/v2/Variables.less';
 @import (reference) '~@nutanix-ui/prism-reactjs/src/styles/v2/ChartCategorialColors.less';
 
+.ntnx-modal .ntnx-modal-content .modal-body .ntnx-stacking-layout {
+  .fs-manage {
+    color: @blue-1;
+  }
+}
 
 // The app
 .file-server-app {
@@ -20,11 +25,6 @@
     background: @light-gray-3;
     height: 100%;
     padding-top: 20px;
-
-    /*un-comment it out when filter and Gruop by are supported*/
-    .filters-button, .query-options {
-      visibility: hidden;
-    }
   }
 
   .ntnx-left-nav-layout {
@@ -59,6 +59,13 @@
   .ntnx.ntnx-text-label[data-theme=light][data-type=primary].fs-tooltip-label {
     padding: 10px;
     color: @blue-1;
+  }
+
+  .fs-manage {
+    float: right;
+    .ntnx-flex-layout span {
+      color: @blue-1;
+    }
   }
 
   .ntnx-left-nav-layout {

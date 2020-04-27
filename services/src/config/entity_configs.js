@@ -66,7 +66,6 @@ const entity_configs = {
           },
           groupByAttributes: [],
           helperAttributes: [
-            'nvm_uuid_list'
           ],
           virtualAttributes: [
             'network_function_type',
@@ -141,9 +140,17 @@ const entity_configs = {
           displayName: i18nT('schema.event.sourceEntity', 'Source Entity')
         },
         classification: {
-          type: 'string',
+          type: 'enum',
+          subType: 'string',
           isList: true,
-          displayName: i18nT('schema.event.classification', 'Event Type')
+          displayName: i18nT('schema.event.classification', 'Event Type'),
+          sortable : false,
+          values : {
+            Anomaly: 'Behavioral Anomaly',
+            SystemAction: 'System Action',
+            UserAction: 'User Action',
+            DR: 'DR'
+          }
         },
         // Virtual Attribute
         cluster_name : {
@@ -197,6 +204,9 @@ const entity_configs = {
           virtualAttributes: [
           ],
           filterByAttributes: [
+            'classification',
+            'cluster_name',
+            '_created_timestamp_usecs_'
           ],
           defaultSortingAttribute: '_created_timestamp_usecs_'
         },
@@ -222,9 +232,7 @@ const entity_configs = {
           sortByAttributes: [
             '_created_timestamp_usecs_'
           ],
-          groupByAttributes: [
-            'classification'
-          ],
+          groupByAttributes: [],
           colorByAttributes: [],
           helperAttributes: [
             'param_name_list'
@@ -236,13 +244,6 @@ const entity_configs = {
     actions: {},
     details: [],
     filters: {
-      local: {
-        // Local filters are specific to entity
-        type: 'simple',
-        value: {
-          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}'
-        }
-      }
     },
     gettingStarted: {
     }
@@ -267,12 +268,27 @@ const entity_configs = {
           isList: true
         },
         impact_type: {
-          type: 'string',
-          displayName: i18nT('schema.alert.impactType', 'Impact Type')
+          type: 'enum',
+          subType: 'string',
+          displayName: i18nT('schema.alert.impactType', 'Impact Type'),
+          values: {
+            Availability: i18nT('schema.alert.availability', 'Availability'),
+            Capacity: i18nT('schema.alert.capacity', 'Capacity'),
+            Configuration: i18nT('schema.alert.configuration', 'Configuration'),
+            Performance: i18nT('schema.alert.performance', 'Performance'),
+            SystemIndicator: i18nT('schema.alert.system_indicator', 'System Indicator'),
+            ControllerVM: i18nT('schema.alert.controller_vm', 'Controller VM')
+          }
         },
         severity : {
-          type: 'string',
-          displayName: i18nT('schema.alert.severity', 'Severity')
+          type: 'enum',
+          subType: 'string',
+          displayName: i18nT('schema.alert.severity', 'Severity'),
+          values: {
+            critical: i18nT('schema.alert.critical', 'Critical'),
+            warning: i18nT('schema.alert.warning', 'Warning'),
+            info : i18nT('schema.alert.info', 'Info')
+          }
         },
         resolved: {
           type: 'boolean',
@@ -283,8 +299,16 @@ const entity_configs = {
           displayName: i18nT('schema.alert.acknowledged', 'Acknowledged')
         },
         _created_timestamp_usecs_ : {
-          type: 'integer',
-          displayName: i18nT('schema.alert.createdTime', 'Create Time')
+          type: 'int',
+          subType: 'time',
+          displayName: i18nT('schema.alert.createdTime', 'Create Time'),
+          units: 'time',
+          filterable : true,
+          values: {
+            '1::0': 'Last 1 hour',
+            '24::0': 'Last 24 hours',
+            '168::0': 'Last week'
+          }
         },
         _cluster_uuid_: {
           type: 'string'
@@ -337,6 +361,10 @@ const entity_configs = {
           virtualAttributes: [
           ],
           filterByAttributes: [
+            'cluster_name',
+            'severity',
+            'impact_type',
+            '_created_timestamp_usecs_'
           ],
           defaultSortingAttribute: '_created_timestamp_usecs_'
         },
@@ -364,10 +392,7 @@ const entity_configs = {
             '_created_timestamp_usecs_'
           ],
           sortByOrder: 'DESCENDING',
-          groupByAttributes: [
-            'title',
-            'severity'
-          ],
+          groupByAttributes: [],
           colorByAttributes: [],
           helperAttributes: [
             'param_name_list'
@@ -379,14 +404,6 @@ const entity_configs = {
     actions: {},
     details: [],
     filters: {
-      local: {
-        // Local filters are specific to entity
-        type: 'simple',
-        value: {
-          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}',
-          2: '{"isChecked":true,"attribute":"resolved","op":"eq","value1":"false","value2":""}'
-        }
-      }
     },
     gettingStarted: {
     }
