@@ -20,7 +20,7 @@ import {
   FullPageModal,
   HeaderFooterLayout,
   Loader,
-  Paragraph,
+  TextGroup,
   Select,
   StackingLayout,
   TextLabel,
@@ -29,6 +29,9 @@ import {
 
 // Local includes
 import FormatterUtil from '../utils/FormatterUtil';
+
+import FakeProgress from '../components/ui/FakeProgress.jsx';
+
 import i18n from '../utils/i18n';
 
 // Actions
@@ -78,6 +81,7 @@ class AlertInfoModal extends React.Component {
       inputProps.value = '';
       stateChanges.alertSearch = '';
       stateChanges.inputProps = inputProps;
+      stateChanges.ready = false;
       stateChanges.alertId = 0;
       stateChanges.alertObject = null;
       stateChanges.alertInfo = null;
@@ -89,6 +93,7 @@ class AlertInfoModal extends React.Component {
           // first time opening - populate alertObject in state
           changed = true;
           inputProps.value = '';
+          stateChanges.ready = false;
           stateChanges.inputProps = inputProps;
           stateChanges.alertId = props.alert.entityId;
           stateChanges.alertObject = props.alert;
@@ -110,6 +115,7 @@ class AlertInfoModal extends React.Component {
         stateChanges.alertSearch = '';
         stateChanges.alertInfo = null;
         stateChanges.selectedRow = null;
+        stateChanges.ready = false;
         props.fetchAlertModalInfo(state.alertId);
       }
 
@@ -131,6 +137,7 @@ class AlertInfoModal extends React.Component {
           key: props.alertInfo.entity.entityId,
           label: props.alertInfo.entity.title
         };
+        stateChanges.ready = true;
         stateChanges.inputProps = inputProps;
         stateChanges.alertSearch = '';
       }
@@ -153,7 +160,8 @@ class AlertInfoModal extends React.Component {
       value: '',
       onChange: null,
       onFocus: null
-    }
+    },
+    ready: false
   }
 
   frame = null
@@ -377,7 +385,7 @@ class AlertInfoModal extends React.Component {
     }
     if (possibleCauseList.length) {
       possibleCauses = (
-        <Paragraph>
+        <TextGroup>
           {
             possibleCauseList.map((p, i) => {
               return (
@@ -387,7 +395,7 @@ class AlertInfoModal extends React.Component {
               );
             })
           }
-        </Paragraph>
+        </TextGroup>
       );
     } else if (this.props.alertModalLoading) {
       possibleCauses = (
@@ -395,9 +403,11 @@ class AlertInfoModal extends React.Component {
       );
     } else {
       possibleCauses = (
-        <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-          { i18nT('N/A', 'N/A') }
-        </TextLabel>
+        <TextGroup>
+          <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+            { i18nT('N/A', 'N/A') }
+          </TextLabel>
+        </TextGroup>
       );
     }
     return possibleCauses;
@@ -424,7 +434,7 @@ class AlertInfoModal extends React.Component {
     }
     if (resolutionList.length) {
       resolutions = (
-        <Paragraph>
+        <TextGroup>
           {
             resolutionList.map((p, i) => {
               return (
@@ -434,7 +444,7 @@ class AlertInfoModal extends React.Component {
               );
             })
           }
-        </Paragraph>
+        </TextGroup>
       );
     } else if (this.props.alertModalLoading) {
       resolutions = (
@@ -442,9 +452,11 @@ class AlertInfoModal extends React.Component {
       );
     } else {
       resolutions = (
-        <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-          { i18nT('ContactNutanixSupport', 'Contact Nutanix Support') }
-        </TextLabel>
+        <TextGroup>
+          <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+            { i18nT('ContactNutanixSupport', 'Contact Nutanix Support') }
+          </TextLabel>
+        </TextGroup>
       );
     }
     return resolutions;
@@ -533,6 +545,7 @@ class AlertInfoModal extends React.Component {
               }
               onClick={ this.handleResolveClick }
               disabled={
+                !this.state.ready ||
                 this.props.alertModalLoading ||
                 this.props.alertRequestActive ||
                 this.props.alertRequestType !== ''
@@ -577,6 +590,7 @@ class AlertInfoModal extends React.Component {
               }
               onClick={ this.handleAcknowledgeClick }
               disabled={
+                !this.state.ready ||
                 this.props.alertModalLoading ||
                 this.props.alertRequestActive ||
                 this.props.alertRequestType !== ''
@@ -626,179 +640,242 @@ class AlertInfoModal extends React.Component {
 
   render() {
     const alertData = this.prepareAlertData();
-    const leftPanel = (
-      <StackingLayout itemSpacing="20px">
-        <StackingLayout itemSpacing="10px">
-          <Title size="h2">
-            { alertData.title }
-          </Title>
-          <TextLabel>
-            { i18nT('AlertTitle', 'Alert Title') }
-          </TextLabel>
-        </StackingLayout>
-        <Divider type="short" />
-        <StackingLayout itemSpacing="5px">
-          <FlexLayout padding="5px" itemSpacing="10px">
-            <FlexItem flexGrow="1">
-              <TextLabel>
-                { i18nT('SourceEntity', 'Source Entity') }
-              </TextLabel>
-            </FlexItem>
-            <FlexItem>
-              <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                { alertData.sourceEntity }
-              </TextLabel>
-            </FlexItem>
-          </FlexLayout>
+    const footer = (
+      <div />
+    );
+    let leftPanel = (
+      <StackingLayout className="loader-center-wrapper">
+        <Loader overlay={ true } tip={ i18nT('Loading', 'Loading') } />
+      </StackingLayout>
+    );
+    let modalHeaderContent = (
+      <StackingLayout padding="10px">
+        <Title size="h2">
+          { i18nT('Loading', 'Loading') }
+        </Title>
+      </StackingLayout>
+    );
 
-          <FlexLayout padding="5px" itemSpacing="10px">
-            <FlexItem flexGrow="1">
-              <TextLabel>
-                { i18nT('Severity', 'Severity') }
-              </TextLabel>
-            </FlexItem>
-            <FlexItem>
-              <Badge color={ alertData.severity.color } text={ alertData.severity.label } />
-            </FlexItem>
-          </FlexLayout>
-
-          <FlexLayout padding="5px" itemSpacing="10px">
-            <FlexItem flexGrow="1">
-              <TextLabel>
-                { i18nT('CreatedTime', 'Created Time') }
-              </TextLabel>
-            </FlexItem>
-            <FlexItem
-              style={
-                {
-                  textAlign: 'right'
-                }
-              }
-            >
-              <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                { alertData.createdLabel }
-              </TextLabel>
-            </FlexItem>
-          </FlexLayout>
-
-          <FlexLayout padding="5px" itemSpacing="10px">
-            <FlexItem flexGrow="1">
-              <TextLabel>
-                { i18nT('LastOccurred', 'Last Occured') }
-              </TextLabel>
-            </FlexItem>
-            <FlexItem
-              style={
-                {
-                  textAlign: 'right'
-                }
-              }
-            >
-              <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                { alertData.lastOccuredLabel }
-              </TextLabel>
-            </FlexItem>
-          </FlexLayout>
-
-          <FlexLayout padding="5px" itemSpacing="10px">
-            <FlexItem flexGrow="1">
-              <TextLabel>
-                { i18nT('ImpactType', 'Impact Type') }
-              </TextLabel>
-            </FlexItem>
-            <FlexItem>
-              <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                { alertData.impactType }
-              </TextLabel>
-            </FlexItem>
-          </FlexLayout>
-
-          <FlexLayout padding="5px" itemSpacing="10px" style={ { display: 'none' } }>
-            <FlexItem flexGrow="1">
-              <TextLabel>
-                { i18nT('Policy', 'Policy') }
-              </TextLabel>
-            </FlexItem>
-            <FlexItem>
-              <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                -
-              </TextLabel>
-            </FlexItem>
-          </FlexLayout>
-
-          <FlexLayout padding="5px" itemSpacing="10px">
-            <FlexItem flexGrow="1">
-              <TextLabel>
-                { i18nT('Status', 'Status') }
-              </TextLabel>
-            </FlexItem>
-            <FlexItem>
-              <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                { alertData.status.statusLabel }
-              </TextLabel>
-            </FlexItem>
-          </FlexLayout>
-
-          <FlexLayout padding="5px" itemSpacing="10px">
-            <FlexItem flexGrow="1">
-              <TextLabel>
-                { i18nT('AcknowledgedBy', 'Acknowledged By') }
-              </TextLabel>
-            </FlexItem>
-            <FlexItem>
-              <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                { alertData.status.acknowledgedBy }
-              </TextLabel>
-            </FlexItem>
-          </FlexLayout>
-
-          <FlexLayout padding="5px" itemSpacing="10px">
-            <FlexItem flexGrow="1">
-              <TextLabel>
-                { i18nT('ResolvedBy', 'Resolved By') }
-              </TextLabel>
-            </FlexItem>
-            <FlexItem>
-              <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                { alertData.status.resolvedBy }
-              </TextLabel>
-            </FlexItem>
-          </FlexLayout>
-
-          <FlexLayout padding="5px" itemSpacing="10px">
-            <FlexItem flexGrow="1">
-              <TextLabel>
-                { i18nT('Description', 'Description') }
-              </TextLabel>
-            </FlexItem>
-            <FlexItem>
-              <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                { alertData.description }
-              </TextLabel>
-            </FlexItem>
-          </FlexLayout>
-        </StackingLayout>
+    let modalBodyContent = (
+      <StackingLayout className="loader-center-wrapper">
+        <Loader overlay={ true } tip={ i18nT('Loading', 'Loading') } />
       </StackingLayout>
     );
 
 
-    const footer = (
-      <div />
-    );
+    if (this.state.ready) {
+      leftPanel = (
+        <StackingLayout itemSpacing="20px">
+          <StackingLayout itemSpacing="5px">
+            <FlexLayout padding="5px" itemSpacing="10px">
+              <FlexItem flexGrow="1">
+                <TextLabel>
+                  { i18nT('SourceEntity', 'Source Entity') }
+                </TextLabel>
+              </FlexItem>
+              <FlexItem>
+                <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+                  { alertData.sourceEntity }
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
 
+            <FlexLayout padding="5px" itemSpacing="10px">
+              <FlexItem flexGrow="1">
+                <TextLabel>
+                  { i18nT('Severity', 'Severity') }
+                </TextLabel>
+              </FlexItem>
+              <FlexItem>
+                <Badge color={ alertData.severity.color } text={ alertData.severity.label } />
+              </FlexItem>
+            </FlexLayout>
+
+            <FlexLayout padding="5px" itemSpacing="10px">
+              <FlexItem flexGrow="1">
+                <TextLabel>
+                  { i18nT('CreatedTime', 'Created Time') }
+                </TextLabel>
+              </FlexItem>
+              <FlexItem
+                style={
+                  {
+                    textAlign: 'right'
+                  }
+                }
+              >
+                <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+                  { alertData.createdLabel }
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
+
+            <FlexLayout padding="5px" itemSpacing="10px">
+              <FlexItem flexGrow="1">
+                <TextLabel>
+                  { i18nT('LastOccurred', 'Last Occured') }
+                </TextLabel>
+              </FlexItem>
+              <FlexItem
+                style={
+                  {
+                    textAlign: 'right'
+                  }
+                }
+              >
+                <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+                  { alertData.lastOccuredLabel }
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
+
+            <FlexLayout padding="5px" itemSpacing="10px">
+              <FlexItem flexGrow="1">
+                <TextLabel>
+                  { i18nT('ImpactType', 'Impact Type') }
+                </TextLabel>
+              </FlexItem>
+              <FlexItem>
+                <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+                  { alertData.impactType }
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
+
+            <FlexLayout padding="5px" itemSpacing="10px" style={ { display: 'none' } }>
+              <FlexItem flexGrow="1">
+                <TextLabel>
+                  { i18nT('Policy', 'Policy') }
+                </TextLabel>
+              </FlexItem>
+              <FlexItem>
+                <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+                  -
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
+
+            <FlexLayout padding="5px" itemSpacing="10px">
+              <FlexItem flexGrow="1">
+                <TextLabel>
+                  { i18nT('Status', 'Status') }
+                </TextLabel>
+              </FlexItem>
+              <FlexItem>
+                <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+                  { alertData.status.statusLabel }
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
+
+            <FlexLayout padding="5px" itemSpacing="10px">
+              <FlexItem flexGrow="1">
+                <TextLabel>
+                  { i18nT('AcknowledgedBy', 'Acknowledged By') }
+                </TextLabel>
+              </FlexItem>
+              <FlexItem>
+                <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+                  { alertData.status.acknowledgedBy }
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
+
+            <FlexLayout padding="5px" itemSpacing="10px">
+              <FlexItem flexGrow="1">
+                <TextLabel>
+                  { i18nT('ResolvedBy', 'Resolved By') }
+                </TextLabel>
+              </FlexItem>
+              <FlexItem>
+                <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+                  { alertData.status.resolvedBy }
+                </TextLabel>
+              </FlexItem>
+            </FlexLayout>
+
+          </StackingLayout>
+        </StackingLayout>
+      );
+
+      modalHeaderContent = (
+        <StackingLayout padding="10px">
+          <Title size="h2">
+            { i18nT('AlertDetails', 'Alert Details') }
+          </Title>
+        </StackingLayout>
+      );
+
+      modalBodyContent = (
+        <StackingLayout
+          itemSpacing="10px"
+          style={
+            {
+              width: '100%'
+            }
+          }>
+          <StackingLayout padding="10px">
+            <Title size="h3">
+              { i18nT('Title', 'Title') }
+            </Title>
+            <StackingLayout padding="10px">
+              { alertData.title }
+            </StackingLayout>
+          </StackingLayout>
+          <StackingLayout padding="10px">
+            <Title size="h3">
+              { i18nT('Description', 'Description') }
+            </Title>
+            <StackingLayout padding="10px">
+              { alertData.description }
+            </StackingLayout>
+          </StackingLayout>
+
+          <Divider />
+
+          <StackingLayout padding="10px">
+            <Title size="h3">
+              { i18nT('PossibleCause', 'Possible Cause') }
+            </Title>
+            <StackingLayout padding="10px">
+              { alertData.possibleCauses }
+            </StackingLayout>
+          </StackingLayout>
+
+          <Divider />
+
+          <StackingLayout padding="10px">
+            <Title size="h3">
+              { i18nT('Recommendations', 'Recommendations') }
+            </Title>
+            <StackingLayout padding="10px">
+              <TextGroup>
+                <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
+                  { alertData.resolutions }
+                </TextLabel>
+              </TextGroup>
+            </StackingLayout>
+          </StackingLayout>
+        </StackingLayout>
+      );
+    }
     return (
       <div>
 
         <FullPageModal
-          visible={ this.props.visible }
-          _title={ alertData.title }
           className="alert-info-modal"
+          visible={ this.props.visible }
           footer={ footer }
           headerActions={
             this.renderHeaderActions()
           }
         >
           <FlexLayout itemSpacing="0px">
+            <FakeProgress
+              className="modal-progress"
+              percent={ 20 }
+              showProgress={ !this.state.ready }
+            />
             <FlexLayout padding="20px" flexShrink="0" style={
               {
                 flexBasis: '240px'
@@ -848,37 +925,13 @@ class AlertInfoModal extends React.Component {
                     )
                   }
                   <HeaderFooterLayout
+                    className="alert-modal-layout"
                     itemSpacing="0px"
                     header={
-                      <StackingLayout padding="10px">
-                        <Title size="h3">
-                          { i18nT('PossibleCause', 'Possible Cause') }
-                        </Title>
-                      </StackingLayout>
+                      modalHeaderContent
                     }
                     bodyContent={
-                      <StackingLayout
-                        itemSpacing="10px"
-                        style={
-                          {
-                            width: '100%'
-                          }
-                        }>
-                        <StackingLayout padding="10px">
-                          { alertData.possibleCauses }
-                        </StackingLayout>
-                        <Divider />
-                        <StackingLayout padding="10px" itemSpacing="0px">
-                          <Title size="h4">
-                            { i18nT('Recommendations', 'Recommendations') }
-                          </Title>
-                          <StackingLayout padding="10px">
-                            <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-                              { alertData.resolutions }
-                            </TextLabel>
-                          </StackingLayout>
-                        </StackingLayout>
-                      </StackingLayout>
+                      modalBodyContent
                     }
                   />
                 </ContainerLayout>
