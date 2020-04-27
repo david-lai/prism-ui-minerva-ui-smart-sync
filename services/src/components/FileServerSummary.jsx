@@ -104,7 +104,7 @@ class FileServerSummary extends React.Component {
     const summaryData = this.props.serverSummary;
     const dataSource = summaryData && summaryData.items ? summaryData.items : [];
     return (
-      <ContainerLayout padding="15px">
+      <ContainerLayout padding="0px">
         { this.props.highlightedWidgetBusy !== true &&
           this.props.fsData === false &&
           (
