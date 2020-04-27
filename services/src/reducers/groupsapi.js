@@ -23,8 +23,7 @@ const {
   ALERT_REQUEST_STATUS,
 
   FETCH_EVENTS,
-  FETCH_EVENT_MODAL_INFO,
-  EVENT_MODAL_LOADING,
+  EVENT_LIST_LOADING,
 
   FETCH_SERVER_ALERTS,
   FETCH_SUMMARY_ALERTS,
@@ -52,8 +51,7 @@ const initialState = {
   clusterDetails: {},
 
   eventList: [],
-  eventModalInfo: null,
-  eventModalLoading: false
+  eventListLoading: false
 };
 
 
@@ -204,26 +202,19 @@ function groupsapis(state = initialState, action) {
         }
       };
 
-    case EVENT_MODAL_LOADING:
+    case EVENT_LIST_LOADING:
       return {
         ...state,
-        eventModalLoading: payload
+        eventListLoading: payload
       };
-
-    case FETCH_EVENT_MODAL_INFO:
-      return {
-        ...state,
-        eventModalLoading: false,
-        eventModalInfo: payload
-      };
-
 
     case FETCH_EVENTS:
-      const eventList = AppUtil.extractGroupResults(payload);
+      const eventList = payload;
       if (eventList && Array.isArray(eventList) && eventList.length) {
         return {
           ...state,
-          eventList
+          eventList,
+          eventListLoading: false
         };
       }
       return {
