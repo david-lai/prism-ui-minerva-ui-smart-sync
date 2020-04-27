@@ -157,12 +157,33 @@
 }
 
 .alert-info-modal {
+
+  > .ntnx-full-page-modal-content {
+    background: @white;
+    padding-top: 20px;
+  }
+
   .header-title {
     display: none;
   }
 
   .modal-body {
     position: relative;
+
+
+    .modal-progress {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    > .ntnx-flex-layout {
+      height: 100%;
+    }
   }
 
   .actions-container {
@@ -199,18 +220,21 @@
     align-items: center;
   }
 
-  .modal-progress {
-    position: absolute;
-    top: 0;
-    left: 0;
+  .loader-center-wrapper {
     width: 100%;
-    height: 1px;
-    overflow: hidden;
+    height: 100%;
   }
+
 }
 .alert-modal-body {
   height: inherit;
   background: @light-gray-3;
+
+  > .ntnx-stacking-layout {
+    > .ntnx-container-layout {
+      height: 100%;
+    }
+  }
 }
 
 .category-vms-popup {
