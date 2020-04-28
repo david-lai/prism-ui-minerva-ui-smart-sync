@@ -72,35 +72,36 @@ class Files extends React.Component {
       changes.serverCount = props.fsData.filtered_entity_count;
     }
 
-    if (props.alertsData) {
-      if (state.alertCount !== props.alertsData.filtered_entity_count) {
-        changed = true;
-        changes.alertCount = props.alertsData.filtered_entity_count;
-      }
-      if (props.alertsData.filtered_entity_count) {
-        AppUtil.extractGroupResults(props.alertsData).forEach((alert) => {
-          const asIndex = severities.indexOf(alert.severity);
-          if (maxSeverity < asIndex) {
-            maxSeverity = asIndex;
-          }
-        });
-        if (maxSeverity !== state.maxSeverity) {
-          changed = true;
-          changes.maxSeverity = maxSeverity;
-        }
-      }
-    }
+    // Temporary comment out to avoid confusion
+    // if (props.alertsData) {
+    //   if (state.alertCount !== props.alertsData.filtered_entity_count) {
+    //     changed = true;
+    //     changes.alertCount = props.alertsData.filtered_entity_count;
+    //   }
+    //   if (props.alertsData.filtered_entity_count) {
+    //     AppUtil.extractGroupResults(props.alertsData).forEach((alert) => {
+    //       const asIndex = severities.indexOf(alert.severity);
+    //       if (maxSeverity < asIndex) {
+    //         maxSeverity = asIndex;
+    //       }
+    //     });
+    //     if (maxSeverity !== state.maxSeverity) {
+    //       changed = true;
+    //       changes.maxSeverity = maxSeverity;
+    //     }
+    //   }
+    // }
 
-    let alertBadgeColor = Badge.BADGE_COLOR_TYPES.GRAY;
-    if (maxSeverity === 1) {
-      alertBadgeColor = Badge.BADGE_COLOR_TYPES.YELLOW;
-    } else if (maxSeverity === 2) {
-      alertBadgeColor = Badge.BADGE_COLOR_TYPES.RED;
-    }
-    if (alertBadgeColor !== state.alertBadgeColor) {
-      changed = true;
-      changes.alertBadgeColor = alertBadgeColor;
-    }
+    // let alertBadgeColor = Badge.BADGE_COLOR_TYPES.GRAY;
+    // if (maxSeverity === 1) {
+    //   alertBadgeColor = Badge.BADGE_COLOR_TYPES.YELLOW;
+    // } else if (maxSeverity === 2) {
+    //   alertBadgeColor = Badge.BADGE_COLOR_TYPES.RED;
+    // }
+    // if (alertBadgeColor !== state.alertBadgeColor) {
+    //   changed = true;
+    //   changes.alertBadgeColor = alertBadgeColor;
+    // }
 
     let panelKey = AppConstants.SUMMARY_TAB_KEY;
     if (props.location.pathname && props.location.pathname.substring) {
@@ -298,21 +299,6 @@ class Files extends React.Component {
             <FlexLayout flexGrow="1" justifyContent="space-between">
               <FlexItem>
                 { i18nT('alerts', 'Alerts') }
-              </FlexItem>
-              <FlexItem>
-                { this.state.alertCount < 0 &&
-                  (
-                    <Loader />
-                  )
-                }
-                { this.state.alertCount > 0 &&
-                  (
-                    <Badge
-                      color={ this.state.alertBadgeColor }
-                      count={ AppUtil.rawNumericFormat(this.state.alertCount) }
-                    />
-                  )
-                }
               </FlexItem>
             </FlexLayout>
           </MenuItem>
