@@ -53,12 +53,13 @@ class Files extends React.Component {
     let changed = false;
     const changes = {};
 
-    const severities = [
-      'info',
-      'warning',
-      'critical'
-    ];
-    let maxSeverity = -1;
+    // Temporary comment out to avoid confusion
+    // const severities = [
+    //   'info',
+    //   'warning',
+    //   'critical'
+    // ];
+    // let maxSeverity = -1;
 
     if (props.fsData && props.alertsData) {
       if (!state.initialized) {

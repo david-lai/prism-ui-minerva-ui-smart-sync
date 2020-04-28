@@ -295,7 +295,7 @@ const entity_configs = {
           displayName: i18nT('schema.alert.acknowledged', 'Acknowledged')
         },
         _created_timestamp_usecs_ : {
-          type: 'integer',            type: 'int',
+          type: 'integer',
           displayName: i18nT('schema.alert.createdTime', 'Create Time')
         },
         _cluster_uuid_: {
