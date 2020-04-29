@@ -9,6 +9,8 @@ import {
   Modal,
   Button,
   Table,
+  OpenInNewWindowIcon,
+  Link,
   StackingLayout
 } from '@nutanix-ui/prism-reactjs';
 import PropTypes from 'prop-types';
@@ -75,28 +77,14 @@ class FileServersDetails extends React.Component {
     this.onOpenPeClick = this.onOpenPeClick.bind(this);
   }
 
-  // Event handler for manage button to open PE
-  onOpenPeClick() {
-    const clusterUuid = this.props.details.cluster_uuid;
-    this.props.openPe(clusterUuid);
-  }
-
   state = {
     currentlyVisible: false
   };
 
-  handleModalClick = (e) => {
-    if (e && e.target && e.target.dataset && e.target.dataset.appearance) {
-      if (e.target.dataset.appearance === 'overlay') {
-        this.props.onClose();
-      }
-    }
-  }
-
-  handleKeydown = (e) => {
-    if (this.props.visible && e.keyCode === 27) {
-      this.props.onClose();
-    }
+  // Event handler for manage button to open PE
+  onOpenPeClick() {
+    const clusterUuid = this.props.details.cluster_uuid;
+    this.props.openPe(clusterUuid);
   }
 
   render() {
@@ -153,6 +141,14 @@ class FileServersDetails extends React.Component {
       key: 'data'
     }];
 
+    const manage = (
+      <Link
+        onClick={ this.onOpenPeClick }
+        className="fs-manage"
+      >
+        <OpenInNewWindowIcon />
+      </Link>);
+
     const data = [
       {
         key: 'name',
@@ -178,43 +174,26 @@ class FileServersDetails extends React.Component {
         key: 'ips',
         title: i18nT('external_ip_addresses', 'External IP Addresses'),
         data: entity.ipv4_address
+      },
+      {
+        key: 'manage',
+        title: i18nT('manage', 'Manage'),
+        data: manage
       }
     ];
 
     const footer = (
-      <div>
-        <span style={
-          {
-            margin: '0 10px'
-          }
-        }>
-          <Button
-            onClick={ this.props.onClose }
-            type="secondary">
-            {i18nT('done', 'Done')}
-          </Button>
-        </span>
-        <Button
-          style={
-            {
-              marigin: '0 10px'
-            }
-          }
-          type="primary"
-          onClick={ this.onOpenPeClick }>
-          {i18nT('manage', 'Manage')}
-        </Button>
-      </div>);
-
+      <Button
+        onClick={ this.props.onClose }
+        type="secondary">
+        {i18nT('close', 'Close')}
+      </Button>);
     return (
       <div>
         <Modal
-          onClick={ this.handleModalClick }
           visible={ this.props.visible }
           title={ i18nT('file_server_details', 'File Server Details') }
           footer={ footer }
-          primaryButtonLabel={ i18nT('done', 'Done') }
-          primaryButtonOnClick={ this.props.onClose }
           onClose={ this.props.onClose }
         >
           <StackingLayout padding="20px">
@@ -234,15 +213,6 @@ class FileServersDetails extends React.Component {
       </div>
     );
   }
-
-  componentDidMount() {
-    window.addEventListener('keydown', this.handleKeydown, { passive: true });
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('keydown', this.handleKeydown);
-  }
-
 }
 
 const mapStateToProps = state => {

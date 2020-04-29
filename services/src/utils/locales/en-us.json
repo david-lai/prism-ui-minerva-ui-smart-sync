@@ -29,7 +29,16 @@
         "resolved": "Resolved",
         "acknowledged": "Acknowledged",
         "createdTime": "Create Time",
-        "cluster": "Cluster"
+        "cluster": "Cluster",
+        "critical": "Critical",
+        "warning": "Warning",
+        "info": "Info",
+        "availability": "Availability",
+        "capacity": "Capacity",
+        "configuration": "Configuration",
+        "performance": "Performance",
+        "system_indicator": "System Indicator",
+        "controller_vm": "Controller VM"        
       },
       "event": {
         "description": "Description",
@@ -70,7 +79,7 @@
     "verion": "Version",
     "fs_vms": "File Server VMs",
     "manage": "Manage",
-    "done": "Done",
+    "close": "Close",
     "external_ip_addresses": "External IP Addresses"
   },
 
