@@ -89,7 +89,7 @@ class EBComponentFactory {
       case COMPONENTS.ACTIONS:
         return (
           <Link
-            className="manage-link eb-actions-link"
+            className="manage-link eb-actions-link fs-manage"
             data-name={ options.options.entity.cluster_uuid }
             onClick={ this.onOpenPeClick }
           >
@@ -169,7 +169,7 @@ class EBComponentFactory {
     } = entity;
     let start, end;
     const numberOfReplacement = defaultMessage.split('{').length;
-    for (let i = 0; i < numberOfReplacement && numberOfReplacement > 1; i++) {
+    for (let i = 1; i < numberOfReplacement; i++) {
       start = defaultMessage.indexOf('{');
       end = defaultMessage.indexOf('}');
       defaultMessage = `${defaultMessage.slice(0, start)}
