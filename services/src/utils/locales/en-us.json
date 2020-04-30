@@ -38,7 +38,7 @@
         "configuration": "Configuration",
         "performance": "Performance",
         "system_indicator": "System Indicator",
-        "controller_vm": "Controller VM"        
+        "controller_vm": "Controller VM"
       },
       "event": {
         "description": "Description",
@@ -51,36 +51,36 @@
   },
 
   "Files": {
-    "files": "Files",
-    "typeName": "Type name to filter",
-    "fileServers": "File Servers",
-    "noFileServer": "No File Servers",
-    "oneFileServer": "One File Server",
-    "numOfFileServers": "{num} File Servers",
-    "summary": "Summary",
-    "alerts": "Alerts",
-    "events": "Events",
-    "loading": "Loading"
+    "Files": "Files",
+    "Type_name_to_filter": "Type name to filter",
+    "File_servers": "File Servers",
+    "No_file_servers": "No File Servers",
+    "One_file_server": "One File Server",
+    "num_of_file_servers": "{num} File Servers",
+    "Summary": "Summary",
+    "Alerts": "Alerts",
+    "Events": "Events",
+    "Loading": "Loading"
   },
 
   "FileServers": {
-    "NotSeeingAllFileServers": "Not seeing all File Servers?",
-    "NotSeeingAllFileServersTooltip": "To manage a file server through Prism Central, the AOS version on the cluster running the file server should 5.15.x or 5.17.1 or above. Upgrade the cluster AOS for the file servers to be displayed. Deactivated file server will not show in prism central."
+    "Not_seeing_all_file_servers": "Not seeing all File Servers?",
+    "Not_seeing_all_file_servers_tooltip": "To manage a file server through Prism Central, the AOS version on the cluster running the file server should 5.15.x or 5.17.1 or above. Upgrade the cluster AOS for the file servers to be displayed. Deactivated file server will not show in prism central."
   },
 
   "EBComponentFactory": {
-    "manage": "Manage",
-    "yes": "Yes"
+    "Manage": "Manage"
   },
 
   "FileServersDetails": {
-    "file_server_details": "File Server Details",
-    "fs_name": "File Server Name",
-    "verion": "Version",
-    "fs_vms": "File Server VMs",
-    "manage": "Manage",
-    "close": "Close",
-    "external_ip_addresses": "External IP Addresses"
+    "Close": "Close",
+    "Cluster_name": "Cluster",
+    "External_ip_addresses": "External IP Addresses",
+    "File_server_details": "File Server Details",
+    "File_server_name": "File Server Name",
+    "File_server_vms": "File Server VMs",
+    "Manage": "Manage",
+    "Version": "Version"
   },
 
   "FileServersManageVersion": {
@@ -100,59 +100,73 @@
   },
 
   "Summary": {
-    "highlightedFileServers": "Highlighted File Servers{count}",
-    "viewAllFileServers": "View all File Servers",
-    "last24Hours": "Last 24 Hours",
-    "lastWeek": "Last Week",
-    "alertLegendCritical": "Critical",
-    "alertLegendWarning": "Warning",
-    "alertLegendInfo": "Info",
-    "alertsSummaryTitle": "Alerts"
+    "Highlighted_file_servers": "Highlighted File Servers{count}",
+    "View_all_file_servers": "View all File Servers",
+    "Last_24_hours": "Last 24 Hours",
+    "Last_week": "Last Week",
+    "alert_legend_critical": "Critical",
+    "alert_legend_warning": "Warning",
+    "alert_legend_info": "Info",
+    "Alerts_summary_title": "Alerts"
   },
 
   "AlertSummary": {
-    "fetchingData": "Fetching data...",
-    "fetchingDataFailed": "Fetching data failed",
-    "NoAlerts": "No Alerts"
+    "Fetching_data": "Fetching data...",
+    "Fetching_data_failed": "Fetching data failed",
+    "No_alerts": "No Alerts"
   },
 
   "FileServerSummary": {
-    "fileServers": "File Servers",
-    "fileServerAlertCritical": "Critical",
-    "fileServerAlertWarning": "Warning",
-    "fileServerAlertInfo": "Info",
-    "NoHighligtedFileServers": "No Highlighted File Servers"
+    "File_servers": "File Servers",
+    "file_servers_alert_critical": "Critical",
+    "file_servers_alert_warning": "Warning",
+    "file_servers_alert_info": "Info",
+    "Fetching_data_failed": "Fetching data failed",
+    "No_highlighted_file_servers": "No Highlighted File Servers"
   },
 
   "AlertInfoModal": {
     "Acknowledge": "Acknowledge",
     "Acknowledged": "Acknowledged",
-    "AcknowledgedBy": "Acknowledged By",
-    "AlertResolved": "Alert Resolved",
-    "AlertResolvingFailed": "Alert Resolving Failed",
-    "AlertAcknowledged": "Alert Acknowledged",
-    "AlertAcknowledgingFailed": "Alert Acknowledging Failed",
-    "AlertTitle": "Alert Title",
-    "AutoResolved": "Auto Resolved",
-    "ContactNutanixSupport": "Contact Nutanix Support",
-    "CreatedTime": "Created Time",
+    "Acknowledged_by": "Acknowledged By",
+    "Alert_details": "Alert Details",
+    "Alert_resolved": "Alert Resolved",
+    "Alert_resolving_failed": "Alert Resolving Failed",
+    "Alert_acknowledged": "Alert Acknowledged",
+    "Alert_acknowledging_failed": "Alert Acknowledging Failed",
+    "Alert_title": "Alert Title",
+    "Auto_resolved": "Auto Resolved",
+    "Contact_nutanix_support": "Contact Nutanix Support",
+    "Created_time": "Created Time",
     "Description": "Description",
     "Failed": "Failed",
-    "ImpactType": "Impact Type",
-    "LastOccurred": "Last Occured",
+    "Impact_type": "Impact Type",
+    "Last_occurred": "Last Occured",
+    "Loading": "Loading...",
     "N/A": "N/A",
     "Policy": "Policy",
-    "PossibleCause": "Possible Cause",
+    "Possible_cause": "Possible Cause",
     "Recommendations": "Recommendations",
     "Resolve": "Resolve",
     "Resolved": "Resolved",
-    "ResolvedBy": "Resolved By",
+    "Resolved_by": "Resolved By",
     "Severity": "Severity",
-    "SourceEntity": "Source Entity",
+    "Source_entity": "Source Entity",
     "Status": "Status",
     "Success": "Success",
-    "alertSeverityCritical": "Critical",
-    "alertSeverityInfo": "Info",
-    "alertSeverityWarning": "Warning"
+    "alert_severity_critical": "Critical",
+    "alert_severity_info": "Info",
+    "alert_severity_warning": "Warning"
+  },
+
+  "EventInfoModal": {
+    "Loading": "Loading...",
+    "Created_time": "Created Time",
+    "Description": "Description",
+    "Event_type": "Event Type",
+    "Event_details": "Event Details",
+    "N/A": "N/A",
+    "Source_entity": "Source Entity",
+    "Title": "Title"
   }
 }

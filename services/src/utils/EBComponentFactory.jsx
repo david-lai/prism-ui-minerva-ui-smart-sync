@@ -94,7 +94,7 @@ class EBComponentFactory {
             onClick={ this.onOpenPeClick }
           >
             <FlexLayout alignItems="center" itemSpacing="5px">
-              <span className="nsg-example-icon-text">{i18nT('manage', 'Manage')}</span>
+              <span className="nsg-example-icon-text">{i18nT('Manage', 'Manage')}</span>
               <OpenInNewWindowIcon />
             </FlexLayout>
           </Link>);
