@@ -295,13 +295,13 @@ class AlertInfoModal extends React.Component {
 
         if (alertInfo.severity === 'info') {
           alertData.severity.color = Badge.BADGE_COLOR_TYPES.GRAY;
-          alertData.severity.label = i18nT('alertSeverityInfo', 'Info');
+          alertData.severity.label = i18nT('alert_severity_info', 'Info');
         } else if (alertInfo.severity === 'warning') {
           alertData.severity.color = Badge.BADGE_COLOR_TYPES.YELLOW;
-          alertData.severity.label = i18nT('alertSeverityWarning', 'Warning');
+          alertData.severity.label = i18nT('alert_severity_warning', 'Warning');
         } else if (alertInfo.severity === 'critical') {
           alertData.severity.color = Badge.BADGE_COLOR_TYPES.RED;
-          alertData.severity.label = i18nT('alertSeverityCritical', 'Critical');
+          alertData.severity.label = i18nT('alert_severity_critical', 'Critical');
         }
       }
 
@@ -319,7 +319,7 @@ class AlertInfoModal extends React.Component {
         if (resolvedStatus.is_true) {
           alertData.status.resolved = true;
           if (resolvedStatus.is_auto_resolved) {
-            alertData.status.statusLabel = i18nT('AutoResolved', 'Auto Resolved');
+            alertData.status.statusLabel = i18nT('Auto_resolved', 'Auto Resolved');
             alertData.status.autoResolved = true;
           } else {
             if (resolvedStatus.user) {
@@ -454,7 +454,7 @@ class AlertInfoModal extends React.Component {
       resolutions = (
         <TextGroup>
           <TextLabel type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }>
-            { i18nT('ContactNutanixSupport', 'Contact Nutanix Support') }
+            { i18nT('Contact_nutanix_support', 'Contact Nutanix Support') }
           </TextLabel>
         </TextGroup>
       );
@@ -670,7 +670,7 @@ class AlertInfoModal extends React.Component {
             <FlexLayout padding="5px" itemSpacing="10px">
               <FlexItem flexGrow="1">
                 <TextLabel>
-                  { i18nT('SourceEntity', 'Source Entity') }
+                  { i18nT('Source_entity', 'Source Entity') }
                 </TextLabel>
               </FlexItem>
               <FlexItem>
@@ -694,7 +694,7 @@ class AlertInfoModal extends React.Component {
             <FlexLayout padding="5px" itemSpacing="10px">
               <FlexItem flexGrow="1">
                 <TextLabel>
-                  { i18nT('CreatedTime', 'Created Time') }
+                  { i18nT('Created_time', 'Created Time') }
                 </TextLabel>
               </FlexItem>
               <FlexItem
@@ -713,7 +713,7 @@ class AlertInfoModal extends React.Component {
             <FlexLayout padding="5px" itemSpacing="10px">
               <FlexItem flexGrow="1">
                 <TextLabel>
-                  { i18nT('LastOccurred', 'Last Occured') }
+                  { i18nT('Last_occurred', 'Last Occured') }
                 </TextLabel>
               </FlexItem>
               <FlexItem
@@ -732,7 +732,7 @@ class AlertInfoModal extends React.Component {
             <FlexLayout padding="5px" itemSpacing="10px">
               <FlexItem flexGrow="1">
                 <TextLabel>
-                  { i18nT('ImpactType', 'Impact Type') }
+                  { i18nT('Impact_type', 'Impact Type') }
                 </TextLabel>
               </FlexItem>
               <FlexItem>
@@ -771,7 +771,7 @@ class AlertInfoModal extends React.Component {
             <FlexLayout padding="5px" itemSpacing="10px">
               <FlexItem flexGrow="1">
                 <TextLabel>
-                  { i18nT('AcknowledgedBy', 'Acknowledged By') }
+                  { i18nT('Acknowledged_by', 'Acknowledged By') }
                 </TextLabel>
               </FlexItem>
               <FlexItem>
@@ -784,7 +784,7 @@ class AlertInfoModal extends React.Component {
             <FlexLayout padding="5px" itemSpacing="10px">
               <FlexItem flexGrow="1">
                 <TextLabel>
-                  { i18nT('ResolvedBy', 'Resolved By') }
+                  { i18nT('Resolved_by', 'Resolved By') }
                 </TextLabel>
               </FlexItem>
               <FlexItem>
@@ -801,7 +801,7 @@ class AlertInfoModal extends React.Component {
       modalHeaderContent = (
         <StackingLayout padding="10px">
           <Title size="h2">
-            { i18nT('AlertDetails', 'Alert Details') }
+            { i18nT('Alert_details', 'Alert Details') }
           </Title>
         </StackingLayout>
       );
@@ -835,7 +835,7 @@ class AlertInfoModal extends React.Component {
 
           <StackingLayout padding="10px">
             <Title size="h3">
-              { i18nT('PossibleCause', 'Possible Cause') }
+              { i18nT('Possible_cause', 'Possible Cause') }
             </Title>
             <StackingLayout padding="10px">
               { alertData.possibleCauses }
@@ -902,8 +902,8 @@ class AlertInfoModal extends React.Component {
                         showCloseIcon={ false }
                         message={
                           this.props.alertRequestType === 'resolve'
-                            ? i18nT('AlertResolved', 'Alert Resolved')
-                            : i18nT('AlertAcknowledged', 'Alert Acknowledged')
+                            ? i18nT('Alert_resolved', 'Alert Resolved')
+                            : i18nT('Alert_acknowledged', 'Alert Acknowledged')
                         }
                       />
                     )
@@ -918,8 +918,8 @@ class AlertInfoModal extends React.Component {
                         showCloseIcon={ false }
                         message={
                           this.props.alertRequestType === 'resolve'
-                            ? i18nT('AlertResolvingFailed', 'Alert Resolving Failed')
-                            : i18nT('AlertAcknowledgingFailed', 'Alert Acknowledging Failed')
+                            ? i18nT('Alert_resolving_failed', 'Alert Resolving Failed')
+                            : i18nT('Alert_acknowledging_failed', 'Alert Acknowledging Failed')
                         }
                       />
                     )

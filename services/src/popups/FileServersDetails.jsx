@@ -143,8 +143,8 @@ class FileServersDetails extends React.Component {
 
     const manage = (
       <Link
-        onClick={ this.onOpenPeClick }
         className="fs-manage"
+        onClick={ this.onOpenPeClick }
       >
         <OpenInNewWindowIcon />
       </Link>);
@@ -152,32 +152,32 @@ class FileServersDetails extends React.Component {
     const data = [
       {
         key: 'name',
-        title: i18nT('name', 'File Server Name'),
+        title: i18nT('File_server_name', 'File Server Name'),
         data: entity.name
       },
       {
         key: 'cluster',
-        title: i18nT('cluster_name', 'Cluster'),
+        title: i18nT('Cluster_name', 'Cluster'),
         data: entity.cluster_name
       },
       {
         key: 'version',
-        title: i18nT('verion', 'Version'),
+        title: i18nT('Version', 'Version'),
         data: entity.afs_version.split('-')[0]
       },
       {
         key: 'vms',
-        title: i18nT('fs_vms', 'File Server VMs'),
+        title: i18nT('File_server_vms', 'File Server VMs'),
         data: entity.nvm_uuid_list.split(',').length || 0
       },
       {
         key: 'ips',
-        title: i18nT('external_ip_addresses', 'External IP Addresses'),
+        title: i18nT('External_ip_addresses', 'External IP Addresses'),
         data: entity.ipv4_address
       },
       {
         key: 'manage',
-        title: i18nT('manage', 'Manage'),
+        title: i18nT('Manage', 'Manage'),
         data: manage
       }
     ];
@@ -186,13 +186,13 @@ class FileServersDetails extends React.Component {
       <Button
         onClick={ this.props.onClose }
         type="secondary">
-        {i18nT('close', 'Close')}
+        {i18nT('Close', 'Close')}
       </Button>);
     return (
       <div>
         <Modal
           visible={ this.props.visible }
-          title={ i18nT('file_server_details', 'File Server Details') }
+          title={ i18nT('File_server_details', 'File Server Details') }
           footer={ footer }
           onClose={ this.props.onClose }
         >
@@ -213,6 +213,7 @@ class FileServersDetails extends React.Component {
       </div>
     );
   }
+
 }
 
 const mapStateToProps = state => {

@@ -258,19 +258,19 @@ class Summary extends React.Component {
           <FlexItem>
             <Badge
               color={ Badge.BADGE_COLOR_TYPES.RED }
-              text={ i18nT('alertLegendCritical', 'Critical') }
+              text={ i18nT('alert_legend_critical', 'Critical') }
             />
           </FlexItem>
           <FlexItem>
             <Badge
               color={ Badge.BADGE_COLOR_TYPES.YELLOW }
-              text={ i18nT('alertLegendWarning', 'Warning') }
+              text={ i18nT('alert_legend_warning', 'Warning') }
             />
           </FlexItem>
           <FlexItem>
             <Badge
               color={ Badge.BADGE_COLOR_TYPES.GRAY }
-              text={ i18nT('alertLegendInfo', 'Info') }
+              text={ i18nT('alert_legend_info', 'Info') }
             />
           </FlexItem>
         </FlexLayout>
@@ -309,7 +309,7 @@ class Summary extends React.Component {
                 showCloseIcon={ false }
                 title={
                   i18nT(
-                    'highlightedFileServers',
+                    'Highlighted_file_servers',
                     'Highlighted File Servers',
                     {
                       count: !this.props.highlightedWidgetBusy &&
@@ -330,7 +330,7 @@ class Summary extends React.Component {
                 }
               >
                 <Link onClick={ this.showAllServers } >
-                  { i18nT('viewAllFileServers', 'View all File Servers') }
+                  { i18nT('View_all_file_servers', 'View all File Servers') }
                 </Link>
               </div>
             }
@@ -357,7 +357,7 @@ class Summary extends React.Component {
                   >
                     <FlexItem flexGrow="0" >
                       <Title size="h3">
-                        { i18nT('alertsSummaryTitle', 'Alerts') }
+                        { i18nT('Alerts_summary_title', 'Alerts') }
                       </Title>
                     </FlexItem>
                     { !this.props.alertsWidgetBusy &&
@@ -408,11 +408,11 @@ class Summary extends React.Component {
                           [
                             {
                               key: 'day',
-                              label: i18nT('last24Hours', 'Last 24 Hours')
+                              label: i18nT('Last_24_hours', 'Last 24 Hours')
                             },
                             {
                               key: 'week',
-                              label: i18nT('lastWeek', 'Last Week')
+                              label: i18nT('Last_week', 'Last Week')
                             }
                           ]
                         }
@@ -420,11 +420,11 @@ class Summary extends React.Component {
                           this.props.alertsWidgetRange === 'day'
                             ? {
                               key: 'day',
-                              label: i18nT('last24Hours', 'Last 24 Hours')
+                              label: i18nT('Last_24_hours', 'Last 24 Hours')
                             }
                             : {
                               key: 'week',
-                              label: i18nT('lastWeek', 'Last Week')
+                              label: i18nT('Last_week', 'Last Week')
                             }
                         }
                         style={
