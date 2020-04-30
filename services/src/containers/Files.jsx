@@ -299,20 +299,20 @@ class Files extends React.Component {
               <FlexItem>
                 { i18nT('alerts', 'Alerts') }
               </FlexItem>
-              <FlexItem>  
-                { this.state.alertCount < 0 &&  
-                  ( 
-                    <Loader />  
-                  ) 
-                } 
-                { this.state.alertCount > 0 &&  
-                  ( 
-                    <Badge  
-                      color={ this.state.alertBadgeColor }  
-                      count={ AppUtil.rawNumericFormat(this.state.alertCount) } 
-                    />  
-                  ) 
-                } 
+              <FlexItem>
+                { this.state.alertCount < 0 &&
+                  (
+                    <Loader />
+                  )
+                }
+                { this.state.alertCount > 0 &&
+                  (
+                    <Badge
+                      color={ this.state.alertBadgeColor }
+                      count={ AppUtil.rawNumericFormat(this.state.alertCount) }
+                    />
+                  )
+                }
               </FlexItem>
             </FlexLayout>
           </MenuItem>

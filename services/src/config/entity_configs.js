@@ -241,12 +241,12 @@ const entity_configs = {
     details: [],
     filters: {
       local: {
-      // Local filters are specific to entity
-      type: 'simple',
-      value: {
-        1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}'
+        // Local filters are specific to entity
+        type: 'simple',
+        value: {
+          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}'
         }
-      }          
+      }
     },
     gettingStarted: {
     }
