@@ -73,7 +73,6 @@ const entity_configs = {
           ],
           filterByAttributes: [
             'name',
-            'cluster_name',
             'afs_version'
           ]
         },
@@ -148,8 +147,7 @@ const entity_configs = {
           values : {
             Anomaly: 'Behavioral Anomaly',
             SystemAction: 'System Action',
-            UserAction: 'User Action',
-            DR: 'DR'
+            UserAction: 'User Action'
           }
         },
         // Virtual Attribute
@@ -204,9 +202,7 @@ const entity_configs = {
           virtualAttributes: [
           ],
           filterByAttributes: [
-            'classification',
-            'cluster_name',
-            '_created_timestamp_usecs_'
+            'classification'
           ],
           defaultSortingAttribute: '_created_timestamp_usecs_'
         },
@@ -244,6 +240,13 @@ const entity_configs = {
     actions: {},
     details: [],
     filters: {
+      local: {
+        // Local filters are specific to entity
+        type: 'simple',
+        value: {
+          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}'
+        }
+      }
     },
     gettingStarted: {
     }
@@ -299,16 +302,8 @@ const entity_configs = {
           displayName: i18nT('schema.alert.acknowledged', 'Acknowledged')
         },
         _created_timestamp_usecs_ : {
-          type: 'int',
-          subType: 'time',
-          displayName: i18nT('schema.alert.createdTime', 'Create Time'),
-          units: 'time',
-          filterable : true,
-          values: {
-            '1::0': 'Last 1 hour',
-            '24::0': 'Last 24 hours',
-            '168::0': 'Last week'
-          }
+          type: 'integer',
+          displayName: i18nT('schema.alert.createdTime', 'Create Time')
         },
         _cluster_uuid_: {
           type: 'string'
@@ -361,10 +356,8 @@ const entity_configs = {
           virtualAttributes: [
           ],
           filterByAttributes: [
-            'cluster_name',
             'severity',
-            'impact_type',
-            '_created_timestamp_usecs_'
+            'impact_type'
           ],
           defaultSortingAttribute: '_created_timestamp_usecs_'
         },
@@ -404,6 +397,14 @@ const entity_configs = {
     actions: {},
     details: [],
     filters: {
+      local: {
+        // Local filters are specific to entity
+        type: 'simple',
+        value: {
+          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}',
+          2: '{"isChecked":true,"attribute":"resolved","op":"eq","value1":"false","value2":""}'
+        }
+      }
     },
     gettingStarted: {
     }
