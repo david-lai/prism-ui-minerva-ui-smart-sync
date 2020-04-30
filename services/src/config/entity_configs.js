@@ -240,6 +240,13 @@ const entity_configs = {
     actions: {},
     details: [],
     filters: {
+      local: {
+        // Local filters are specific to entity
+        type: 'simple',
+        value: {
+          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}'
+        }
+      }
     },
     gettingStarted: {
     }
@@ -390,6 +397,14 @@ const entity_configs = {
     actions: {},
     details: [],
     filters: {
+      local: {
+        // Local filters are specific to entity
+        type: 'simple',
+        value: {
+          1: '{"isChecked":true,"attribute":"file_server","op":"ne","value1":"[no_val]","value2":""}',
+          2: '{"isChecked":true,"attribute":"resolved","op":"eq","value1":"false","value2":""}'
+        }
+      }
     },
     gettingStarted: {
     }
