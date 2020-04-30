@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { closeModal } from '../actions';
 import FileServersDetails from '../popups/FileServersDetails.jsx';
 import AlertInfoModal from '../popups/AlertInfoModal.jsx';
+import EventInfoModal from '../popups/EventInfoModal.jsx';
 
 // Constants
 import { MODAL_TYPE } from '../utils/AppConstants';
@@ -65,6 +66,15 @@ class ModalContainer extends React.Component {
           onClose={ options.onClose || close }
           alert={ options.entity }
           alertList={ this.props.alertList }
+        />
+      );
+    } else if (type === MODAL_TYPE.EVENT_INFO) {
+      return (
+        <EventInfoModal
+          closeModalAction={ close }
+          visible={ visible }
+          onClose={ options.onClose || close }
+          options={ options }
         />
       );
     }

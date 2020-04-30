@@ -67,7 +67,8 @@ const AppConstants = {
 
   MODAL_TYPE: {
     FILE_SERVER_DETAILS: 'file_server_details',
-    ALERT_INFO: 'alert_info'
+    ALERT_INFO: 'alert_info',
+    EVENT_INFO: 'EVENT_INFO'
   },
 
   ENTITY_CATEGORY_SEPARATOR: ':',
@@ -97,6 +98,9 @@ const AppConstants = {
     SET_ALERTS_WIDGET_RANGE: 'set_alerts_widget_range',
 
     FETCH_CLUSTER_DETAILS: 'FETCH_CLUSTER_DETAILS',
+
+    FETCH_EVENTS: 'FETCH_EVENTS',
+    EVENT_LIST_LOADING: 'EVENT_LIST_LOADING',
 
     SET_TAB: 'set_tab'
   }
