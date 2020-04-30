@@ -21,6 +21,7 @@ const entity_configs = {
         },
         nvm_uuid_list: {
           type: 'string',
+          isList: true,
           displayName: i18nT('schema.file_server.file_server_vms', 'File Server VMs')
         },
         cluster_name: {
@@ -99,8 +100,8 @@ const entity_configs = {
             'name'
           ],
           groupByAttributes: [
-            'cluster_name',
-            'afs_version'
+            // 'cluster_name',
+            // 'afs_version'
           ],
           colorByAttributes: [],
           helperAttributes: [],

@@ -102,7 +102,7 @@ class EBComponentFactory {
         const version = options.text.split('-')[0];
         return (<span>{ version }</span>);
       case COMPONENTS.NUMBER_OF_VMS:
-        const numberOfVms = options.text.split(',').length || 0;
+        const numberOfVms = options.text.length || 0;
         return (<span>{ numberOfVms }</span>);
       case COMPONENTS.SEPARATE_PASCAL_CASE:
         let separatedPascalCase = '';
