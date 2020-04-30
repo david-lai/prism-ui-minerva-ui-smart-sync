@@ -328,7 +328,7 @@ class EventInfoModal extends React.Component {
             <FlexLayout padding="5px" itemSpacing="10px">
               <FlexItem flexGrow="1">
                 <TextLabel>
-                  { i18nT('CreatedTime', 'Created Time') }
+                  { i18nT('Created_time', 'Created Time') }
                 </TextLabel>
               </FlexItem>
               <FlexItem
@@ -348,7 +348,7 @@ class EventInfoModal extends React.Component {
             <FlexLayout padding="5px" itemSpacing="10px">
               <FlexItem flexGrow="1">
                 <TextLabel>
-                  { i18nT('EventType', 'Event Type') }
+                  { i18nT('Event_type', 'Event Type') }
                 </TextLabel>
               </FlexItem>
               <FlexItem>
@@ -365,7 +365,7 @@ class EventInfoModal extends React.Component {
       modalHeaderContent = (
         <StackingLayout padding="10px">
           <Title size="h2">
-            { i18nT('EventDetails', 'Event Details') }
+            { i18nT('Event_details', 'Event Details') }
           </Title>
         </StackingLayout>
       );
