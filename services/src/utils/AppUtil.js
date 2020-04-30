@@ -5,18 +5,7 @@
 //
 import { AphroditeApi } from 'prism-utils-common';
 
-import AppConstants from './AppConstants';
-
 const AppUtil = {
-
-  // @param error - error from axios
-  extractErrorMsg(error = {}) {
-    if (error && error.response && error.response.data) {
-      const msgs = error.response.data.message_list || [];
-      return msgs.length ? msgs[0].message : '';
-    }
-    return '';
-  },
 
   // Flattens group results for entities
   extractGroupResults(gr) {
@@ -72,31 +61,6 @@ const AppUtil = {
     }
 
     return returnValue;
-  },
-
-  // Parse a category string into a category name-value hash
-  categoryFromString(cat) {
-    const parts = cat.split(AppConstants.ENTITY_CATEGORY_SEPARATOR);
-    const name = parts[0].trim();
-    const value = (parts.length === 2) ? parts[1].trim() : '';
-    return {
-      name,
-      value
-    };
-  },
-
-  entityToPlainObject(entity) {
-    if (entity && entity.data && Array.isArray(entity.data)) {
-      return entity.data.reduce((acc, val) => {
-        const value = val.values && val.values.length &&
-          val.values[0].values && val.values[0].values.length ? val.values[0].values[0] : null;
-        acc[val.name] = value;
-        return acc;
-      }, {
-        entity_id: entity.entity_id
-      });
-    }
-    return {};
   },
 
   // Only works in the Embedded Mode.

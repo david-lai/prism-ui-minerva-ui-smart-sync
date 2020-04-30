@@ -47,21 +47,21 @@ class FileServerSummary extends React.Component {
       },
       tableColumns: [
         {
-          title: i18nT('fileServers', 'File servers'),
+          title: i18nT('File_servers', 'File servers'),
           key: 'title'
         },
         {
-          title: i18nT('fileServerAlertCritical', 'Critical'),
+          title: i18nT('file_server_alert_critical', 'Critical'),
           key: 'critical',
           render: this.renderAlertCell.bind(this, 'critical')
         },
         {
-          title: i18nT('fileServerAlertWarning', 'Warning'),
+          title: i18nT('file_server_alert_warning', 'Warning'),
           key: 'warning',
           render: this.renderAlertCell.bind(this, 'warning')
         },
         {
-          title: i18nT('fileServerAlertInfo', 'Info'),
+          title: i18nT('file_server_alert_info', 'Info'),
           key: 'info',
           render: this.renderAlertCell.bind(this, 'info')
         }
@@ -118,7 +118,7 @@ class FileServerSummary extends React.Component {
                   type={ TextLabel.TEXT_LABEL_TYPE.ERROR }
                   size={ TextLabel.TEXT_LABEL_SIZE.MEDIUM }
                 >
-                  { i18nT('fetchingDataFailed', 'Fetching data failed') }
+                  { i18nT('Fetching_data_failed', 'Fetching data failed') }
                 </TextLabel>
               </FlexItem>
             </FlexLayout>
@@ -138,13 +138,13 @@ class FileServerSummary extends React.Component {
               <FlexItem>
                 <img
                   src={ noServersIcon }
-                  alt={ i18nT('NoHighligtedFileServers', 'No Highlighted File Servers') }
+                  alt={ i18nT('No_highlighted_file_servers', 'No Highlighted File Servers') }
                   height="150"
                 />
               </FlexItem>
               <FlexItem>
                 <TextLabel>
-                  { i18nT('NoHighligtedFileServers', 'No Highlighted File Servers') }
+                  { i18nT('No_highlighted_file_servers', 'No Highlighted File Servers') }
                 </TextLabel>
               </FlexItem>
             </FlexLayout>

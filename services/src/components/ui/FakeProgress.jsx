@@ -71,11 +71,6 @@ class FakeProgress extends React.Component {
     percent: -1
   }
 
-  constructor(props) {
-    super(props);
-    window.fp = this;
-  }
-
   resetProgress() {
     this.setState({
       percent: -1,

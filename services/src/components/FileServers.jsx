@@ -44,8 +44,8 @@ class FileServers extends React.Component {
                 }
               >
                 { i18nT(
-                  'NotSeeingAllFileServersTooltip',
-                  'NotSeeingAllFileServersTooltip')
+                  'Not_seeing_all_file_servers_tooltip',
+                  'Not_seeing_all_file_servers_tooltip')
                 }
               </div>
             }
@@ -54,7 +54,7 @@ class FileServers extends React.Component {
               className="fs-tooltip-label"
               type={ TextLabel.TEXT_LABEL_TYPE.PRIMARY }
             >
-              { i18nT('NotSeeingAllFileServers', 'Not seeing all File Servers?') }
+              { i18nT('Not_seeing_all_file_servers', 'Not seeing all File Servers?') }
             </TextLabel>
           </Tooltip>
         </div>
