@@ -347,9 +347,10 @@ class Files extends React.Component {
 
   // Set the correspoding componets for each files route
   getBodyContent() {
+    const mainClassName = `app-main app-main-${this.state.currentPanelKey}`;
     if (!this.state.initialized || this.state.loading) {
       return (
-        <div className="app-main app-main-loader">
+        <div className={ `${mainClassName} app-main-loader` }>
           <Loader
             tip={ i18nT('loading', 'Loading') }
             overlay={ true }
@@ -359,7 +360,7 @@ class Files extends React.Component {
     }
 
     return (
-      <div className="app-main">
+      <div className={ mainClassName }>
         <Route
           path="/"
           exact={ true }
