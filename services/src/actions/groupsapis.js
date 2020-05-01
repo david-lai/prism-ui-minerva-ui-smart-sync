@@ -7,6 +7,7 @@
 import moment from 'moment';
 import axios from 'axios';
 import AppConstants from './../utils/AppConstants';
+import AppUtil from './../utils/AppUtil';
 
 // ------------
 // Action Types
@@ -24,6 +25,9 @@ export const {
   ALERT_REQUEST_ACTIVE,
   ALERT_REQUEST_TYPE,
   ALERT_REQUEST_STATUS,
+
+  FETCH_EVENTS,
+  EVENT_LIST_LOADING,
 
   FETCH_SUMMARY_ALERTS,
   SUMMARY_ALERTS_BUSY,
@@ -478,5 +482,133 @@ export const setAlertsWidgetRange = (value) => {
       type: SET_ALERTS_WIDGET_RANGE,
       payload: value
     });
+  };
+};
+
+/**
+ * Fetches events data from the API
+ *
+ * @return {Function}               Dispatcher method
+ */
+export const fetchEvents = () => {
+  return (dispatch) => {
+    dispatch({
+      type: EVENT_LIST_LOADING,
+      payload: true
+    });
+    const query = {
+      entity_type: 'event',
+      group_member_offset: 0,
+      group_member_sort_attribute: '_created_timestamp_usecs_',
+      group_member_sort_order: 'DESCENDING',
+      group_member_attributes: [
+        {
+          attribute: 'title'
+        },
+        {
+          attribute: 'source_entity_name'
+        },
+        {
+          attribute: 'cluster'
+        },
+        {
+          attribute: 'source_entity_uuid'
+        },
+        {
+          attribute: 'source_entity_type'
+        },
+        {
+          attribute: 'operation_type'
+        },
+        {
+          attribute: 'default_message'
+        },
+        {
+          attribute: 'param_name_list'
+        },
+        {
+          attribute: 'param_value_list'
+        }
+      ],
+      filter_criteria: 'file_server!=[no_val]'
+    };
+    axios.post(AppConstants.APIS.GROUPS_API, query)
+      .then((resp) => {
+        if (resp && resp.status && resp.status === 200 && resp.data) {
+          const results = AppUtil.extractGroupResults(resp.data);
+          const eventIds = results.map(li => li.entity_id);
+          let url = `${AppConstants.APIS.PRISM_GATEWAY}/events`;
+          url += `?event_ids=${eventIds.join(',')}&detailed_info=true&__=${new Date().getTime()}`;
+          axios.get(url)
+            .then((detailResp) => {
+              let itemDetails = [];
+              if (detailResp && detailResp.status && detailResp.status === 200 && detailResp.data) {
+                if (
+                  detailResp.data &&
+                  detailResp.data.entities &&
+                  Array.isArray(detailResp.data.entities)
+                ) {
+                  const itemList = results.map(il => {
+                    const details = detailResp.data.entities.find(re => re.id === il.entity_id);
+                    if (details) {
+                      il.details = details;
+                    }
+                    return il;
+                  });
+                  itemDetails = itemList;
+                }
+              }
+              const eventList = itemDetails.map((listItem) => {
+                const paramNames = listItem.details &&
+                  listItem.details.contextTypes
+                  ? listItem.details.contextTypes
+                  : [];
+
+                const paramValues = listItem.details &&
+                  listItem.details.contextValues
+                  ? listItem.details.contextValues
+                  : [];
+
+                const parameters = paramNames.reduce((acc, val, index) => {
+                  acc[val] = paramValues[index];
+                  return acc;
+                }, {});
+                listItem.default_message = listItem.default_message.replace(/(\{[^}]+\})/g, (propVar) => {
+                  const propName = propVar.replace(/[{}]/g, '');
+                  let propValue = '';
+                  if (
+                    parameters &&
+                    parameters[propName]
+                  ) {
+                    propValue = parameters[propName];
+                  }
+                  return propValue;
+                });
+                return listItem;
+              });
+              dispatch({
+                type: FETCH_EVENTS,
+                payload: eventList
+              });
+            })
+            .catch((ex) => {
+              dispatch({
+                type: FETCH_EVENTS,
+                payload: false
+              });
+            });
+        } else {
+          dispatch({
+            type: FETCH_EVENTS,
+            payload: false
+          });
+        }
+      })
+      .catch((ex) => {
+        dispatch({
+          type: FETCH_EVENTS,
+          payload: false
+        });
+      });
   };
 };

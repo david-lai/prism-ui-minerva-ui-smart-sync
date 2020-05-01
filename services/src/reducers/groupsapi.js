@@ -22,6 +22,9 @@ const {
   ALERT_REQUEST_TYPE,
   ALERT_REQUEST_STATUS,
 
+  FETCH_EVENTS,
+  EVENT_LIST_LOADING,
+
   FETCH_SERVER_ALERTS,
   FETCH_SUMMARY_ALERTS,
   SUMMARY_ALERTS_BUSY,
@@ -45,7 +48,10 @@ const initialState = {
   alertList: [],
   fsDetails: {},
   serverAlerts: {},
-  clusterDetails: {}
+  clusterDetails: {},
+
+  eventList: [],
+  eventListLoading: false
 };
 
 
@@ -194,6 +200,26 @@ function groupsapis(state = initialState, action) {
           state.clusterDetails
           )
         }
+      };
+
+    case EVENT_LIST_LOADING:
+      return {
+        ...state,
+        eventListLoading: payload
+      };
+
+    case FETCH_EVENTS:
+      const eventList = payload;
+      if (eventList && Array.isArray(eventList) && eventList.length) {
+        return {
+          ...state,
+          eventList,
+          eventListLoading: false
+        };
+      }
+      return {
+        ...state,
+        eventList: []
       };
 
     default:

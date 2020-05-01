@@ -40,7 +40,8 @@ import FileServers from '../components/FileServers.jsx';
 import {
   openModal,
   fetchFsData,
-  fetchAlerts
+  fetchAlerts,
+  fetchEvents
 } from '../actions';
 
 // Helper to translate strings from this module
@@ -125,6 +126,7 @@ class Files extends React.Component {
     filtered_entity_count: PropTypes.string,
     fetchFsData: PropTypes.func,
     fetchAlerts: PropTypes.func,
+    fetchEvents: PropTypes.func,
     location: PropTypes.object,
     history : PropTypes.object
   };
@@ -214,7 +216,7 @@ class Files extends React.Component {
       showEntityTypeSelector: false,
       showFiltersBar: false,
       showFiltersPanel: true,
-      filterBarPlaceholder: i18nT('typeName', 'Type name to filter'),
+      filterBarPlaceholder: i18nT('Type_name_to_filter', 'Type name to filter'),
       filtersPanelCollapsed: true,
       queryConfig,
       ebComponentFactory: EBComponentFactory.getInstance({
@@ -264,6 +266,7 @@ class Files extends React.Component {
   refreshData() {
     this.props.fetchFsData();
     this.props.fetchAlerts();
+    this.props.fetchEvents();
   }
 
   getLeftPanel() {
@@ -277,7 +280,7 @@ class Files extends React.Component {
 
         <StackingLayout padding="0px-20px" itemSpacing="10px">
           <Title>
-            { i18nT('files', 'Files') }
+            { i18nT('Files', 'Files') }
           </Title>
           <div>
             <TextLabel>
@@ -289,15 +292,15 @@ class Files extends React.Component {
 
         <MenuGroup key="1">
           <MenuItem key={ AppConstants.SUMMARY_TAB_KEY }>
-            { i18nT('summary', 'Summary') }
+            { i18nT('Summary', 'Summary') }
           </MenuItem>
           <MenuItem key={ AppConstants.FILE_SERVERS_TAB_KEY }>
-            { i18nT('fileServers', 'File Servers') }
+            { i18nT('File_servers', 'File Servers') }
           </MenuItem>
           <MenuItem key={ AppConstants.ALERTS_TAB_KEY }>
             <FlexLayout flexGrow="1" justifyContent="space-between">
               <FlexItem>
-                { i18nT('alerts', 'Alerts') }
+                { i18nT('Alerts', 'Alerts') }
               </FlexItem>
               <FlexItem>
                 { this.state.alertCount < 0 &&
@@ -317,7 +320,7 @@ class Files extends React.Component {
             </FlexLayout>
           </MenuItem>
           <MenuItem key={ AppConstants.EVENTS_TAB_KEY }>
-            { i18nT('events', 'Events') }
+            { i18nT('Events', 'Events') }
           </MenuItem>
         </MenuGroup>
       </Menu>
@@ -327,17 +330,17 @@ class Files extends React.Component {
   // Render buckets counts accounting for unavailability
   renderFileServersCount(count) {
     if (isNaN(count)) {
-      return <Loader tip={ i18nT('fileServers', 'File Servers') } />;
+      return <Loader tip={ i18nT('File_servers', 'File Servers') } />;
     }
     switch (count) {
       case -1:
-        return <Loader tip={ i18nT('fileServers', 'File Servers') } />;
+        return <Loader tip={ i18nT('File_servers', 'File Servers') } />;
       case 0:
-        return i18nT('noFileServer', 'No File Servers');
+        return i18nT('No_file_servers', 'No File Servers');
       case 1:
-        return i18nT('oneFileServer', 'One File Server');
+        return i18nT('One_file_server', 'One File Server');
       default:
-        return i18nT('numOfFileServers', '{num} File Servers',
+        return i18nT('num_of_file_servers', '{num} File Servers',
           { num: AppUtil.rawNumericFormat(count) });
     }
   }
@@ -348,7 +351,7 @@ class Files extends React.Component {
       return (
         <div className="app-main app-main-loader">
           <Loader
-            tip={ i18nT('loading', 'Loading') }
+            tip={ i18nT('Loading', 'Loading') }
             overlay={ true }
           />
         </div>
@@ -399,7 +402,7 @@ class Files extends React.Component {
       return (
         <div className="app-main app-main-loader">
           <Loader
-            tip={ i18nT('loading', 'Loading') }
+            tip={ i18nT('Loading', 'Loading') }
             overlay={ true }
           />
         </div>
@@ -475,7 +478,8 @@ const mapDispatchToProps = dispatch => {
   return {
     openModal: (type, options) => dispatch(openModal(type, options)),
     fetchFsData: () => dispatch(fetchFsData()),
-    fetchAlerts: () => dispatch(fetchAlerts())
+    fetchAlerts: () => dispatch(fetchAlerts()),
+    fetchEvents: () => dispatch(fetchEvents())
   };
 };
 

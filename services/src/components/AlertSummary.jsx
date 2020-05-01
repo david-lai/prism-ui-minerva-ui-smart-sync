@@ -147,7 +147,7 @@ class AlertSummary extends React.Component {
             >
               <FlexItem />
               <FlexItem>
-                <Loader tip={ i18nT('fetchingData', 'Fetching data') } />
+                <Loader tip={ i18nT('Fetching_data', 'Fetching data') } />
               </FlexItem>
             </FlexLayout>
           )
@@ -165,7 +165,7 @@ class AlertSummary extends React.Component {
                   type={ TextLabel.TEXT_LABEL_TYPE.ERROR }
                   size={ TextLabel.TEXT_LABEL_SIZE.MEDIUM }
                 >
-                  { i18nT('fetchingDataFailed', 'Fetching data failed') }
+                  { i18nT('Fetching_data_failed', 'Fetching data failed') }
                 </TextLabel>
               </FlexItem>
             </FlexLayout>
@@ -185,11 +185,11 @@ class AlertSummary extends React.Component {
             >
               <img
                 src={ noAlertsIcon }
-                alt={ i18nT('NoAlerts', 'No alerts') }
+                alt={ i18nT('No_alerts', 'No alerts') }
                 height="150"
               />
               <TextLabel>
-                { i18nT('NoAlerts', 'No alerts') }
+                { i18nT('No_alerts', 'No alerts') }
               </TextLabel>
             </FlexLayout>
           )
