@@ -65,7 +65,7 @@
 
   "FileServers": {
     "NotSeeingAllFileServers": "Not seeing all File Servers?",
-    "NotSeeingAllFileServersTooltip": "To manage a file server through Prism Central, the AOS version on the cluster running the file server should 5.15.x or 5.17.1 or above. Upgrade the cluster AOS for the file servers to be displayed. Deactivated file server will not show in prism central."
+    "NotSeeingAllFileServersTooltip": "To manage a file server through Prism Central, upgrade the AOS cluster to the 5.15 family, or 5.17.1 and later. Active file servers will appear in Prism Central after upgrading the AOS cluster."
   },
 
   "EBComponentFactory": {
