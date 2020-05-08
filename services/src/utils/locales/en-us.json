@@ -168,5 +168,37 @@
     "N/A": "N/A",
     "Source_entity": "Source Entity",
     "Title": "Title"
+  },
+
+  "CreateNewPolicyModal": {
+    "Back": "Back",
+    "Cancel": "Cancel",
+    "Create": "Create",
+    "Create_a_data_protection_policy": "Create a Data Protection Policy",
+    "Description": "Description",
+    "Name": "Name",
+    "Next": "Next",
+    "Select_file_server": "Select File Server",
+    "Select_source_file_server": "Select Source File Server",
+    "Select_target_file_server": "Select Target File Server",
+    "Settings": "Settings",
+    "Source_and_targets": "Source and Targets",
+    "Update": "Update"
+  },
+
+  "ReplicationSchedule": {
+    "Recovery_point_objective_RPO": "Recovery Point Objective (RPO)",
+    "Replication_schedule": "Replication Schedule",
+    "snapshot_timing_info": "A snapshot will be taken and replicated every {value} {unit}",
+    "schedule_unit_sec": "Second",
+    "schedule_unit_min": "Minute",
+    "schedule_unit_hr": "Hour",
+    "schedule_unit_day": "Day",
+    "schedule_unit_week": "Week",
+    "schedule_unit_plural_sec": "Seconds",
+    "schedule_unit_plural_min": "Minutes",
+    "schedule_unit_plural_hr": "Hours",
+    "schedule_unit_plural_day": "Days",
+    "schedule_unit_plural_week": "Weeks"
   }
 }

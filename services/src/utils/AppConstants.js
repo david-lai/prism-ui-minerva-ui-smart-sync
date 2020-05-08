@@ -23,6 +23,10 @@ const AppConstants = {
 
   SUMMARY_TAB_KEY: 'summary',
   FILE_SERVERS_TAB_KEY: 'file_servers',
+  DATA_PROTECTION_GROUP_KEY: 'data_protection',
+  PROTECTED_FILE_SERVERS_TAB_KEY: 'protected_file_servers',
+  REPLICATION_JOBS_TAB_KEY: 'replication_jobs',
+  POLICIES_TAB_KEY: 'policies',
   ALERTS_TAB_KEY: 'alerts',
   EVENTS_TAB_KEY: 'events',
 
@@ -68,7 +72,8 @@ const AppConstants = {
   MODAL_TYPE: {
     FILE_SERVER_DETAILS: 'file_server_details',
     ALERT_INFO: 'alert_info',
-    EVENT_INFO: 'EVENT_INFO'
+    EVENT_INFO: 'EVENT_INFO',
+    CREATE_NEW_POLICY: 'CREATE_NEW_POLICY'
   },
 
   ENTITY_CATEGORY_SEPARATOR: ':',

@@ -13,6 +13,8 @@ import FileServersDetails from '../popups/FileServersDetails.jsx';
 import AlertInfoModal from '../popups/AlertInfoModal.jsx';
 import EventInfoModal from '../popups/EventInfoModal.jsx';
 
+import CreateNewPolicyModal from '../popups/CreateNewPolicyModal.jsx';
+
 // Constants
 import { MODAL_TYPE } from '../utils/AppConstants';
 
@@ -71,6 +73,15 @@ class ModalContainer extends React.Component {
     } else if (type === MODAL_TYPE.EVENT_INFO) {
       return (
         <EventInfoModal
+          closeModalAction={ close }
+          visible={ visible }
+          onClose={ options.onClose || close }
+          options={ options }
+        />
+      );
+    } else if (type === MODAL_TYPE.CREATE_NEW_POLICY) {
+      return (
+        <CreateNewPolicyModal
           closeModalAction={ close }
           visible={ visible }
           onClose={ options.onClose || close }

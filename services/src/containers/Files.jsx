@@ -34,6 +34,9 @@ import i18n from '../utils/i18n';
 
 import Summary from '../components/Summary.jsx';
 import FileServers from '../components/FileServers.jsx';
+import ProtectedFileServers from '../components/ProtectedFileServers.jsx';
+import ReplicationJobs from '../components/ReplicationJobs.jsx';
+import Policies from '../components/Policies.jsx';
 
 
 // Actions
@@ -110,8 +113,19 @@ class Files extends React.Component {
     if (state.currentPanelKey !== panelKey) {
       changed = true;
       changes.currentPanelKey = panelKey;
+      changes.activeKeyPath = [
+        '1'
+      ];
+      const hardwareSubmenu = [
+        AppConstants.FILE_SERVERS_TAB_KEY,
+        AppConstants.REPLICATION_JOBS_TAB_KEY,
+        AppConstants.POLICIES_TAB_KEY
+      ];
+      if (hardwareSubmenu.indexOf(panelKey) !== -1) {
+        changes.activeKeyPath.push(AppConstants.DATA_PROTECTION_GROUP_KEY);
+      }
+      changes.activeKeyPath.push(panelKey);
     }
-
     if (changed) {
       return changes;
     }
@@ -140,6 +154,16 @@ class Files extends React.Component {
     alertEbConfiguration: null,
     eventEbConfiguration: null,
     currentPanelKey: AppConstants.SUMMARY_TAB_KEY,
+    activeKeyPath: [
+      '1',
+      AppConstants.SUMMARY_TAB_KEY
+    ],
+    openKeyMap: [
+      [
+        '1',
+        AppConstants.DATA_PROTECTION_GROUP_KEY
+      ]
+    ],
 
     alertCount: -1,
     serverCount: -1,
@@ -227,15 +251,26 @@ class Files extends React.Component {
 
   // Event handler for left panel tab click
   onMenuChange = (e) => {
-    const key = (typeof e === 'object') ? e.key : e;
+    let key = (typeof e === 'object') ? e.key : e;
+    let activeKeyPath = (typeof e === 'object') ? e.keyPath : [];
+    if (key === 'data_protection_internal') {
+      key = 'protected_file_servers';
+      activeKeyPath = ['1', AppConstants.DATA_PROTECTION_GROUP_KEY, key];
+    }
     if (key && this.state.currentPanelKey !== key) {
       this.setState({
-        currentPanelKey: key
+        currentPanelKey: key,
+        activeKeyPath
       });
       const newPath = `/${key}`;
-      this.props.history.push(newPath);
-      this.changePcUrl(key);
+      this.goToPath(newPath);
+      // this.changePcUrl(newPath);
     }
+  }
+
+  goToPath = (newPath) => {
+    this.props.history.push(newPath);
+    this.changePcUrl(newPath);
   }
 
   // Change PC URL
@@ -244,7 +279,7 @@ class Files extends React.Component {
       service: AppConstants.SERVICE_NAME.PRISM_UI,
       target: AppConstants.IFRAME_EVENT_CHANGE_PC_URL,
       state: AppConstants.FS_CHANGE_PC_URL,
-      serviceTargets: url
+      serviceTargets: url.replace(/^\/?/, '')
     }, '*', window.parent);
   }
 
@@ -275,8 +310,15 @@ class Files extends React.Component {
       <Menu
         itemSpacing="10px"
         padding="20px-0px"
-        activeKeyPath={ ['1', this.state.currentPanelKey] }
-        onClick={ this.onMenuChange } style={ { width: '240px' } } >
+        activeKeyPath={ this.state.activeKeyPath }
+        openKeyMap={ this.state.openKeyMap }
+        onClick={ this.onMenuChange }
+        style={
+          {
+            width: '240px'
+          }
+        }
+      >
 
         <StackingLayout padding="0px-20px" itemSpacing="10px">
           <Title>
@@ -297,6 +339,21 @@ class Files extends React.Component {
           <MenuItem key={ AppConstants.FILE_SERVERS_TAB_KEY }>
             { i18nT('File_servers', 'File Servers') }
           </MenuItem>
+          <MenuGroup
+            type="collapsible"
+            title={ i18nT('Hardware', 'Hardware') }
+            key={ AppConstants.DATA_PROTECTION_GROUP_KEY }
+          >
+            <MenuItem key={ AppConstants.PROTECTED_FILE_SERVERS_TAB_KEY }>
+              { i18nT('Protected_file_servers', 'Protected File Servers') }
+            </MenuItem>
+            <MenuItem key={ AppConstants.REPLICATION_JOBS_TAB_KEY }>
+              { i18nT('Replication_jobs', 'Replication Jobs') }
+            </MenuItem>
+            <MenuItem key={ AppConstants.POLICIES_TAB_KEY }>
+              { i18nT('Policies', 'Policies') }
+            </MenuItem>
+          </MenuGroup>
           <MenuItem key={ AppConstants.ALERTS_TAB_KEY }>
             <FlexLayout flexGrow="1" justifyContent="space-between">
               <FlexItem>
@@ -380,6 +437,25 @@ class Files extends React.Component {
           <FileServers
             ebConfig={ this.state.fsEbConfiguration }
             openModal={ this.props.openModal }
+          />
+        </Route>
+        <Route
+          path={ `/${AppConstants.PROTECTED_FILE_SERVERS_TAB_KEY}` }
+          exact={ true }
+        >
+          <ProtectedFileServers />
+        </Route>
+        <Route
+          path={ `/${AppConstants.REPLICATION_JOBS_TAB_KEY}` }
+          exact={ true }
+        >
+          <ReplicationJobs />
+        </Route>
+        <Route
+          path={ `/${AppConstants.POLICIES_TAB_KEY}` }
+        >
+          <Policies
+            goToPath={ this.goToPath }
           />
         </Route>
         <Route
