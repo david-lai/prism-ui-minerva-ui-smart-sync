@@ -12,10 +12,12 @@ import { OpenInNewWindowIcon, Link, FlexLayout } from '@nutanix-ui/prism-reactjs
 
 // Popups
 import FileServersName from '../components/FileServersName.jsx';
+import FailoverAction from '../components/FailoverAction.jsx';
 import AlertInfoCell from '../components/AlertInfoCell.jsx';
 import AlertSeverityCell from '../components/AlertSeverityCell.jsx';
 
 import EventTitleCell from '../components/EventTitleCell.jsx';
+import PrimaryFileServersName from '../components/PrimaryFileServersName.jsx';
 
 // Local includes
 import AppConstants from './AppConstants';
@@ -39,7 +41,9 @@ const COMPONENTS = {
   PICK_NAMED_LIST_ITEM: 'pick_named_list_item',
   EVENT_DESCRIPTION: 'event_description',
   ALERT_TITLE: 'alert_title',
-  ALERT_SEVERITY: 'alert_severity'
+  ALERT_SEVERITY: 'alert_severity',
+  FAILOVER_ACTIONS: 'failover_actions',
+  PRIMARY_FS_NAME: 'primary_fs_name'
 };
 
 // Components
@@ -94,7 +98,7 @@ class EBComponentFactory {
             onClick={ this.onOpenPeClick }
           >
             <FlexLayout alignItems="center" itemSpacing="5px">
-              <span className="nsg-example-icon-text">{i18nT('Manage', 'Manage')}</span>
+              <span className="nsg-example-icon-text">{i18nT('manage', 'Manage')}</span>
               <OpenInNewWindowIcon />
             </FlexLayout>
           </Link>);
@@ -152,6 +156,20 @@ class EBComponentFactory {
         return (
           <AlertSeverityCell
             options={ options.options }
+          />
+        );
+      case COMPONENTS.PRIMARY_FS_NAME:
+        return (
+          <PrimaryFileServersName
+            options={ options.options }
+            openModal={ this.openModal }
+          />
+        );
+      case COMPONENTS.FAILOVER_ACTIONS:
+        return (
+          <FailoverAction
+            options={ options.options }
+            openModal={ this.openModal }
           />
         );
 

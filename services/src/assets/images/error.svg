@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="15px" viewBox="0 0 16 15" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 15</title>
+    <defs>
+        <path d="M1.28033009,0.219669914 L3,1.939 L4.71966991,0.219669914 C5.01256313,-0.0732233047 5.48743687,-0.0732233047 5.78033009,0.219669914 C6.0732233,0.512563133 6.0732233,0.987436867 5.78033009,1.28033009 L4.061,3 L5.78033009,4.71966991 C6.0732233,5.01256313 6.0732233,5.48743687 5.78033009,5.78033009 C5.48743687,6.0732233 5.01256313,6.0732233 4.71966991,5.78033009 L3,4.061 L1.28033009,5.78033009 C0.987436867,6.0732233 0.512563133,6.0732233 0.219669914,5.78033009 C-0.0732233047,5.48743687 -0.0732233047,5.01256313 0.219669914,4.71966991 L1.939,3 L0.219669914,1.28033009 C-0.0732233047,0.987436867 -0.0732233047,0.512563133 0.219669914,0.219669914 C0.512563133,-0.0732233047 0.987436867,-0.0732233047 1.28033009,0.219669914 Z" id="path-1"></path>
+    </defs>
+    <g id="D-Planned-Failover-VD-Final-14th-May" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="D14" transform="translate(-892.000000, -403.000000)">
+            <g id="Group-9" transform="translate(392.000000, 399.000000)">
+                <g id="Group-15" transform="translate(500.503906, 4.000000)">
+                    <circle id="Oval" fill="#F55656" cx="7.5" cy="7.5" r="7.5"></circle>
+                    <g id="Special-/-Cross-Mini" transform="translate(4.500000, 4.433499)">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <g id="Mask" fill-rule="nonzero"></g>
+                        <g id="Icon-/-Reversed" mask="url(#mask-2)" fill="#FFFFFF" fill-rule="evenodd">
+                            <g id="Color-/-White">
+                                <polygon id="Color" points="0 0 6 0 6 6 0 6"></polygon>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

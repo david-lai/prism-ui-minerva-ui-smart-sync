@@ -27,8 +27,8 @@ class App extends React.Component {
     // Finally all is good, show the main app
     return (
       <div className="file-server-app">
-        <ModalContainer />
         <Router>
+          <ModalContainer />
           <Files />
         </Router>
       </div>

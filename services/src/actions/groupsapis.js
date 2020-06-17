@@ -6,6 +6,7 @@
 
 import moment from 'moment';
 import axios from 'axios';
+import _ from 'lodash';
 import AppConstants from './../utils/AppConstants';
 import AppUtil from './../utils/AppUtil';
 
@@ -17,6 +18,7 @@ export const {
   FETCH_FS_DETAILS,
   HIGHLIGHTED_WIDGET_BUSY,
   FETCH_ALERTS,
+  TRIGGER_FAILOVER,
 
   ALERT_MODAL_LOADING,
   FETCH_ALERT_MODAL_INFO,
@@ -262,7 +264,6 @@ export const fetchSummaryAlerts = (dateRange = 'day') => {
     const filter_criteria = `_created_timestamp_usecs_=ge=${timestamp}000;resolved==false`;
     const query = {
       entity_type: 'alert',
-      group_member_count: 1,
       group_member_attributes: [
         {
           attribute: 'title'
@@ -340,6 +341,36 @@ export const fetchServerAlerts = (entityId) => {
   };
 };
 
+/**
+ * Start Failover action
+ * @param {String} extId - file server uuid
+ * @param {Object} failoverData - the payload for failover action
+ * @return {undefined}
+ */
+export const triggerFailover = (extId, failoverData) => {
+  return (dispatch) => {
+    const url = _.template(AppConstants.APIS.FAILOVER_API)({ extId });
+
+    axios.post(url, failoverData)
+      .then((resp) => {
+        dispatch({
+          type: TRIGGER_FAILOVER,
+          payload: resp.data
+        });
+      })
+      .catch((ex) => {
+        dispatch({
+          type: TRIGGER_FAILOVER,
+          payload: false
+        });
+      });
+  };
+};
+
+/**
+ * Fetches files data
+ * @return {undefined}
+ */
 export const fetchFsData = () => {
   return (dispatch) => {
     dispatch({

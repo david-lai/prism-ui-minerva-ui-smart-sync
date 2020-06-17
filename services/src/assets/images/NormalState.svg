@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="15px" height="10px" viewBox="0 0 15 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 10</title>
+    <g id="D-Planned-Failover-VD-Final-14th-May" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linejoin="round">
+        <g id="D14" transform="translate(-674.000000, -405.000000)">
+            <g id="Group-9" transform="translate(392.000000, 399.000000)">
+                <g id="Group-10" transform="translate(282.000000, 7.000000)">
+                    <line x1="0.5" y1="4" x2="8.5" y2="4" id="Path-18" stroke="#D5DAE0" stroke-linecap="round" stroke-dasharray="1,2"></line>
+                    <path d="M9.5,0 L14.5,4 L9.5,8 L9.5,0 Z" id="Combined-Shape-Copy" stroke="#68DC8E" fill="#16E086"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

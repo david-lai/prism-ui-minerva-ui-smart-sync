@@ -26,10 +26,10 @@
     height: 100%;
     padding-top: 20px;
 
-    /*remove it out when filter and Gruop by are supported*/  
-    .filters-button { 
-      visibility: hidden; 
-    }    
+    /*remove it out when filter and Gruop by are supported*/
+    .filters-button {
+      visibility: hidden;
+    }
   }
 
   .ntnx-left-nav-layout {
@@ -185,7 +185,6 @@
   .modal-body {
     position: relative;
 
-
     .modal-progress {
       display: block;
       position: absolute;
@@ -252,6 +251,435 @@
   }
 }
 
+.app-main-protected_file_servers {
+  .table-custom-footer {
+    background: white;
+    margin-top: -60px;
+    margin-left: 20px;
+    margin-right: 20px;
+    position: relative;
+    border-top: 1px solid #d5dae0;
+    border-radius: 0px 0px 4px 4px;
+    border-top-color: #EEEEEE;
+
+    .custom-footer-cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 10px;
+
+      img {
+        margin: auto;
+      }
+
+      span {
+        margin-left: 10px;
+      }
+    }
+  }
+}
+
+.ad_dns_config_modal, .failover-action-modal, .resume_replication_modal  {
+  .fs-domain-name {
+    margin-top: 10px;
+    background: @light-gray-3;
+    padding-left: 10px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+  }
+  .password-label {
+    margin-bottom: 10px;
+  }
+}
+
+.ad_dns_config_modal {
+  .modal-body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+}
+
+.failover-action-modal {
+  .top-section-label-container {
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    margin-bottom: -15px;
+
+    .top-section-label1 {
+      margin-left: 35px;
+      margin-right: 80px;
+    }
+
+    .top-section-label2 {
+      margin-right: 120px;
+    }
+  }
+
+  .viz-container {
+    .viz-hybrid-container {
+      width: 500px;    
+      #col_leftColumn, #col_centerColumn, #col_rightColumn {
+        width: 120Px;
+      }
+    }
+  }
+
+  .password-label {
+    margin-bottom: 10px;
+  }
+
+  .body-container {
+    .top-section {
+      margin-top: 5px;
+    }
+  }
+
+  .rpo-cointainer {
+    height: 170px;
+  }
+
+  .failback-boxes-container {
+    margin-top: 20px;
+    width: 500px;
+    height: 250px;
+    position: relative;
+    font-size: 10px;
+
+    .box-content {
+      text-align: center;
+    }
+
+    .margin-top-text {
+      margin-top: 10px;
+    }
+
+    .upper-left-box {
+      position: absolute;
+      top: 50px;
+      left: 120px;
+      width: 60px;
+      height: 60px;
+      border-left: 1px solid @red-2;
+      border-top: 1px solid @red-2;
+      border-top-left-radius: 10px;
+    }
+
+    .upper-right-box {
+      position: absolute;
+      top: 50px;
+      left: 330px;
+      width: 60px;
+      height: 60px;
+      border-top: 1px solid @red-2;
+      border-right: 1px solid @red-2;
+      border-top-right-radius: 10px;
+    }
+
+    .lower-left-box {
+      position: absolute;
+      top: 160px;
+      left: 120px;
+      width: 60px;
+      height: 60px;
+      border-left: 1px solid @green-2;
+      border-bottom: 1px solid @green-2;
+      border-bottom-left-radius: 10px;
+    }
+
+    .lower-right-box {
+      position: absolute;
+      top: 160px;
+      left: 330px;
+      width: 60px;
+      height: 60px;
+      border-bottom: 1px solid @green-2;
+      border-right: 1px solid @green-2;
+      border-bottom-right-radius: 10px;
+    }
+
+    .failback-box {
+      display: flex;
+      align-items: center;
+      align-content: space-around;
+      justify-content: center;
+      position: absolute;
+      border-radius: 4px;
+    }
+
+    .triangle-icon {
+      position: absolute;
+      z-index: 1;
+    }
+
+    .dot-icon {
+      position: absolute;
+      z-index: 1;
+      height: 5px;
+      width: 5px;
+    }
+
+    .triangle-right-icon {
+      top: 47px;
+      left: 177px;
+      color: @red-1;
+    }
+
+    .top-box-dot {
+      top: 48px;
+      left: 329px;
+      color: @red-1;
+    }
+
+    .bottom-box-dot {
+      top: 217px;
+      left: 176px;
+      color: @green-1;
+    }
+
+    .top-box {
+      top: 0px;
+      border: 1px solid @red-2;
+
+      .deleted-box {
+        padding: 2px;
+        background-color: @white;
+        color: @red-1;
+        font-weight: 600;
+      }
+    }
+    
+    .triangle-left-icon {
+      top: 216px;
+      left: 330px;
+      color: @green-1;
+    }
+
+    .bottom-box {
+      top: 175px;
+      border: 1px solid @green-2;
+
+      .activated-box {
+        padding: 2px;
+        background-color: @white;
+        color: @green-1;
+        font-weight: 600; 
+      }
+    }
+
+    .top-bottom-box {
+      left: 180px;
+      width: 150px;
+      height: 100px;
+      background-color: @light-gray-3;
+    }
+
+    .triangle-up-icon {
+      top: 160px;
+      left: 117px;
+      color: @green-1;      
+    }
+
+    .triangle-down-icon {
+      top: 105px;
+      left: 386px;
+      color: @red-1;
+    }
+
+    .left-box-dot {
+      top: 105px;
+      left: 118px;
+      color: @red-1;
+    }
+
+    .right-box-dot {
+      top: 160px;
+      left: 388px;
+      color: @green-1;
+    }
+
+    .left-box {
+      left: 45px;
+    }
+
+    .right-box {
+      left: 315px;
+    }
+
+    .left-right-box {
+      top: 110px;
+      width: 150px;
+      height: 50px;
+      border: 1px solid @light-gray-2;
+    }
+  }
+
+}
+
+.failover-action-modal, .resume_replication_modal, .reverse_replication_policy_modal {
+  .checkobx-description {
+    margin-left: 20px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    font-size: 12px;
+  }
+
+  .first-page-section-container {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .hr-line {
+      width: 25px;
+      hr {
+        border-top: 1px dotted @light-gray-2;
+      }
+    }
+
+    .top-dot-icon {
+      height: 5px;
+      width: 5px;
+      color: @light-gray-2;
+    }
+
+    .bottom-dot-icon {
+      height: 8px;
+      width: 8px;
+      color: @light-gray-2;
+    }
+
+    .rpo-cointainer {
+      width: 270px;
+      margin: 0;
+      padding: 20px;
+      border-radius: 4px;
+      background: @light-gray-3;
+
+      .dp_policy_checkbox {
+        margin-bottom: 10px;
+      }
+
+      .dark-divider {
+        border-top-color: @light-gray-2;
+        margin-top: 5px;
+        margin-bottom: 10px;
+      }
+
+/*      .rpo-policy-name-title {
+        margin-left: 10px;
+      }*/
+
+      .rpo-policy-name {
+        padding: 5px;
+        border: 1px solid @light-gray-1;
+        display: flex;
+        align-items: center;
+        height: 25px
+      }
+    }
+
+    .box-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #b8bfca;
+      height: 50px;
+      width: 120px;
+      margin: 0;
+      font-size: 12px;
+      border-radius: 4px;
+      word-break: break-word;
+      padding: 10px;
+    }
+  }
+}
+
+.reverse_replication_policy_modal {
+  .ntnx-modal-content {
+    .modal-body {
+      padding-top: 10px;
+      padding-bottom: 20px
+    }
+  }
+}
+
+.resume_replication_modal {
+  .location-radio-box {
+    border: 1px solid @light-gray-3;
+    height: 50px;
+    width: 375px;
+  }
+
+  .box-container {
+    display: flex;
+    align-items: center;
+    align-content: space-around;
+    justify-content: center;
+    border-radius: 4px;
+    word-break: break-word;
+    padding: 10px;      
+    font-size: 12px;
+  }
+
+  .mid-box-container {
+    border: 1px solid @green-2;
+    width: 150px;
+    height: 100px;
+    background-color: @light-gray-3;
+
+    img {
+      margin-right: 5px;
+    }
+
+    .activated-box {
+      padding: 2px;
+      background-color: @white;
+      color: @green-1;
+      font-weight: 600; 
+    }
+
+    .box-content {
+      margin-top: 10px;
+      text-align: center;
+
+      .margin-top-text {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .side-box-container {
+    top: 110px;
+    width: 150px;
+    height: 50px;
+    border: 1px solid @light-gray-2;    
+  }
+
+  .hr-line {
+    width: 25px;
+    hr {
+      border-top: 1px dotted @green-2;
+    }
+  }
+  .ntnx-flex-layout .ntnx-flex-item .ntnx {
+    .triangle-icon {
+      color: @green-2;
+    }  
+
+    .dot-icon {
+      height: 5px;
+      width: 5px;
+      color: @green-2;
+    }
+  }
+
+  .rpo-cointainer {
+    height: 190px;
+  }
+}
+
 .category-vms-popup {
   height: 500px;
 }
@@ -290,4 +718,11 @@
   svg {
     margin-left: 10%;
   }
+}
+
+.ntnx div.file-server-selector-body {
+  background-color: @light-gray-3;
+  width: inherit;
+  height: inherit;
+  padding: 10px;
 }
