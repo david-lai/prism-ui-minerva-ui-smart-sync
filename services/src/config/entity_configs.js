@@ -120,6 +120,108 @@ const entity_configs = {
     //     'Minerva files have not been defined. Start by defining one.')
     // }
   },
+  files_relationship_pair: {
+    schema: {
+      idAttribute: 'entity_id',
+      nameAttribute: 'owner_fs_name',
+      attributes: {
+        owner_fs_name: {
+          type: 'string',
+          displayName:
+            i18nT('schema.protected_file_server.primary_fileServers', 'Primary File Servers')
+        },
+        primary_fs_name: {
+          type: 'string',
+          isList: true,
+          displayName:
+           i18nT('schema.protected_file_server.recovery_fileServers', 'Recovery File Servers')
+        },
+        policy_name: {
+          type: 'string',
+          displayName: i18nT('schema.protected_file_server.policies', 'Policies')
+        },
+        status : {
+          type: 'string',
+          displayName: i18nT('schema.protected_file_server.actions', 'Actions')
+        }
+      }
+    },
+    perspectives: [
+      {
+        name: '_common_',
+        entityAttributes: {
+          idAttribute: 'entity_id',
+          primaryAttribute: 'owner_fs_name',
+          customRenders: {
+            owner_fs_name : {
+              columnWidth: '30%',
+              formatter: 'primary_fs_name'
+            },
+            primary_fs_name : {
+              columnWidth: '25%'
+            },
+            policy_name: {
+              columnWidth: '25%'
+            },
+            status: {
+              columnWidth: '20%',
+              formatter: 'failover_actions'
+            }
+          },
+          groupByAttributes: [],
+          helperAttributes: [
+          ],
+          virtualAttributes: [
+          ],
+          filterByAttributes: [
+          ]
+        },
+        visualizations: [
+          {
+            name: 'grid',
+            entityAttributes: {}
+          }
+        ]
+      },
+      {
+        name: 'General',
+        entityAttributes: {
+          idAttribute: 'entity_id',
+          primaryAttribute: 'owner_fs_name',
+          displayAttributes: [
+            'owner_fs_name',
+            'primary_fs_name',
+            'policy_name',
+            'status'
+          ],
+          sortByAttributes: [
+            'owner_fs_name'
+          ],
+          groupByAttributes: [
+          ],
+          colorByAttributes: [],
+          helperAttributes: [
+            'owner_fs_uuid',
+            'primary_fs_uuid',
+            'policy_uuid',
+            'secondary_fs_uuid',
+            'secondary_fs_name'
+          ],
+          summaries: {}
+        }
+      }
+    ],
+    actions: {},
+    details: [],
+    filters: {}
+    // Temporary Comment out. UmComment it when PC add FS workflow is
+    // supported
+    // gettingStarted: {
+    //   createActionId: 'create_sc',
+    //   gettingStartedPrompt: i18nT('noFiles',
+    //     'Minerva files have not been defined. Start by defining one.')
+    // }
+  },
   event: {
     schema: {
       idAttribute: 'entity_id',

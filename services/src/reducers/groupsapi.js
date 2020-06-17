@@ -13,6 +13,7 @@ const {
   FETCH_FS_DETAILS,
   HIGHLIGHTED_WIDGET_BUSY,
   FETCH_ALERTS,
+  TRIGGER_FAILOVER,
 
   FETCH_ALERT_MODAL_INFO,
   ALERT_MODAL_LOADING,
@@ -220,6 +221,12 @@ function groupsapis(state = initialState, action) {
       return {
         ...state,
         eventList: []
+      };
+
+    case TRIGGER_FAILOVER:
+      return {
+        ...state,
+        failoverData: payload
       };
 
     default:

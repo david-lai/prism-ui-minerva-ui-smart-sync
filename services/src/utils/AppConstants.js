@@ -7,7 +7,8 @@ const AppConstants = {
   APIS: {
     PRISM_GATEWAY : '/PrismGateway/services/rest/v1',
     GROUPS_API : '/api/nutanix/v3/groups',
-    ALERTS_API : '/api/nutanix/v3/alerts'
+    ALERTS_API : '/api/nutanix/v3/alerts',
+    FAILOVER_API : '/files/v4.a1/config/file-servers/<%= extId %>/failover'
   },
 
   // State for when an action is enabled
@@ -42,21 +43,24 @@ const AppConstants = {
   FS_PC_URL_LISTENER: 'fs_pc_url_listener',
 
   ENTITY_TYPES: {
-    ENTITY_FILE_SERVER: 'file_server_service',
-    ENTITY_ALERT      : 'alert',
-    ENTITY_EVENT      : 'event'
+    ENTITY_FILE_SERVER            : 'file_server_service',
+    ENTITY_ALERT                  : 'alert',
+    ENTITY_EVENT                  : 'event',
+    ENTITY_FILES_RELATIONSHIP_PAIR: 'files_relationship_pair'
   },
 
   ENTITY_TYPE_NAME: {
-    ENTITY_FILE_SERVER: 'File Server',
-    ENTITY_ALERT      : 'Alert',
-    ENTITY_EVENT      : 'Event'
+    ENTITY_FILE_SERVER            : 'File Server',
+    ENTITY_ALERT                  : 'Alert',
+    ENTITY_EVENT                  : 'Event',
+    ENTITY_FILES_RELATIONSHIP_PAIR: 'Files Relationship Pair'
   },
 
   ENTITY_TYPE_NAME_PLURAL: {
-    ENTITY_FILE_SERVER: 'File Servers',
-    ENTITY_ALERT      : 'Alerts',
-    ENTITY_EVENT      : 'Events'
+    ENTITY_FILE_SERVER            : 'File Servers',
+    ENTITY_ALERT                  : 'Alerts',
+    ENTITY_EVENT                  : 'Events',
+    ENTITY_FILES_RELATIONSHIP_PAIR: 'Files Relationship Pairs'
   },
 
   // NOTIFICATION
@@ -73,7 +77,11 @@ const AppConstants = {
     FILE_SERVER_DETAILS: 'file_server_details',
     ALERT_INFO: 'alert_info',
     EVENT_INFO: 'EVENT_INFO',
-    CREATE_NEW_POLICY: 'CREATE_NEW_POLICY'
+    CREATE_NEW_POLICY: 'CREATE_NEW_POLICY',
+    FAILOVER: 'failover',
+    FAILOVER_AD_DNS_CONFIG: 'failover_ad_dns_config',
+    RESUME_REPLICATION: 'resume_replication',
+    CREATE_REVERSE_REPLICATION_POLICY: 'create_reverse_replication_policy'
   },
 
   ENTITY_CATEGORY_SEPARATOR: ':',
@@ -81,6 +89,26 @@ const AppConstants = {
     NET_SERVICE_PROVIDER: 'NetworkServiceProvider'
   },
 
+  RECOVERY_INTERVAL_UNIT: {
+    MINUTES: 'MINUTES',
+    HOURLY: 'HOURLY',
+    DAYLY: 'DAYLY'
+  },
+
+  PROTECTED_FILE_SERVERS_ACTIONS: {
+    FAILOVER: 'FAILOVER',
+    FAILBACK: 'FAILBACK'
+  },
+
+  FAILOVER_TYPE: {
+    PLANNED: 'PLANNED',
+    UNPLANNED: 'UNPLANNED'
+  },
+
+  DNS_UPDATE_TYPE: {
+    MS_DNS: 'MS-DNS',
+    MANUAL: 'manual'
+  },
 
   // Action Types
   ACTIONS: {
@@ -88,6 +116,7 @@ const AppConstants = {
     FETCH_FS_DETAILS: 'FETCH_FS_DETAILS',
     HIGHLIGHTED_WIDGET_BUSY: 'highlighted_widget_busy',
     FETCH_ALERTS: 'fetch_alerts',
+    TRIGGER_FAILOVER: 'trigger_failover',
 
     ALERT_MODAL_LOADING: 'alert_modal_loading',
     FETCH_ALERT_MODAL_INFO: 'fetch_alert_modal_info',

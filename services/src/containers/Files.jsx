@@ -38,7 +38,6 @@ import ProtectedFileServers from '../components/ProtectedFileServers.jsx';
 import ReplicationJobs from '../components/ReplicationJobs.jsx';
 import Policies from '../components/Policies.jsx';
 
-
 // Actions
 import {
   openModal,
@@ -153,6 +152,7 @@ class Files extends React.Component {
     fsEbConfiguration: null,
     alertEbConfiguration: null,
     eventEbConfiguration: null,
+    filesRelationshipPairEbConfiguration: null,
     currentPanelKey: AppConstants.SUMMARY_TAB_KEY,
     activeKeyPath: [
       '1',
@@ -188,6 +188,8 @@ class Files extends React.Component {
       this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_ALERT);
     this.state.eventEbConfiguration =
       this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_EVENT);
+    this.state.filesRelationshipPairEbConfiguration =
+      this.getEbConfiguration(AppConstants.ENTITY_TYPES.ENTITY_FILES_RELATIONSHIP_PAIR);
 
     this.onMenuChange = this.onMenuChange.bind(this);
     this.receiveMessage = this.receiveMessage.bind(this);
@@ -211,6 +213,14 @@ class Files extends React.Component {
       [AppConstants.ENTITY_TYPES.ENTITY_EVENT]: {
         singular: AppConstants.ENTITY_TYPE_NAME.ENTITY_EVENT,
         plural: AppConstants.ENTITY_TYPE_NAME_PLURAL.ENTITY_EVENT
+      },
+      [AppConstants.ENTITY_TYPES.ENTITY_EVENT]: {
+        singular: AppConstants.ENTITY_TYPE_NAME.ENTITY_EVENT,
+        plural: AppConstants.ENTITY_TYPE_NAME_PLURAL.ENTITY_EVENT
+      },
+      [AppConstants.ENTITY_TYPES.ENTITY_FILES_RELATIONSHIP_PAIR]: {
+        singular: AppConstants.ENTITY_TYPE_NAME.ENTITY_FILES_RELATIONSHIP_PAIR,
+        plural: AppConstants.ENTITY_TYPE_NAME_PLURAL.ENTITY_FILES_RELATIONSHIP_PAIR
       }
     };
     this.entityGroupings = [
@@ -443,7 +453,10 @@ class Files extends React.Component {
           path={ `/${AppConstants.PROTECTED_FILE_SERVERS_TAB_KEY}` }
           exact={ true }
         >
-          <ProtectedFileServers />
+          <ProtectedFileServers
+            ebConfig={ this.state.filesRelationshipPairEbConfiguration }
+            openModal={ this.props.openModal }
+          />
         </Route>
         <Route
           path={ `/${AppConstants.REPLICATION_JOBS_TAB_KEY}` }

@@ -21,6 +21,12 @@
         "tap": "Tap",
         "inline": "Inline"
       },
+      "protected_file_server": {
+        "primary_fileServers": "Primary File Servers",
+        "recovery_fileServers": "Recovery File Servers",
+        "policies": "Policies",
+        "actions": "Actions"
+      },
       "alert": {
         "description": "Description",
         "sourceEntity": "Source Entity",
@@ -46,6 +52,9 @@
         "classification": "Event Type",
         "cluster": "Cluster",
         "createdTime": "Create Time"
+      },
+      "files_relationship_pair": {
+        
       }
     }
   },
@@ -69,7 +78,121 @@
   },
 
   "EBComponentFactory": {
-    "Manage": "Manage"
+    "manage": "Manage"
+  },
+
+  "PrimaryFileServersName": {
+    "replication_error": "Replication Error",
+    "replication_error_text1": "Replication failed between File Servers.",
+    "replication_error_text2": "There are shares which are marked",
+    "replication_error_text3": "primary on both the file servers and are in",
+    "replication_error_text4": "Read/Write Mode. Use Actions to choose",
+    "replication_error_text5": "primary and resume replication."
+  },
+
+  "ProtectedFileServers": {
+    "protected_file_servers_title": "{value} Protected File Servers",
+    "loading_protected_file_servers": "Loading Protected File Servers",
+    "primary_file_servers": "Primary File Servers",
+    "recovery_file_servers": "Recovery File Servers",
+    "policies": "Policies",
+    "rpo_compliance_by_shares": "RPO Compliance by Shares",
+    "actions": "Actions"
+  },
+
+  "FailoverAction": {
+    "failover": "Failover",
+    "retry_failover": "Retry Failover",
+    "failback": "Failback",
+    "resume_replication": "Resume Replication",
+    "configure_dns_ad": "Configure DNS and Active Directory",
+    "create_rr_policy": "Create a Reverse Replication Policy"
+  },
+
+  "FailoverActionModal": {
+    "failover": "Failover",
+    "failback": "Failback",
+    "failoverSettings": "Failover Settings",
+    "failbackSettings": "Failback Settings",
+    "ad_dns_config": "Active Directory and DNS Configuration"
+  },
+
+  "FailoverAdDnsConfigModal": {
+    "title": "Configure AD and DNS Server",
+    "close": "Close",
+    "save": "Save"
+  },
+
+  "ReverseReplicationPolicyModal": {
+    "title": "Create a Reverse Replication Policy",
+    "create_policy": "Create Policy"
+  },
+
+  "ResumeReplicationActionModal": {
+    "resume_replication": "Resume Replication",
+    "choose_active_location": "Choose Active Location",
+    "data_protection_policies": "Data Protection Policies",
+    "error_msg": "Replication failed between File Servers. There are shares which are marked primary on both the file servers and are in Read/Write Mode. Choose the primary location to resume replication."
+  },
+
+  "FailoverSettingPage":  {
+    "planned_failover": "Planned Failover",
+    "unplanned_failover": "Unplanned Failover",
+    "from": "From (Primary)",
+    "shares": "Shares",
+    "to": "To (Recovery)",
+    "dp_policies": "Data Protection Policies",
+    "dp_policies_desc": "There are existing policies between the file servers and configure the behavior of the policies once the failover is completed.",
+    "pa_fs": "Primary / Active File Server",
+    "rs_fs": "Recovery / Standby File Server",
+    "policy": "Policy",
+    "deleted": "Deleted",
+    "activated": "Activated"
+  },
+
+  "ReverseReplicationPolicyPage": {
+    "create_policy": "Create a Reverse Replication Policy",
+    "create_policy_desc": "This would start replicating the data in the reverse direction and would simplify in failback.",
+    "rpo": "Recovery Point Objective (RPO)",
+    "policy_name": "Policy Name",
+    "data_protection_policy": "Data Protection Policy",
+    "data_protection_policy_desc": "No policy available between London and Germany. It is recommended to create a policy to resume replication.",
+    "dp_policy_title": "Create a Data Protection Policy",
+    "reverse_replication_policy_desc": "Reverse replication policy is created between the Recovery and Primary. This policy would help in easy failback process from recovery to primary once the primary is operational. All the shares from the primary server which are active on the recovery would be automatically added to this policy."
+  },
+
+  "FailoverAdDnsConfigPage": {
+    "ad_dns_config": "Active Directory and DNS Configuration",
+    "ad_dns_config_desc": "For seamless experience for the clients or end users post failover, the Active Directory and DNS entries of the recovery or standby server need to updated with the primary or active server. If you are using Microsoft DFS then this is not required.",
+    "fs_name": "File Server Name",
+    "ad_credentials": "Active Directory Credentials",
+    "ad_domain_name": "Active Directory Domain Name",
+    "admin_username": "Administrator Username",
+    "password": "Password",
+    "fs_dns": "File Server DNS Entries",
+    "fs_specific_dns": "File Server specific DNS entries for the target need to be updated.",
+    "auto_update": "Automatically Update entires(MS-DNS only)",
+    "manual_update": "Manually update Entries (All other DNS)",
+    "preferred_ns": "Preferred Name Server",
+    "username": "Username"
+  },
+
+  "FailoverConfirmModal": {
+    "proceed": "Proceed",
+    "modal_title": "Are you sure you want to proceed without providing the AD or DNS details ?",
+    "modal_msg": "Once you proceed, the clients may require reconfiguration to be able to connect to the shares or exports."
+  },
+
+  "ResumeReplicationActiveLocationPage": {
+    "choose_location": "Choose the location on which the shares would be active:",
+    "share_desc": "Shares on the primary location will be retained in the Read/Write mode and the shares on the other site are put in read only mode."
+  },
+
+  "ResumeReplicationDataProtectionPolicyPage": {
+    "dp_policy": "Data Protection Policy",
+    "page_desc": "The following policy will be activated and the replication between the sites will be resumed.",
+    "policy": "Policy",
+    "activated": "Activated"
   },
 
   "FileServersDetails": {

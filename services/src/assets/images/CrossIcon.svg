@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="10px" height="10px" viewBox="0 0 10 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Cross Icon</title>
+    <defs>
+        <path d="M1.70710678,0.292893219 L5,3.585 L8.29289322,0.292893219 C8.68341751,-0.0976310729 9.31658249,-0.0976310729 9.70710678,0.292893219 C10.0976311,0.683417511 10.0976311,1.31658249 9.70710678,1.70710678 L6.415,5 L9.70710678,8.29289322 C10.0976311,8.68341751 10.0976311,9.31658249 9.70710678,9.70710678 C9.31658249,10.0976311 8.68341751,10.0976311 8.29289322,9.70710678 L5,6.415 L1.70710678,9.70710678 C1.31658249,10.0976311 0.683417511,10.0976311 0.292893219,9.70710678 C-0.0976310729,9.31658249 -0.0976310729,8.68341751 0.292893219,8.29289322 L3.585,5 L0.292893219,1.70710678 C-0.0976310729,1.31658249 -0.0976310729,0.683417511 0.292893219,0.292893219 C0.683417511,-0.0976310729 1.31658249,-0.0976310729 1.70710678,0.292893219 Z" id="path-1"></path>
+    </defs>
+    <g id="D-Planned-Failover-VD-Final-14th-May" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="D10" transform="translate(-1090.000000, -275.000000)">
+            <g id="Special-/-Cross" transform="translate(1090.000000, 274.988753)">
+                <mask id="mask-2" fill="white">
+                    <use xlink:href="#path-1"></use>
+                </mask>
+                <g id="Mask" fill-rule="nonzero"></g>
+                <g id="Icon-/-Error" mask="url(#mask-2)" fill="#F55656" fill-rule="evenodd">
+                    <g id="Color-/-Red-1">
+                        <polygon id="Color" points="0 0 10 0 10 10 0 10"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

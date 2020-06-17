@@ -9,14 +9,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { closeModal } from '../actions';
+
+// Utils includes
+import AppConstants, { MODAL_TYPE } from '../utils/AppConstants';
+
 import FileServersDetails from '../popups/FileServersDetails.jsx';
 import AlertInfoModal from '../popups/AlertInfoModal.jsx';
 import EventInfoModal from '../popups/EventInfoModal.jsx';
 
 import CreateNewPolicyModal from '../popups/CreateNewPolicyModal.jsx';
-
-// Constants
-import { MODAL_TYPE } from '../utils/AppConstants';
+import FailoverActionModal from '../popups/FailoverActionModal.jsx';
+import FailoverAdDnsConfigModal from '../popups/FailoverAdDnsConfigModal.jsx';
+import ReverseReplicationPolicyModal from '../popups/ReverseReplicationPolicyModal.jsx';
+import ResumeReplicationActionModal from '../popups/ResumeReplicationActionModal.jsx';
 
 /**
  * Class represents Header Container
@@ -82,6 +87,78 @@ class ModalContainer extends React.Component {
     } else if (type === MODAL_TYPE.CREATE_NEW_POLICY) {
       return (
         <CreateNewPolicyModal
+          closeModalAction={ close }
+          visible={ visible }
+          onClose={ options.onClose || close }
+          options={ options }
+        />
+      );
+    } else if (type === MODAL_TYPE.FAILOVER) {
+      let action = 'failvoer';
+      const {
+        owner_fs_uuid: ownerFsUuid,
+        primary_fs_uuid: primaryFsUuid,
+        status
+      } = options.entity;
+      if (ownerFsUuid === primaryFsUuid && status === '1') {
+        action = AppConstants.PROTECTED_FILE_SERVERS_ACTIONS.FAILOVER;
+      } else {
+        action = AppConstants.PROTECTED_FILE_SERVERS_ACTIONS.FAILBACK;
+      }
+      return (
+        <FailoverActionModal
+          closeModalAction={ close }
+          visible={ visible }
+          onClose={ options.onClose || close }
+          action={ action }
+          options={ options }
+        />
+      );
+    } else if (type === MODAL_TYPE.FAILOVER_AD_DNS_CONFIG) {
+      let action = 'failvoer';
+      const {
+        owner_fs_uuid: ownerFsUuid,
+        primary_fs_uuid: primaryFsUuid,
+        status
+      } = options.entity;
+      if (ownerFsUuid === primaryFsUuid && status === '1') {
+        action = AppConstants.PROTECTED_FILE_SERVERS_ACTIONS.FAILOVER;
+      } else {
+        action = AppConstants.PROTECTED_FILE_SERVERS_ACTIONS.FAILBACK;
+      }
+      return (
+        <FailoverAdDnsConfigModal
+          closeModalAction={ close }
+          visible={ visible }
+          onClose={ options.onClose || close }
+          action={ action }
+          options={ options }
+        />
+      );
+    } else if (type === MODAL_TYPE.RESUME_REPLICATION) {
+      let action = 'failvoer';
+      const {
+        owner_fs_uuid: ownerFsUuid,
+        primary_fs_uuid: primaryFsUuid,
+        status
+      } = options.entity;
+      if (ownerFsUuid === primaryFsUuid && status === '1') {
+        action = AppConstants.PROTECTED_FILE_SERVERS_ACTIONS.FAILOVER;
+      } else {
+        action = AppConstants.PROTECTED_FILE_SERVERS_ACTIONS.FAILBACK;
+      }
+      return (
+        <ResumeReplicationActionModal
+          closeModalAction={ close }
+          visible={ visible }
+          onClose={ options.onClose || close }
+          action={ action }
+          options={ options }
+        />
+      );
+    } else if (type === MODAL_TYPE.CREATE_REVERSE_REPLICATION_POLICY) {
+      return (
+        <ReverseReplicationPolicyModal
           closeModalAction={ close }
           visible={ visible }
           onClose={ options.onClose || close }
